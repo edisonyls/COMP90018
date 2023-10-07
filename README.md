@@ -39,11 +39,15 @@
 - Convert speech to text
 
 ### Project Structure
-** Frontend Structure **
+**Frontend Structure**
 
-** Backend Structure **
+To Be Updated
+
+**Backend Structure**
+
+To Be Updated
 
 ### API Endpoints with Schema
-
+To Be Updated
 
 	
