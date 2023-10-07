@@ -1,23 +1,49 @@
-# COMP90018
-### Basic Features
-- Basic Autehntication
-	- Sign In
-	- Register
-- Profile Editing
-- Search, add and delete friends
-- Daily Habit Tracker
-	- Allows users to set targets based on frequency within a selected timeframe (e.g., go to the gym three times a week or hike once a month).
-	- Once a goal is completed, it can be marked as done with the option to include a location or photo.
-	- Extra completed challenges (the one you do not set as a goal) can be shared publicly with friends.
-	-Users can opt to keep their completed tasks private or share them with friends.
-- Social Interaction
-	- Friends can view your completed tasks in real time.
-	- Friends can react to your completed tasks using various emoticons like :muscle:, :+1:, etc.
-	- Friends can comment on your completed tasks.
-	- Friends can view the locations where you've completed your challenges in a map.
+# COMP90018 - Mobile Computing System Programming
+## Assignment 2 - Let's Pet (Pet App)
+### Basic Features 
+:gem: Basic Authentication
 
-### Nice to Have Features
-- Reminder in a time that set by the user (e.g. remind everyday at 18:00 if not complete)
-- Third party authentication
-- Statistics report (fishish goals at the location of school for 5 times, finish goals at the location of home 10 times)
-- Customization, giving full control to the users
+- Sign In
+- Register
+
+:gem: Home Page
+
+- You can categorize the post by All, Missing, Found and General
+- You can see posts from other users
+- You can search posts by keywords
+
+:gem: Map
+
+- You can see the locations of posts from other users
+- You can filter the locations based on the categories
+
+:gem:  My Account
+
+- You can see personal information
+- You can see your pets registered
+- You can see other posts that you liked/collected previously
+- You can edit your personal information
+- You can change your password and email for you registered account
+
+:gem:  Posts from Other Users
+
+- You can see posts from other users
+- You can react on the posts, such as :thumbsup: :heart: :100: and etc.
+
+:gem:  Create New Post
+- You can post new post
+
+:gem: Other Features
+
+- Real time message
+- Convert speech to text
+
+### Project Structure
+** Frontend Structure **
+
+** Backend Structure **
+
+### API Endpoints with Schema
+
+
+	
