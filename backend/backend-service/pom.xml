@@ -11,5 +11,12 @@
 
     <artifactId>backend-service</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.comp90018</groupId>
+            <artifactId>backend-mapper</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>
