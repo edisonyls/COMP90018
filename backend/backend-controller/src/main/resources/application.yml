@@ -1,0 +1,13 @@
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8
+    max-swallow-size: -1
+spring:
+  #  profiles:
+  #    active: dev
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+
