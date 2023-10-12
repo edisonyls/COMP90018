@@ -2,7 +2,7 @@ package com.comp90018.jsonResult;
 
 import java.util.Map;
 
-public class GraceJSONResult {
+public class JSONResult {
 
     // 响应业务状态码
     private Integer status;
@@ -21,17 +21,17 @@ public class GraceJSONResult {
      * @param data
      * @return
      */
-    public static GraceJSONResult ok(Object data) {
-        return new GraceJSONResult(data);
+    public static JSONResult ok(Object data) {
+        return new JSONResult(data);
     }
     /**
      * 成功返回，不带有数据的，直接调用ok方法，data无须传入（其实就是null）
      * @return
      */
-    public static GraceJSONResult ok() {
-        return new GraceJSONResult(ResponseStatusEnum.SUCCESS);
+    public static JSONResult ok() {
+        return new JSONResult(ResponseStatusEnum.SUCCESS);
     }
-    public GraceJSONResult(Object data) {
+    public JSONResult(Object data) {
         this.status = ResponseStatusEnum.SUCCESS.status();
         this.msg = ResponseStatusEnum.SUCCESS.msg();
         this.success = ResponseStatusEnum.SUCCESS.success();
@@ -43,8 +43,8 @@ public class GraceJSONResult {
      * 错误返回，直接调用error方法即可，当然也可以在ResponseStatusEnum中自定义错误后再返回也都可以
      * @return
      */
-    public static GraceJSONResult error() {
-        return new GraceJSONResult(ResponseStatusEnum.FAILED);
+    public static JSONResult error() {
+        return new JSONResult(ResponseStatusEnum.FAILED);
     }
 
     /**
@@ -52,8 +52,8 @@ public class GraceJSONResult {
      * @param map
      * @return
      */
-    public static GraceJSONResult errorMap(Map map) {
-        return new GraceJSONResult(ResponseStatusEnum.FAILED, map);
+    public static JSONResult errorMap(Map map) {
+        return new JSONResult(ResponseStatusEnum.FAILED, map);
     }
 
     /**
@@ -61,48 +61,41 @@ public class GraceJSONResult {
      * @param msg
      * @return
      */
-    public static GraceJSONResult errorMsg(String msg) {
-        return new GraceJSONResult(ResponseStatusEnum.FAILED, msg);
+    public static JSONResult errorMsg(String msg) {
+        return new JSONResult(ResponseStatusEnum.FAILED, msg);
     }
 
-    /**
-     * 错误返回，token异常，一些通用的可以在这里统一定义
-     * @return
-     */
-    public static GraceJSONResult errorTicket() {
-        return new GraceJSONResult(ResponseStatusEnum.TICKET_INVALID);
-    }
 
     /**
      * 自定义错误范围，需要传入一个自定义的枚举，可以到[ResponseStatusEnum.java[中自定义后再传入
      * @param responseStatus
      * @return
      */
-    public static GraceJSONResult errorCustom(ResponseStatusEnum responseStatus) {
-        return new GraceJSONResult(responseStatus);
+    public static JSONResult errorCustom(ResponseStatusEnum responseStatus) {
+        return new JSONResult(responseStatus);
     }
-    public static GraceJSONResult exception(ResponseStatusEnum responseStatus) {
-        return new GraceJSONResult(responseStatus);
+    public static JSONResult exception(ResponseStatusEnum responseStatus) {
+        return new JSONResult(responseStatus);
     }
 
-    public GraceJSONResult(ResponseStatusEnum responseStatus) {
+    public JSONResult(ResponseStatusEnum responseStatus) {
         this.status = responseStatus.status();
         this.msg = responseStatus.msg();
         this.success = responseStatus.success();
     }
-    public GraceJSONResult(ResponseStatusEnum responseStatus, Object data) {
+    public JSONResult(ResponseStatusEnum responseStatus, Object data) {
         this.status = responseStatus.status();
         this.msg = responseStatus.msg();
         this.success = responseStatus.success();
         this.data = data;
     }
-    public GraceJSONResult(ResponseStatusEnum responseStatus, String msg) {
+    public JSONResult(ResponseStatusEnum responseStatus, String msg) {
         this.status = responseStatus.status();
         this.msg = msg;
         this.success = responseStatus.success();
     }
 
-    public GraceJSONResult() {
+    public JSONResult() {
     }
 
     public Integer getStatus() {
