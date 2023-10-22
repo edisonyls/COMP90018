@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { View, Image, Text, TextInput, TouchableOpacity } from "react-native";
+import Checkbox from "expo-checkbox";
 import Constants from "expo-constants";
 
 const StatusBarHeight = Constants.statusBarHeight;
@@ -29,9 +30,21 @@ export const InnerContainer = styled.View`
   align-items: center;
 `;
 
+export const LogoAndTextContainer = styled.View`
+  align-items: center;
+  margin-bottom: 20px;
+  flex-direction: row;
+`;
+
+export const WelcomeText = styled.Text`
+  font-size: 32px;
+  font-weight: bold;
+  margin-left: 15px;
+`;
+
 export const PageLogo = styled.Image`
-  width: 250px;
-  height: 300px;
+  width: 100px;
+  height: 100px;
 `;
 
 export const PageTitle = styled.Text`
@@ -43,11 +56,13 @@ export const PageTitle = styled.Text`
 `;
 
 export const SubTitle = styled.Text`
-  font-size: 18px;
+  font-size: 12px;
   margin-bottom: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
   letter-spacing: 1px;
   font-weight: bold;
-  color: ${tertiary};
+  color: ${darkLight};
 `;
 
 export const StyledFormArea = styled.View`
@@ -59,7 +74,7 @@ export const StyledTextInput = styled.TextInput`
   padding: 15px;
   padding-left: 55px;
   padding-right: 55px;
-  border-radius: 5px;
+  border-radius: 20px;
   font-size: 16px;
   height: 60px;
   margin-bottom: 10px;
@@ -75,14 +90,14 @@ export const StyledInputLabel = styled.Text`
 
 export const LeftIcon = styled.View`
   left: 15px;
-  top: 38px;
+  top: 30px;
   position: absolute;
   z-index: 1;
 `;
 
 export const RightIcon = styled.TouchableOpacity`
   right: 15px;
-  top: 38px;
+  top: 30px;
   position: absolute;
   z-index: 1;
 `;
@@ -92,10 +107,10 @@ export const StyledButton = styled.TouchableOpacity`
   background-color: ${brand};
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 20px;
   height: 60px;
   margin-bottom: 10px;
-  /* margin-vertical: 5px; */
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 
   ${(props) =>
     props.google == true &&
@@ -113,6 +128,7 @@ export const ButtonText = styled.Text`
     props.google == true &&
     `
     padding: 25px;
+    margin-bottom: 15px;
   `}
 `;
 
@@ -151,4 +167,16 @@ export const TextLink = styled.TouchableOpacity`
 export const TextLinkContent = styled.Text`
   color: ${brand};
   font-size: 15px;
+`;
+
+export const CheckBoxView = styled.View`
+  flex-direction: row;
+  margin-bottom: 10px;
+  margin-top: 10px;
+`;
+
+export const StyledCheckBox = styled(Checkbox)`
+  color: ${brand};
+  margin-right: 10px;
+  margin-left: 10px;
 `;
