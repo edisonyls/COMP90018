@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
-import { View, TouchableOpacity } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { Text, View, Alert } from "react-native";
+import Checkbox from "expo-checkbox";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import {
   StyledContainer,
@@ -24,6 +24,10 @@ import {
   ExtraView,
   TextLink,
   TextLinkContent,
+  LogoAndTextContainer,
+  WelcomeText,
+  CheckBoxView,
+  StyledCheckBox,
 } from "../components/styles";
 
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
@@ -31,19 +35,13 @@ const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
 
 const Register = () => {
   const [hidePassword, setHidePassword] = useState(true);
-  const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date(2000, 0, 1));
-  const [dob, setDob] = useState();
+  const [isChecked, setIsChecked] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(false);
-    setDate(currentDate);
-    setDob(currentDate);
-  };
-
-  const showDatePicker = () => {
-    setShow(true);
+  const AlertPopUp = () => {
+    Alert.alert("Password not matched", "Please re-enter your password", [
+      { text: "OK", onPress: () => console.log("OK Pressed") },
+    ]);
   };
 
   return (
@@ -51,19 +49,17 @@ const Register = () => {
       <StyledContainer>
         <StatusBar style="dark" />
         <InnerContainer>
-          <PageTitle>Let's Pet</PageTitle>
-          <SubTitle>Register</SubTitle>
-
-          {show && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode="date"
-              is24Hour={true}
-              display="default"
-              onChange={onChange}
+          <LogoAndTextContainer>
+            <View>
+              <WelcomeText>Create</WelcomeText>
+              <WelcomeText>New Account</WelcomeText>
+            </View>
+            <PageLogo
+              resizeMode="cover"
+              source={require("./../assets/logo.jpg")}
             />
-          )}
+          </LogoAndTextContainer>
+          <SubTitle>Join our pet family today to help each other out!</SubTitle>
 
           <Formik
             initialValues={{
@@ -99,18 +95,6 @@ const Register = () => {
                   keyboardType="email-address"
                 />
                 <MyTextInput
-                  label="Date of Birth"
-                  icon="calendar"
-                  placeholder="YYYY - MM - DD"
-                  placeholderTextColor={darkLight}
-                  onChangeText={handleChange("dateOfBirth")}
-                  onBlur={handleBlur("dateOfBirth")}
-                  value={dob ? dob.toDateString() : ""}
-                  isDate={true}
-                  editable={false}
-                  showDatePicker={showDatePicker}
-                />
-                <MyTextInput
                   label="Password"
                   icon="lock"
                   placeholder="* * * * * * * *"
@@ -137,8 +121,24 @@ const Register = () => {
                   setHidePassword={setHidePassword}
                 />
                 <MsgBox>...</MsgBox>
-                <StyledButton onPress={handleSubmit}>
-                  <ButtonText>Sign In</ButtonText>
+                <CheckBoxView>
+                  <StyledCheckBox
+                    value={isChecked}
+                    onValueChange={setIsChecked}
+                  />
+                  <Text>I agree to the terms and conditions</Text>
+                </CheckBoxView>
+                <MsgBox>{message}</MsgBox>
+                <StyledButton
+                  onPress={() => {
+                    if (values.password !== values.confirmPassword) {
+                      AlertPopUp();
+                    } else {
+                      handleSubmit();
+                    }
+                  }}
+                >
+                  <ButtonText>Sign Up</ButtonText>
                 </StyledButton>
                 <Line />
                 <ExtraView>
@@ -172,12 +172,7 @@ const MyTextInput = ({
         <Octicons name={icon} size={30} color={brand} />
       </LeftIcon>
       <StyledInputLabel>{label}</StyledInputLabel>
-      {!isDate && <StyledTextInput {...props} />}
-      {isDate && (
-        <TouchableOpacity onPress={showDatePicker}>
-          <StyledTextInput {...props} />
-        </TouchableOpacity>
-      )}
+      <StyledTextInput {...props} />
       {isPassword && (
         <RightIcon onPress={() => setHidePassword(!hidePassword)}>
           <Ionicons
