@@ -43,8 +43,9 @@ public class MailController {
             return JSONResult.errorCustom(ResponseStatusEnum.FAILED);
         }
         String ip = request.getHeader("x-forwarded-for");
-        redis.setnx60s(REDIS_IP + ip, ip);
         log.info(REDIS_IP + ip);
+        redis.setnx60s(REDIS_IP + ip, ip);
+
 
 
         mailService.sendMailMessage(email);

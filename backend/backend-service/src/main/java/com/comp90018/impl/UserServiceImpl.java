@@ -20,10 +20,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private Sid sid;
+
     @Override
-    public Users queryUserIsExistByEmail(String email) {
+    public Users queryUserIsExistByEmailAndPassword(String email, String password) {
         Example example = new Example(Users.class);
-        example.createCriteria().andEqualTo("email", email);
+        example.createCriteria().andEqualTo("email1", email).andEqualTo("password", password);
         Users user = usersMapper.selectOneByExample(example);
         return user;
     }
