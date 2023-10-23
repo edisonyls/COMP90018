@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { View, Image, Text, TextInput, TouchableOpacity } from "react-native";
-import Constants from "expo-constants";
+//import styled from 'styled-components/native'; // 注意是 'styled-components/native'
+import { View, Image, Text, TouchableOpacity } from "react-native";
+import Constants from 'expo-constants';
 
 const StatusBarHeight = Constants.statusBarHeight;
-// colors
+
 export const Colors = {
   primary: "#ffffff",
   secondary: "#E5E7EB",
@@ -31,13 +32,8 @@ export const InnerContainer = styled.View`
   align-items: center;
 `;
 
-export const PageLogo = styled.Image`
-  width: 250px;
-  height: 300px;
-`;
-
 export const PageTitle = styled.Text`
-  font-size: 30px;
+  font-size: 35px;
   text-align: center;
   font-weight: bold;
   color: ${brand};
@@ -45,49 +41,18 @@ export const PageTitle = styled.Text`
 `;
 
 export const SubTitle = styled.Text`
-  font-size: 18px;
+  font-size: 13px;
   margin-bottom: 20px;
   letter-spacing: 1px;
   font-weight: bold;
-  color: ${tertiary};
+  color: ${darkLight};
 `;
 
-export const StyledFormArea = styled.View`
-  width: 90%;
+export const StyledImage = styled.Image`
+  width: 250px;
+  height: 300px;
 `;
 
-export const StyledTextInput = styled.TextInput`
-  background-color: ${secondary};
-  padding: 15px;
-  padding-left: 55px;
-  padding-right: 55px;
-  border-radius: 5px;
-  font-size: 16px;
-  height: 60px;
-  margin-bottom: 10px;
-  /* margin-vertical: 3px seems not to work */
-  color: ${tertiary};
-`;
-
-export const StyledInputLabel = styled.Text`
-  color: ${tertiary};
-  font-size: 13px;
-  text-align: left;
-`;
-
-export const LeftIcon = styled.View`
-  left: 15px;
-  top: 38px;
-  position: absolute;
-  z-index: 1;
-`;
-
-export const RightIcon = styled.TouchableOpacity`
-  right: 15px;
-  top: 38px;
-  position: absolute;
-  z-index: 1;
-`;
 
 export const StyledButton = styled.TouchableOpacity`
   padding: 15px;
@@ -117,40 +82,10 @@ export const ButtonText = styled.Text`
     padding: 25px;
   `}
 `;
-
-export const MsgBox = styled.Text`
-  text-align: center;
-  font-size: 13px;
-`;
-
 export const Line = styled.View`
   height: 1px;
   width: 100%;
   background-color: ${darkLight};
   margin-bottom: 10px;
   /* margin-vertical: 10px; */
-`;
-
-export const ExtraView = styled.View`
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  padding: 10px;
-`;
-
-export const ExtraText = styled.Text`
-  justify-content: center;
-  align-items: center;
-  color: ${tertiary};
-  font-size: 15px;
-`;
-
-export const TextLink = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
-`;
-
-export const TextLinkContent = styled.Text`
-  color: ${brand};
-  font-size: 15px;
 `;

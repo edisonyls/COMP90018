@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignIn from "./../screens/signin";
 import Register from "./../screens/register";
+import Landing from "./../screens/Landing";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,10 +23,12 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-        initialRouteName="Sign In"
+        //initialRouteName="Sign In"
+        initialRouteName="Landing"
       >
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Landing" component={Landing} />
       </Stack.Navigator>
     </NavigationContainer>
   );
