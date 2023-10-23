@@ -36,9 +36,10 @@ public class UserServiceImpl implements UserService {
         user.setEmail1(email);
         user.setNickname(nickname);
         user.setPassword(password);
+        user.setId(userId);
 
         //TODO 引入枚举类重写初始化
-        user.setAppId("default");
+        user.setAppId(userId);
         user.setProfile("default");
         user.setSex(2);
         user.setBirthday(DateUtil.stringToDate("1900-01-01"));

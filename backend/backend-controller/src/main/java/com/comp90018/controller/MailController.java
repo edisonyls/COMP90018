@@ -7,9 +7,11 @@ import com.comp90018.jsonResult.ResponseStatusEnum;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.MailService;
 import com.comp90018.service.UserService;
+import com.comp90018.utils.IPUtil;
 import com.comp90018.utils.RedisOperator;
 import com.comp90018.vo.UserVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
@@ -42,18 +44,16 @@ public class MailController {
         if(email == null || email.length() == 0) {
             return JSONResult.errorCustom(ResponseStatusEnum.FAILED);
         }
-        String ip = request.getHeader("x-forwarded-for");
+        String ip = IPUtil.getRequestIp(request);
         log.info(REDIS_IP + ip);
-        redis.setnx60s(REDIS_IP + ip, ip);
-
-
+        redis.set(REDIS_IP + ip, ip, 30);
 
         mailService.sendMailMessage(email);
         return JSONResult.ok(email);
     }
 
     @PostMapping("/signup")
-    public JSONResult signUp(@Valid@RequestParam SignUpBO signUpBO) {
+    public JSONResult signUp(@Valid@RequestBody SignUpBO signUpBO) {
         String code = signUpBO.getCode();
         String email = signUpBO.getEmail();
         String username = signUpBO.getUsername();
