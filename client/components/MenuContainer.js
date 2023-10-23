@@ -12,7 +12,7 @@ const MenuContainer = ({ title, imageSrc, type, setType }) => {
       onPress={handlePress}
     >
       <View
-        className={`w-24 h-24 p-2 shadow-sm rounded-full items-center justify-center ${
+        className={`w-20 h-20 p-2 shadow-sm rounded-full items-center justify-center m-1 ${
           type === title.toLowerCase() ? "bg-gray-300" : "bg-white"
         }`}
       >

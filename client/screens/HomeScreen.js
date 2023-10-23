@@ -27,33 +27,33 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white relative">
-      <View className="flex-row items-between justify-between px-8">
-        <View>
-          <Text className="text-[40px] text-[#0B646B] font-bold">
-            {"Welcome :)"}
-          </Text>
-          <Text className="text-[20px] text-[#527283]">userName</Text>
-        </View>
-        <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
-          <Image
-            className="w-full h-full rounded-md object-cover"
-            source={require("./../assets/logo.jpg")}
-          />
-        </View>
-      </View>
-
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#0B646B" />
         </View>
       ) : (
         <ScrollView>
+          <View className="flex-row items-between justify-between px-8">
+            <View>
+              <Text className="text-[40px] text-[#0B646B] font-bold">
+                {"Welcome :)"}
+              </Text>
+              <Text className="text-[20px] text-[#527283]">userName</Text>
+            </View>
+            <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
+              <Image
+                className="w-full h-full rounded-md object-cover"
+                source={require("./../assets/logo.jpg")}
+              />
+            </View>
+          </View>
+
           <View className="px-4 mt-8">
             <Text className="text-[#2C7379] text-[20px] font-bold">
               Category
             </Text>
           </View>
-          <View className="flex-row item-center justify-center px-8 mt-8">
+          <View className="flex-row item-center justify-center px-8 mt-4">
             <MenuContainer
               key={"all"}
               title="All"
@@ -84,7 +84,7 @@ const HomeScreen = () => {
             />
           </View>
           <View>
-            <View className="flex-row items-center justify-between px-4 mt-8">
+            <View className="flex-row items-center justify-between px-4 mt-4">
               <Text className="text-[#2C7379] text-[20px] font-bold">
                 All Post
               </Text>
@@ -96,21 +96,36 @@ const HomeScreen = () => {
               </TouchableOpacity>
             </View>
 
-            <View className="px-4 mt-8 flex-row items-center justify-evenly flex-wrap">
+            <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">
               {mainData?.length > 0 ? (
                 <>
                   {/* need unique key */}
                   <ItemCardContainer
-                    key={"101"}
+                    key={"post_id_1"}
                     imageSrc={require("./../assets/logo.jpg")}
-                    title="Try something very long"
-                    location="location101"
+                    badge="Missing"
+                    petName="Ross"
+                    petKind="British"
+                    location="West Melbourne"
+                    title="$100 Reward"
                   />
                   <ItemCardContainer
-                    key={"102"}
+                    key={"post_id_2"}
                     imageSrc={require("./../assets/logo.jpg")}
-                    title="102"
-                    location="location102"
+                    badge="Found"
+                    petName="Miso"
+                    petKind="Sausage"
+                    title="Seen at Carlton"
+                    location="Carlton"
+                  />
+                  <ItemCardContainer
+                    key={"post_id_3"}
+                    imageSrc={require("./../assets/logo.jpg")}
+                    badge="General"
+                    petName="Miso"
+                    petKind="Sausage"
+                    title="This is a really long title, I want to see how it looks like when it is too long to fit in the card"
+                    location="Carlton"
                   />
                 </>
               ) : (
