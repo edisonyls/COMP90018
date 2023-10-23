@@ -25,6 +25,18 @@ spring:
       pool-name: DataSourceHikariCP
       max-lifetime: 18000000
       connection-test-query: SELECT 1
+  mail:
+    host: smtp.163.com
+    port: 587
+    username: comp90018@163.com
+    password: YPWUCXDOUUDQASMA
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+        debug: true
 
 mybatis:
   type-aliases-package: com.comp90018.pojo
@@ -38,3 +50,4 @@ mapper:
 pagehelper:
   helper-dialect: MYSQL
   support-methods-arguments: true
+

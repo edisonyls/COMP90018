@@ -6,8 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.Properties;
 
+import static com.comp90018.idworker.utils.Serializes.closeQuietly;
 import static java.io.File.separator;
-import static org.n3r.idworker.utils.Serializes.closeQuietly;
+
 
 public class Props {
     static Logger log = LoggerFactory.getLogger(Props.class);
