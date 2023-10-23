@@ -3,7 +3,8 @@ package com.comp90018.jsonResult;
 public enum ResponseStatusEnum {
 
     SUCCESS(200, true, "success!"),
-    FAILED(500, false, "failure!");
+    FAILED(500, false, "failure!"),
+    WRONG_CODE(506, false, "verify code is wrong or outdated");
 
     // 响应业务状态
     private Integer status;
