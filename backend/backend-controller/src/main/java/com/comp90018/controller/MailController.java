@@ -40,11 +40,11 @@ public class MailController {
     UserService userService;
 
     @PostMapping("/sendMail")
-    public JSONResult send(@RequestParam String email, HttpServletRequest request) {
+    public JSONResult send(@RequestParam String email, HttpServletRequest httpServletRequest) {
         if(email == null || email.length() == 0) {
             return JSONResult.errorCustom(ResponseStatusEnum.FAILED);
         }
-        String ip = IPUtil.getRequestIp(request);
+        String ip = IPUtil.getRequestIp(httpServletRequest);
         log.info(REDIS_IP + ip);
         redis.set(REDIS_IP + ip, ip, 30);
 

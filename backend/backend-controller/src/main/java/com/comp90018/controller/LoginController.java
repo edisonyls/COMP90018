@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.spring.web.json.Json;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 import static com.comp90018.ConstantEnum.REDIS_TOKEN;
@@ -33,7 +34,7 @@ public class LoginController {
     @Autowired
     UserService userService;
     @PostMapping("/login")
-    public JSONResult login(@RequestParam String email, @RequestParam String password) {
+    public JSONResult login(@RequestParam String email, @RequestParam String password, HttpServletRequest httpServletRequest) {
 
         Users user = userService.queryUserIsExistByEmailAndPassword(email, password);
         if(user == null) {
