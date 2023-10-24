@@ -53,5 +53,11 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public Users queryUser(String userId) {
+        Users user = usersMapper.selectByPrimaryKey(userId);
+        return user;
+    }
+
 
 }
