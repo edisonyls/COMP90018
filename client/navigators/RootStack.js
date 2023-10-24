@@ -17,6 +17,7 @@ const RootStack = () => {
           headerStyle: {
             backgroundColor: "transparent",
           },
+          headerShown: false, // disable the header for now
           headerTintColor: tertiary,
           headerTransparent: true,
           headerTitle: "",
@@ -30,7 +31,7 @@ const RootStack = () => {
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Landing" component={Landing} />
-        <Stack.Screen name="Home" component={RootTab} />
+        <Stack.Screen name="RootHome" component={RootTab} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -52,7 +52,7 @@ const SignIn = ({ navigation }) => {
           initialValues={{ email: "", password: "" }}
           onSubmit={(values) => {
             console.log(values);
-            navigation.navigate("Home");
+            navigation.navigate("RootHome");
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values }) => (

@@ -8,6 +8,7 @@ import Register from "../screens/RegisterScreen";
 import { Entypo } from "@expo/vector-icons";
 import Landing from "../screens/Landing";
 import { Ionicons } from "@expo/vector-icons";
+import ChatScreen from "../screens/ChatScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -104,8 +105,8 @@ const RootTab = ({ navigation }) => {
       />
 
       <Tab.Screen
-        name="Register"
-        component={Register}
+        name="Chat"
+        component={ChatScreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
