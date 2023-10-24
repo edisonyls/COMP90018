@@ -12,6 +12,9 @@ import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+const Tab = createBottomTabNavigator();
 
 const HomeScreen = () => {
   const [type, setType] = useState("all");
@@ -38,7 +41,7 @@ const HomeScreen = () => {
               <Text className="text-[40px] text-[#0B646B] font-bold">
                 {"Welcome :)"}
               </Text>
-              <Text className="text-[20px] text-[#527283]">userName</Text>
+              <Text className="text-[20px] text-[#527283]">Test User</Text>
             </View>
             <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
               <Image
@@ -48,7 +51,7 @@ const HomeScreen = () => {
             </View>
           </View>
 
-          <View className="px-4 mt-8">
+          <View className="px-4 mt-4">
             <Text className="text-[#2C7379] text-[20px] font-bold">
               Category
             </Text>
@@ -102,7 +105,7 @@ const HomeScreen = () => {
                   {/* need unique key */}
                   <ItemCardContainer
                     key={"post_id_1"}
-                    imageSrc={require("./../assets/logo.jpg")}
+                    imageSrc={require("./../assets/dog_example_1.jpg")}
                     badge="Missing"
                     petName="Ross"
                     petKind="British"

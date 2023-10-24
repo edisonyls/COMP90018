@@ -18,7 +18,7 @@ const ItemCardContainer = ({
   };
 
   return (
-    <TouchableOpacity className="relative rounded-md border border-gray-300 space-y-2 px-3 py-2 shadow-md bg-white w-[160px] h-[320px] my-2">
+    <TouchableOpacity className="relative rounded-md border border-gray-300 space-y-2 px-3 py-2 shadow-md bg-white w-[160px] h-[280px] my-2">
       <View>
         <View className="flex-row items-start space-x-1 mb-1">
           <FontAwesome name="map-marker" size={14} color="#8597A2" />
@@ -28,7 +28,7 @@ const ItemCardContainer = ({
         </View>
         <Image
           source={imageSrc}
-          className="w-full h-40 rounded-md object-cover"
+          className="w-full h-32 rounded-md object-cover mb-1"
         />
         <View className="flex-col items-start">
           {badge && (
