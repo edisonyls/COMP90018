@@ -5,6 +5,7 @@ import SignIn from "../screens/SignInScreen";
 import Register from "../screens/RegisterScreen";
 import Landing from "../screens/Landing";
 import RootTab from "./RootTab";
+import { MapScreen } from "../screens/MapScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,7 @@ const RootStack = () => {
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Home" component={RootTab} />
+        <Stack.Screen name="Map" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
