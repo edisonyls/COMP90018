@@ -26,10 +26,8 @@ import {
   LogoAndTextContainer,
   WelcomeText,
 } from "../components/styles";
-
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
 const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
-
 const SignIn = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   return (
