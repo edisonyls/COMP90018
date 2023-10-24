@@ -13,7 +13,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://100.87.54.162:3306/comp-test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    url: jdbc:mysql://127.0.0.1:3306/comp-test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: root
     password: root
     hikari:
@@ -25,6 +25,18 @@ spring:
       pool-name: DataSourceHikariCP
       max-lifetime: 18000000
       connection-test-query: SELECT 1
+  mail:
+    host: smtp.163.com
+    port: 587
+    username: comp90018@163.com
+    password: YPWUCXDOUUDQASMA
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+        debug: true
 
 mybatis:
   type-aliases-package: com.comp90018.pojo
@@ -38,3 +50,4 @@ mapper:
 pagehelper:
   helper-dialect: MYSQL
   support-methods-arguments: true
+

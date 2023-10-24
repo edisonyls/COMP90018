@@ -23,6 +23,8 @@ import {
   ExtraView,
   TextLink,
   TextLinkContent,
+  LogoAndTextContainer,
+  WelcomeText,
 } from "../components/styles";
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
 const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
@@ -33,18 +35,25 @@ const SignIn = ({ navigation }) => {
       <StyledContainer>
         <StatusBar style="dark" />
         <InnerContainer>
-          <PageLogo
-            resizeMode="cover"
-            source={require("./../assets/logo.jpg")}
-          />
-          <PageTitle>Let's Pet</PageTitle>
-          <SubTitle>Sign In</SubTitle>
+          <LogoAndTextContainer>
+            <View>
+              <WelcomeText>Hello,</WelcomeText>
+              <WelcomeText>Welcome Back!</WelcomeText>
+            </View>
+            <PageLogo
+              resizeMode="cover"
+              source={require("./../assets/logo.jpg")}
+            />
+          </LogoAndTextContainer>
+          <SubTitle>
+            Our community stays strong and friendly as we have you!
+          </SubTitle>
 
           <Formik
             initialValues={{ email: "", password: "" }}
             onSubmit={(values) => {
               console.log(values);
-              navigation.navigate("Register");
+              navigation.navigate("Home");
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
