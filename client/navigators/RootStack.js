@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignIn from "../screens/SignInScreen";
 import Register from "../screens/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
+import MapScreen from "../screens/MapScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,11 +24,12 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-        initialRouteName="Sign In"
+        initialRouteName="Map"
       >
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Map" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
