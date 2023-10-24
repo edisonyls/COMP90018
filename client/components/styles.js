@@ -22,9 +22,8 @@ export const StyledContainer = styled.View`
   padding: 25px;
   padding-top: ${StatusBarHeight + 30}px;
   background-color: ${primary};
+  height: 100%;
 `;
-
-
 
 export const InnerContainer = styled.View`
   flex: 1;
@@ -34,7 +33,7 @@ export const InnerContainer = styled.View`
 
 export const LogoAndTextContainer = styled.View`
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   flex-direction: row;
 `;
 
