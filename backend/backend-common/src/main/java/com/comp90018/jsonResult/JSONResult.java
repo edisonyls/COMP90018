@@ -1,5 +1,7 @@
 package com.comp90018.jsonResult;
 
+import com.comp90018.enums.ResponseStatusEnum;
+
 import java.util.Map;
 
 public class JSONResult {
