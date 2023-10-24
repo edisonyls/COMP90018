@@ -66,9 +66,6 @@ public class MailController {
         Users user = userService.createUser(email, username, password);
         redis.del(REDIS_CODE + email);
 
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(user, userVO);
-
-        return JSONResult.ok(userVO);
+        return JSONResult.ok(user);
     }
 }

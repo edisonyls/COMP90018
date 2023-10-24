@@ -37,28 +37,7 @@ public class UserVO {
 
     private Date updatedTime;
 
-    public UserVO(String id, String email1, String password, String mobile, String nickname, String appId, String profile, Integer sex, Date birthday, String country, String state, Integer postcode, String description, String bgImg, Integer canAppIdBeUpdated, Date createdTime, Date updatedTime) {
-        this.id = id;
-        this.email1 = email1;
-        this.password = password;
-        this.mobile = mobile;
-        this.nickname = nickname;
-        this.appId = appId;
-        this.profile = profile;
-        this.sex = sex;
-        this.birthday = birthday;
-        this.country = country;
-        this.state = state;
-        this.postcode = postcode;
-        this.description = description;
-        this.bgImg = bgImg;
-        this.canAppIdBeUpdated = canAppIdBeUpdated;
-        this.createdTime = createdTime;
-        this.updatedTime = updatedTime;
-    }
-
-    public UserVO() {
-    }
+    private String UserToken;
 
     @Override
     public String toString() {
@@ -80,8 +59,42 @@ public class UserVO {
                 ", canAppIdBeUpdated=" + canAppIdBeUpdated +
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
+                ", UserToken='" + UserToken + '\'' +
                 '}';
     }
+
+    public String getUserToken() {
+        return UserToken;
+    }
+
+    public void setUserToken(String userToken) {
+        UserToken = userToken;
+    }
+
+    public UserVO(String id, String email1, String password, String mobile, String nickname, String appId, String profile, Integer sex, Date birthday, String country, String state, Integer postcode, String description, String bgImg, Integer canAppIdBeUpdated, Date createdTime, Date updatedTime, String userToken) {
+        this.id = id;
+        this.email1 = email1;
+        this.password = password;
+        this.mobile = mobile;
+        this.nickname = nickname;
+        this.appId = appId;
+        this.profile = profile;
+        this.sex = sex;
+        this.birthday = birthday;
+        this.country = country;
+        this.state = state;
+        this.postcode = postcode;
+        this.description = description;
+        this.bgImg = bgImg;
+        this.canAppIdBeUpdated = canAppIdBeUpdated;
+        this.createdTime = createdTime;
+        this.updatedTime = updatedTime;
+        UserToken = userToken;
+    }
+
+    public UserVO() {
+    }
+
 
     public String getId() {
         return id;
