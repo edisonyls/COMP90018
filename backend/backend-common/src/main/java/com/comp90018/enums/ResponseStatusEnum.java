@@ -1,11 +1,12 @@
-package com.comp90018.jsonResult;
+package com.comp90018.enums;
 
 public enum ResponseStatusEnum {
 
     SUCCESS(200, true, "success!"),
     FAILED(500, false, "failure!"),
-    WRONG_CODE(506, false, "verify code is wrong or outdated"),
-    USER_NOT_EXIST(516, false, "user does not exist!");
+    WRONG_CODE(501, false, "verify code is wrong or outdated"),
+    USER_NOT_EXIST(502, false, "user does not exist!"),
+    USER_NOT_LOGIN(503, false, "user not logged in");
 
     // 响应业务状态
     private Integer status;
