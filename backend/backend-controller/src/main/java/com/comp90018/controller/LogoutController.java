@@ -30,6 +30,12 @@ public class LogoutController {
     @Autowired
     RedisOperator redis;
 
+    /**
+     * User can only log out in the settings page
+     * @param usrId
+     * @param httpServletRequest
+     * @return
+     */
     @PostMapping("/logout")
     public JSONResult logout(@RequestParam String usrId, HttpServletRequest httpServletRequest) {
         redis.del(REDIS_TOKEN + usrId);
