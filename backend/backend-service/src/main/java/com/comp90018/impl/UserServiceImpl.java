@@ -39,12 +39,10 @@ public class UserServiceImpl implements UserService {
         user.setId(userId);
 
         //TODO 引入枚举类重写初始化
-        user.setAppId(userId);
         user.setProfile("default");
         user.setSex(2);
         user.setBirthday(DateUtil.stringToDate("1900-01-01"));
         user.setDescription("default");
-        user.setCanAppIdBeUpdated(0);
 
         user.setCreatedTime(new Date());
         user.setUpdatedTime(new Date());

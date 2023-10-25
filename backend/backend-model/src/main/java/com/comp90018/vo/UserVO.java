@@ -22,8 +22,6 @@ public class UserVO {
 
     private String nickname;
 
-    private String appId;
-
     private String profile;
 
     private Integer sex;
@@ -40,7 +38,6 @@ public class UserVO {
 
     private String bgImg;
 
-    private Integer canAppIdBeUpdated;
 
     private Date createdTime;
 

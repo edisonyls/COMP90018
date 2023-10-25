@@ -29,12 +29,6 @@ public class Users {
     private String nickname;
 
     /**
-     * unique identifier of the user for the app
-     */
-    @Column(name = "app_id")
-    private String appId;
-
-    /**
      * profile picture
      */
     private String profile;
@@ -75,11 +69,6 @@ public class Users {
     @Column(name = "bg_img")
     private String bgImg;
 
-    /**
-     * whether app_id can be updated，1: default, can；0: cannot
-     */
-    @Column(name = "can_app_id_be_updated")
-    private Integer canAppIdBeUpdated;
 
     /**
      * created time
@@ -179,23 +168,6 @@ public class Users {
         this.nickname = nickname;
     }
 
-    /**
-     * 获取unique identifier of the user for the app
-     *
-     * @return app_id - unique identifier of the user for the app
-     */
-    public String getAppId() {
-        return appId;
-    }
-
-    /**
-     * 设置unique identifier of the user for the app
-     *
-     * @param appId unique identifier of the user for the app
-     */
-    public void setAppId(String appId) {
-        this.appId = appId;
-    }
 
     /**
      * 获取profile picture
@@ -341,23 +313,6 @@ public class Users {
         this.bgImg = bgImg;
     }
 
-    /**
-     * 获取whether app_id can be updated，1: default, can；0: cannot
-     *
-     * @return can_app_id_be_updated - whether app_id can be updated，1: default, can；0: cannot
-     */
-    public Integer getCanAppIdBeUpdated() {
-        return canAppIdBeUpdated;
-    }
-
-    /**
-     * 设置whether app_id can be updated，1: default, can；0: cannot
-     *
-     * @param canAppIdBeUpdated whether app_id can be updated，1: default, can；0: cannot
-     */
-    public void setCanAppIdBeUpdated(Integer canAppIdBeUpdated) {
-        this.canAppIdBeUpdated = canAppIdBeUpdated;
-    }
 
     /**
      * 获取created time
