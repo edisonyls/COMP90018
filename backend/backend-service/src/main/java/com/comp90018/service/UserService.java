@@ -1,5 +1,6 @@
 package com.comp90018.service;
 
+import com.comp90018.bo.ChangeUserBO;
 import com.comp90018.pojo.Users;
 
 public interface UserService {
@@ -9,4 +10,6 @@ public interface UserService {
     public Users createUser(String email, String nickname, String password);
 
     public Users queryUser(String userId);
+
+    public Users changeUserInfo(ChangeUserBO changeUserBO);
 }
