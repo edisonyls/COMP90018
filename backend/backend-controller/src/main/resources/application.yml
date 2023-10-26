@@ -37,6 +37,10 @@ spring:
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
         debug: true
+  redis:
+    host: 180.76.230.251
+    database: 10
+    port: 6379
 
 mybatis:
   type-aliases-package: com.comp90018.pojo

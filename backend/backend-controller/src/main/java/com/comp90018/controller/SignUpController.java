@@ -22,7 +22,7 @@ import javax.validation.Valid;
 @Slf4j
 @Api(tags = "mail controller")
 @RequestMapping("verify")
-public class MailController {
+public class SignUpController {
 
     @Autowired
     RedisOperator redis;

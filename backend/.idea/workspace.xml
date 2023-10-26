@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4ff41828-906e-47da-9528-4fff5f66fe50" name="Changes" comment="controller正常使用">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="4ff41828-906e-47da-9528-4fff5f66fe50" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-controller/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend-controller/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,6 +112,7 @@
       <workItem from="1698060291324" duration="16000" />
       <workItem from="1698060316424" duration="3385000" />
       <workItem from="1698127142216" duration="5000" />
+      <workItem from="1698306557522" duration="1812000" />
     </task>
     <task id="LOCAL-00001" summary="mapper and pojo">
       <option name="closed" value="true" />
