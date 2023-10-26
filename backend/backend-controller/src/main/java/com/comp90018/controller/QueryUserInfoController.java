@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Api(tags = "query controller")
 @RequestMapping("query")
-public class QueryController {
+public class QueryUserInfoController {
 
     @Autowired
     private RedisOperator redis;

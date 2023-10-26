@@ -38,7 +38,6 @@ public class UserVO {
 
     private String bgImg;
 
-
     private Date createdTime;
 
     private Date updatedTime;
