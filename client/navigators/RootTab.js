@@ -8,6 +8,7 @@ import Register from "../screens/RegisterScreen";
 import { Entypo } from "@expo/vector-icons";
 import Landing from "../screens/Landing";
 import { Ionicons } from "@expo/vector-icons";
+import PostOption from "../screens/PostOption";
 
 const Tab = createBottomTabNavigator();
 
@@ -79,11 +80,11 @@ const RootTab = ({ navigation }) => {
 
       <Tab.Screen
         name="Add"
-        component={Landing}
+        component={PostOption}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+              <TouchableOpacity onPress={() => navigation.navigate("PostOption")}>
                 <View
                   style={{
                     top: Platform.OS == "ios" ? -10 : -20,
