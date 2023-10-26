@@ -5,9 +5,10 @@ import SignIn from "../screens/SignInScreen";
 import Register from "../screens/RegisterScreen";
 import Landing from "../screens/Landing";
 import RootTab from "./RootTab";
-import { MapScreen } from "../screens/MapScreen";
+import MapScreen from "../screens/MapScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();        
 
 const RootStack = () => {
   const tertiary = "#1F2937";
@@ -25,14 +26,16 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-        //initialRouteName="Sign In"
+       
         initialRouteName="Landing"
+        //initialRouteName="Profile"
       >
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Home" component={RootTab} />
         <Stack.Screen name="Map" component={MapScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
