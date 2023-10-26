@@ -10,7 +10,6 @@
     <result column="password" property="password" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="VARCHAR" />
     <result column="nickname" property="nickname" jdbcType="VARCHAR" />
-    <result column="app_id" property="appId" jdbcType="VARCHAR" />
     <result column="profile" property="profile" jdbcType="VARCHAR" />
     <result column="sex" property="sex" jdbcType="INTEGER" />
     <result column="birthday" property="birthday" jdbcType="DATE" />
@@ -19,7 +18,6 @@
     <result column="postcode" property="postcode" jdbcType="INTEGER" />
     <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="bg_img" property="bgImg" jdbcType="VARCHAR" />
-    <result column="can_app_id_be_updated" property="canAppIdBeUpdated" jdbcType="INTEGER" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
   </resultMap>
