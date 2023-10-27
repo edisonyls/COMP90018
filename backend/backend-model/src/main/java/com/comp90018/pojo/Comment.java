@@ -1,9 +1,15 @@
 package com.comp90018.pojo;
 
+import org.springframework.context.annotation.EnableMBeanExport;
+
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name = "comment")
 public class Comment {
     @Id
     private String id;
