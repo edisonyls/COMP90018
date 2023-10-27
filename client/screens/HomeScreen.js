@@ -79,7 +79,7 @@ const HomeScreen = () => {
           <ActivityIndicator size="large" color="#0B646B" />
         </View>
       ) : (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
           <View className="flex-row items-between justify-between px-8">
             <View>
               <Text className="text-[40px] text-[#0B646B] font-bold">
