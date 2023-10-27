@@ -1,4 +1,4 @@
-package com.comp90018.vo;
+package com.comp90018.bo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,13 +8,12 @@ import lombok.ToString;
 import java.util.Date;
 
 @Data
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class UserVO {
+public class ChangeUserBO {
+    // can not change id, email
     private String id;
-
-    private String email1;
 
     private String password;
 
@@ -37,15 +36,4 @@ public class UserVO {
     private String description;
 
     private String bgImg;
-
-    private Date createdTime;
-
-    private Date updatedTime;
-
-    private String UserToken;
-    private Integer myFollows;
-    private Integer myFans;
-    private Integer myVlogLikes;
-    private Integer myCommentLikes;
-
 }

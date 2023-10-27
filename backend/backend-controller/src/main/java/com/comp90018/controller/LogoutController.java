@@ -20,10 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Api(tags = "logout controller")
 @RequestMapping("settings")
-public class LogoutController {
-
-    @Autowired
-    RedisOperator redis;
+public class LogoutController extends BaseController{
 
     @PostMapping("/logout")
     public JSONResult logout(@RequestParam String usrId, HttpServletRequest httpServletRequest) {

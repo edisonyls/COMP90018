@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import { View } from "react-native";
-import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import {
   StyledContainer,
   InnerContainer,
@@ -27,9 +26,12 @@ import {
   WelcomeText,
 } from "../components/styles";
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
+
 const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
+
 const SignIn = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
+
   return (
     <StyledContainer>
       <StatusBar style="dark" />
