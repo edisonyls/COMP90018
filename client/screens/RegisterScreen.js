@@ -29,11 +29,11 @@ import {
   CheckBoxView,
   StyledCheckBox,
 } from "../components/styles";
-
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
+
 const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
 
-const Register = () => {
+const Register = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
   const [message, setMessage] = useState("");
@@ -143,7 +143,7 @@ const Register = () => {
                 <Line />
                 <ExtraView>
                   <ExtraText>Already have an account? </ExtraText>
-                  <TextLink>
+                  <TextLink onPress={() => navigation.navigate("SignIn")}>
                     <TextLinkContent>Login</TextLinkContent>
                   </TextLink>
                 </ExtraView>
