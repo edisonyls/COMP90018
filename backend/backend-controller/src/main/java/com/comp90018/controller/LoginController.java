@@ -24,13 +24,8 @@ import java.util.UUID;
 @Slf4j
 @Api(tags = "login controller")
 @RequestMapping("login")
-public class LoginController {
+public class LoginController extends BaseController{
 
-    @Autowired
-    RedisOperator redis;
-
-    @Autowired
-    UserService userService;
     @PostMapping("/login")
     public JSONResult login(@RequestParam String email, @RequestParam String password, HttpServletRequest httpServletRequest) {
 
