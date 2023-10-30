@@ -1,9 +1,11 @@
 package com.comp90018.controller;
 
 import com.comp90018.bo.UploadPostBO;
+import com.comp90018.enums.PostTypeEnum;
 import com.comp90018.jsonResult.JSONResult;
 import com.comp90018.pojo.Post;
 import com.comp90018.service.PostService;
+import com.comp90018.utils.MinIOUtils;
 import com.comp90018.utils.RedisOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
 @RestController
 @Slf4j
 @RequestMapping("post")
-public class UploadPostController {
+public class UploadPostController extends BaseController {
 
     @Autowired
     RedisOperator redis;
@@ -26,7 +29,9 @@ public class UploadPostController {
     PostService postService;
 
     @PostMapping("/uploadPost")
-    public JSONResult uploadPost(@Valid @RequestBody UploadPostBO uploadPostBO) {
+    public JSONResult uploadPost(@Valid @RequestBody UploadPostBO uploadPostBO, MultipartFile file) {
+
+        Post post;
 
         if (uploadPostBO.getUserId() == null) {
             return JSONResult.errorMsg("User id cannot be blank");
@@ -52,11 +57,27 @@ public class UploadPostController {
         String petBread = uploadPostBO.getPetBread();
         String name = uploadPostBO.getPetName();
         String contactNumber = uploadPostBO.getContactNumber();
-        Post post;
+
+        String fileName = file.getOriginalFilename();
+        String postImgUrl = null;
+        try {
+            MinIOUtils.uploadFile(minIOConfig.getBucketName(), fileName, file.getInputStream());
+            postImgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
+            uploadPostBO.setPostImg(postImgUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (postImgUrl == null) {
+            return JSONResult.errorMsg("Pet picture cannot be blank");
+        }
+
+        String postImg = uploadPostBO.getPostImg();
+
         switch (postType) {
-            case "Pet Missing": post = postService.createPetMissingPost(userId, 0, petCategory, petBread, name, latitude, longitude); break;
-            case "Found A Pet": post = postService.createFoundAPetPost(userId, 1, petCategory, petBread, name, contactNumber, title, description, latitude, longitude); break;
-            default: post = postService.createGeneralPost(userId, title, description, latitude, longitude); break;
+            case "Pet Missing": post = postService.createPetMissingPost(userId, postImg, PostTypeEnum.MISSING.getPostType(), petCategory, petBread, name, latitude, longitude); break;
+            case "Found A Pet": post = postService.createFoundAPetPost(userId, postImg, PostTypeEnum.FOUND.getPostType(), petCategory, petBread, name, contactNumber, title, description, latitude, longitude); break;
+            default: post = postService.createGeneralPost(userId, postImg, PostTypeEnum.GENERAL.getPostType(), title, description, latitude, longitude); break;
         }
 
         return JSONResult.ok(post);

@@ -17,10 +17,11 @@ public class PostServiceImpl implements PostService {
     private Sid sid;
 
     @Override
-    public Post createPetMissingPost(String userId, int postType, String petCategory, String petBread, String petName, Double latitude, Double longitude) {
+    public Post createPetMissingPost(String userId, String postImg, int postType, String petCategory, String petBread, String petName, Double latitude, Double longitude) {
         Post post = new Post();
         String postId = sid.nextShort();
         post.setId(postId);
+        post.setPicture(postImg);
         post.setPosterId(userId);
         post.setPostType(postType);
         post.setPetCategory(petCategory);
@@ -32,10 +33,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createFoundAPetPost(String userId, int postType, String petCategory, String petBread, String petName, String contactNumber, String title, String description, Double latitude, Double longitude) {
+    public Post createFoundAPetPost(String userId, String postImg, int postType, String petCategory, String petBread, String petName, String contactNumber, String title, String description, Double latitude, Double longitude) {
         Post post = new Post();
         String postId = sid.nextShort();
         post.setId(postId);
+        post.setPicture(postImg);
         post.setPosterId(userId);
         post.setPostType(postType);
         post.setPetCategory(petCategory);
@@ -50,15 +52,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createGeneralPost(String userId, String title, String description, Double latitude, Double longitude) {
+    public Post createGeneralPost(String userId, String postImg, int postType, String title, String description, Double latitude, Double longitude) {
         Post post = new Post();
         String postId = sid.nextShort();
         post.setId(postId);
+        post.setPicture(postImg);
         post.setPosterId(userId);
         post.setTitle(title);
         post.setDescription(description);
         post.setLatitude(latitude);
         post.setLongitude(longitude);
+        post.setPostType(postType);
         return null;
     }
 }
