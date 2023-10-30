@@ -26,13 +26,10 @@
           "apiKey": "AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng"
         }
       },
-
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.jpg",
         "backgroundColor": "#ffffff"
-      }
-
-      
+      } 
     },
     "web": {
       "favicon": "./assets/logo.jpg"
