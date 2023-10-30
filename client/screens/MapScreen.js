@@ -17,6 +17,7 @@ import * as Location from 'expo-location';
 import { Animated, Easing } from 'react-native';
 const RadarAnimation = React.memo(() => {
 const scaleValue = new Animated.Value(0); // 初始值为0
+const [selectedMenu, setSelectedMenu] = useState("All");
 
   const animateRadar = () => {
     scaleValue.setValue(0); // 在动画开始时重置值
@@ -136,6 +137,7 @@ const scaleValue = new Animated.Value(0); // 初始值为0
                     imageSrc={require("../assets/dog.png")}
                     type={type}
                     setType={setType}
+                    setSelectedMenu={setSelectedMenu} 
                     />
                     <MenuContainer
                     key={"missing"}
@@ -143,6 +145,7 @@ const scaleValue = new Animated.Value(0); // 初始值为0
                     imageSrc={require("../assets/dog.png")}
                     type={type}
                     setType={setType}
+                    setSelectedMenu={setSelectedMenu} 
                     />
                     <MenuContainer
                     key={"found"}
@@ -150,6 +153,7 @@ const scaleValue = new Animated.Value(0); // 初始值为0
                     imageSrc={require("../assets/dog.png")}
                     type={type}
                     setType={setType}
+                    setSelectedMenu={setSelectedMenu} 
                     />
                 </View>   
                 <MapView

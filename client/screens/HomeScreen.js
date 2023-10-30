@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator();
 const HomeScreen = () => {
   const [type, setType] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState("post");
+  const [selectedMenu, setSelectedMenu] = useState("All");
   const [mainData, setMainData] = useState([
     {
       id: "post_id_1",
