@@ -48,7 +48,7 @@ public class UploadPostController extends BaseController {
         String postImg = uploadPostBO.getPostImg();
 
         if(postImg == null) {
-            return JSONResult.errorMsg("Img cannot be empty");
+            return JSONResult.errorMsg("Img cannot be empty.");
         }
 
         try {
