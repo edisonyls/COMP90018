@@ -4,11 +4,9 @@ server:
     uri-encoding: UTF-8
     max-swallow-size: -1
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: create
-  #  profiles:
-  #    active: dev
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
   servlet:
     multipart:
       max-file-size: 2MB
