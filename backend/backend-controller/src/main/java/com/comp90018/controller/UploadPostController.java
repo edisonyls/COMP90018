@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -28,7 +31,7 @@ public class UploadPostController extends BaseController {
     PostService postService;
 
     @PostMapping("/uploadPost")
-    public JSONResult uploadPost(@RequestPart("uploadPostBO") UploadPostBO uploadPostBO, @RequestParam("file") MultipartFile file) {
+    public JSONResult uploadPost(@RequestBody UploadPostBO uploadPostBO) {
 
         String userId = uploadPostBO.getUserId();
         String postType = uploadPostBO.getPostType();
@@ -42,22 +45,27 @@ public class UploadPostController extends BaseController {
         String contactNumber = uploadPostBO.getContactNumber();
         String rewards = uploadPostBO.getRewards();
         String tag = uploadPostBO.getTag();
+        String postImg = uploadPostBO.getPostImg();
 
-        String fileName = file.getOriginalFilename();
-        String postImgUrl = null;
+        if(postImg == null) {
+            return JSONResult.errorMsg("Img cannot be empty");
+        }
+
         try {
-            MinIOUtils.uploadFile(minIOConfig.getBucketName(), fileName, file.getInputStream());
-            postImgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
-            uploadPostBO.setPostImg(postImgUrl);
+            byte[] imageBytes = Base64.getDecoder().decode(postImg);
+            InputStream imageStream = new ByteArrayInputStream(imageBytes);
+            String extension = ".jpg"; // Defaulting to .jpg, you can adjust this if you have the extension.
+            String uniqueFileName = userId + "_" + System.currentTimeMillis() + extension;
+            MinIOUtils.uploadFile(minIOConfig.getBucketName(), uniqueFileName, imageStream);
+            postImg = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + uniqueFileName;
+            uploadPostBO.setPostImg(postImg);
+        } catch (IllegalArgumentException e) {
+            return JSONResult.errorMsg("Provided image data is not a valid Base64 encoding.");
         } catch (Exception e) {
             e.printStackTrace();
+            return JSONResult.errorMsg("An error occurred while processing the image.");
         }
 
-        if (postImgUrl == null) {
-            return JSONResult.errorMsg("Pet picture cannot be blank");
-        }
-
-        String postImg = uploadPostBO.getPostImg();
 
         Post post = null;
         boolean ifValid = userId == null || postImg == null || petCategory == null || petBread == null ||
@@ -72,8 +80,8 @@ public class UploadPostController extends BaseController {
                 break;
             case "Found A Pet":
                 if (ifValid)
-                post = postService.createFoundAPetPost(userId, postImg, PostTypeEnum.FOUND.getPostType(), petCategory,
-                    petBread, name, contactNumber, title, description, latitude, longitude); break;
+                    post = postService.createFoundAPetPost(userId, postImg, PostTypeEnum.FOUND.getPostType(), petCategory,
+                            petBread, name, contactNumber, title, description, latitude, longitude); break;
             default:
                 if (userId == null || tag == null || title == null || postImg == null || latitude == null || longitude == null) {
                     return JSONResult.errorMsg("Required fields cannot be blank for Pet Missing post.");
@@ -85,6 +93,7 @@ public class UploadPostController extends BaseController {
 
         return JSONResult.ok(post);
     }
+
 
     @GetMapping("getAllPosts")
     public JSONResult getAllPosts() {
