@@ -33,4 +33,10 @@ public class UploadPostBO {
 
     private String contactNumber;
 
+    private String postImg;
+
+    private String rewards;
+
+    private String tag;
+
 }
