@@ -131,7 +131,11 @@
                 <artifactId>knife4j-springdoc-ui</artifactId>
                 <version>3.0.3</version>
             </dependency>
-
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>8.2.1</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
