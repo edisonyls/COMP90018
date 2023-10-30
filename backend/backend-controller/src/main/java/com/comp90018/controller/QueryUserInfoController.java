@@ -20,13 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Api(tags = "query controller")
 @RequestMapping("query")
-public class QueryUserInfoController {
-
-    @Autowired
-    private RedisOperator redis;
-
-    @Autowired
-    private UserService userService;
+public class QueryUserInfoController extends BaseController{
 
     @GetMapping("userInfo")
     public JSONResult queryUserInfo(@RequestParam String userId) {

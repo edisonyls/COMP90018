@@ -6,7 +6,8 @@ public enum ResponseStatusEnum {
     FAILED(500, false, "failure!"),
     WRONG_CODE(501, false, "verify code is wrong or outdated"),
     USER_NOT_EXIST(502, false, "user does not exist!"),
-    USER_NOT_LOGIN(503, false, "user not logged in");
+    USER_NOT_LOGIN(503, false, "user not logged in"),
+    CHANGE_USER_INFO_FAIL(504, false, "change user info fail");
 
     // 响应业务状态
     private Integer status;

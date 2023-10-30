@@ -4,6 +4,9 @@ server:
     uri-encoding: UTF-8
     max-swallow-size: -1
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
   #  profiles:
   #    active: dev
   servlet:
@@ -42,6 +45,15 @@ spring:
     database: 10
     port: 6379
 
+minio:
+  endpoint: http://180.76.230.251:9000
+  fileHost: http://180.76.230.251:9000
+  bucketName: comp90018
+  accessKey: root
+  secretKey: 12345678
+  imgSize: 1024
+  fileSize: 1024
+
 mybatis:
   type-aliases-package: com.comp90018.pojo
   mapper-locations: classpath:mapper/*.xml
@@ -54,4 +66,3 @@ mapper:
 pagehelper:
   helper-dialect: MYSQL
   support-methods-arguments: true
-

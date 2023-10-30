@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c3be29b-c833-492a-b340-0cd1876eec8b" name="Changes" comment="rename">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend-controller/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend-controller/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend-controller/src/main/java/com/comp90018/controller/SignUpController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend-controller/src/main/java/com/comp90018/controller/SignUpController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,6 +156,7 @@
       <workItem from="1698127162805" duration="11389000" />
       <workItem from="1698311585300" duration="78000" />
       <workItem from="1698311684121" duration="52000" />
+      <workItem from="1698311759286" duration="599000" />
     </task>
     <task id="LOCAL-00001" summary="create backend project">
       <option name="closed" value="true" />

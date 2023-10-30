@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4ff41828-906e-47da-9528-4fff5f66fe50" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend-controller/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend-controller/src/main/resources/application.yml" afterDir="false" />
+    <list default="true" id="4ff41828-906e-47da-9528-4fff5f66fe50" name="Changes" comment="change user info">
+      <change afterPath="$PROJECT_DIR$/backend-common/src/main/java/com/comp90018/utils/MinIOUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend-common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend-common/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +16,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -34,24 +35,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/tivvvv/IdeaProjects/COMP90018/backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/tivvvv/IdeaProjects/COMP90018/backend/backend-common/src/main/java/com/comp90018/utils",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018" />
@@ -113,6 +114,7 @@
       <workItem from="1698060316424" duration="3385000" />
       <workItem from="1698127142216" duration="5000" />
       <workItem from="1698306557522" duration="1812000" />
+      <workItem from="1698311770656" duration="13235000" />
     </task>
     <task id="LOCAL-00001" summary="mapper and pojo">
       <option name="closed" value="true" />
@@ -154,7 +156,31 @@
       <option name="project" value="LOCAL" />
       <updated>1698061416461</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="application.yml update redis">
+      <option name="closed" value="true" />
+      <created>1698312079259</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1698312079259</updated>
+    </task>
+    <task id="LOCAL-00007" summary="application.yml update redis">
+      <option name="closed" value="true" />
+      <created>1698312107057</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1698312107057</updated>
+    </task>
+    <task id="LOCAL-00008" summary="change user info">
+      <option name="closed" value="true" />
+      <created>1698342810438</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1698342810438</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -177,6 +203,8 @@
     <MESSAGE value="application.yml" />
     <MESSAGE value="knife4j documentation" />
     <MESSAGE value="controller正常使用" />
-    <option name="LAST_COMMIT_MESSAGE" value="controller正常使用" />
+    <MESSAGE value="application.yml update redis" />
+    <MESSAGE value="change user info" />
+    <option name="LAST_COMMIT_MESSAGE" value="change user info" />
   </component>
 </project>
