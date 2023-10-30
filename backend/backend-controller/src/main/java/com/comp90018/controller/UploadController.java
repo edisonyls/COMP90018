@@ -18,10 +18,7 @@ import java.io.IOException;
 @Api(tags = "upload controller")
 @RestController
 @RequestMapping("upload")
-public class UploadController {
-
-    @Autowired
-    private MinIOConfig minIOConfig;
+public class UploadController extends BaseController{
 
     @PostMapping("upload")
     public JSONResult upload(MultipartFile file) throws Exception {
