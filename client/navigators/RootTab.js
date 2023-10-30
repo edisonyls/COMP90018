@@ -8,6 +8,7 @@ import Register from "../screens/RegisterScreen";
 import { Entypo } from "@expo/vector-icons";
 import Landing from "../screens/Landing";
 import { Ionicons } from "@expo/vector-icons";
+import PostOption from "../screens/PostOption";
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 
@@ -80,12 +81,14 @@ const RootTab = ({ navigation }) => {
       />
 
       <Tab.Screen
-        name="AddTab"
-        component={Landing}
+        name="Add"
+        component={PostOption}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("PostOption")}
+              >
                 <View
                   style={{
                     top: Platform.OS == "ios" ? -10 : -20,
@@ -132,7 +135,7 @@ const RootTab = ({ navigation }) => {
       <Tab.Screen
         name="ProfileTab"
         component={ProfileScreen}
-        options={{ 
+        options={{
           tabBarIcon: ({ focused }) => {
             return (
               <View className="items-center justify-center">

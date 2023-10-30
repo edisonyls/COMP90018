@@ -5,10 +5,13 @@ import SignIn from "../screens/SignInScreen";
 import Register from "../screens/RegisterScreen";
 import Landing from "../screens/Landing";
 import RootTab from "./RootTab";
+import PostOption from "../screens/PostOption";
+import FindMyPet from "../screens/FindMyPet";
+
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 
-const Stack = createNativeStackNavigator();        
+const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
   const tertiary = "#1F2937";
@@ -27,7 +30,6 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-       
         initialRouteName="Landing"
         //initialRouteName="Profile"
       >
@@ -35,6 +37,8 @@ const RootStack = () => {
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Home" component={RootTab} />
+        <Stack.Screen name="PostOption" component={PostOption} />
+        <Stack.Screen name="FindMyPet" component={FindMyPet} />
         <Stack.Screen name="Map" component={MapScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
