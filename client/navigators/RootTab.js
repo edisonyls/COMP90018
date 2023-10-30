@@ -31,7 +31,7 @@ const RootTab = ({ navigation }) => {
   return (
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
-        name="HomeScreen"
+        name="HomeTab"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => {
@@ -80,7 +80,7 @@ const RootTab = ({ navigation }) => {
       />
 
       <Tab.Screen
-        name="Add"
+        name="AddTab"
         component={Landing}
         options={{
           tabBarIcon: ({ focused }) => {
@@ -130,7 +130,7 @@ const RootTab = ({ navigation }) => {
         }}
       />
       <Tab.Screen
-        name="ProfileScreen"
+        name="ProfileTab"
         component={ProfileScreen}
         options={{ 
           tabBarIcon: ({ focused }) => {

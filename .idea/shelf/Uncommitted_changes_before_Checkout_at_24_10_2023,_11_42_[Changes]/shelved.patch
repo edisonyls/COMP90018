@@ -1,0 +1,79 @@
+Index: backend/.idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"4ff41828-906e-47da-9528-4fff5f66fe50\" name=\"Changes\" comment=\"controller正常使用\">\n      <change afterPath=\"$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/LogoutController.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/backend-common/src/main/java/com/comp90018/ConstantEnum.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/backend-common/src/main/java/com/comp90018/ConstantEnum.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/config/Knife4jConfig.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/config/Knife4jConfig.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/LoginController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/LoginController.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/MailController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/MailController.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/backend-controller/target/classes/application.yml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/backend-controller/target/classes/application.yml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/backend-controller/target/classes/com/comp90018/config/Knife4jConfig.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/backend-controller/target/classes/com/comp90018/config/Knife4jConfig.class\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/backend-model/src/main/java/com/comp90018/vo/UserVO.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/backend-model/src/main/java/com/comp90018/vo/UserVO.java\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/..\" />\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 0\n}</component>\n  <component name=\"ProjectId\" id=\"2Wg39zZFTWuel6u57d4ar4Xb9iw\" />\n  <component name=\"ProjectLevelVcsManager\">\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,\n    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,\n    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,\n    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\n    &quot;last_opened_file_path&quot;: &quot;/Users/tivvvv/IdeaProjects/COMP90018/backend&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RecentsManager\">\n    <key name=\"CopyFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018\" />\n      <recent name=\"$PROJECT_DIR$/backend-mapper/src/main/java/com/comp90018/mapper\" />\n      <recent name=\"$PROJECT_DIR$/backend-mapper/src/main/resources/mapper\" />\n      <recent name=\"$PROJECT_DIR$/backend-model/src/main/java/com/comp90018/pojo\" />\n      <recent name=\"$PROJECT_DIR$\" />\n    </key>\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\n      <recent name=\"com.comp90018.utils\" />\n      <recent name=\"com.comp90018.my.mapper\" />\n    </key>\n  </component>\n  <component name=\"RunManager\" selected=\"Spring Boot.Application\">\n    <configuration name=\"GeneratorDisplay\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\n      <option name=\"MAIN_CLASS_NAME\" value=\"com.imooc.mybatis.utils.GeneratorDisplay\" />\n      <module name=\"mybatis-generator-for-imooc\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"com.imooc.mybatis.utils.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"Application\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"backend-controller\" />\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"com.comp90018.Application\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"com.comp90018.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"Spring Boot.Application\" />\n        <item itemvalue=\"Application.GeneratorDisplay\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"4ff41828-906e-47da-9528-4fff5f66fe50\" name=\"Changes\" comment=\"\" />\n      <created>1697140248758</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1697140248758</updated>\n      <workItem from=\"1697140249789\" duration=\"4604000\" />\n      <workItem from=\"1697148842868\" duration=\"2948000\" />\n      <workItem from=\"1698060291324\" duration=\"16000\" />\n      <workItem from=\"1698060316424\" duration=\"3385000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"mapper and pojo\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1697148131301</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1697148131301</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"mapper, pojo and json result\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1697148329363</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1697148329363</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"application.yml\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1697149563910</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1697149563910</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"knife4j documentation\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1697163800171</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1697163800171</updated>\n    </task>\n    <task id=\"LOCAL-00005\" summary=\"controller正常使用\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1698061416461</created>\n      <option name=\"number\" value=\"00005\" />\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1698061416461</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"6\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"mapper and pojo\" />\n    <MESSAGE value=\"mapper, pojo and json result\" />\n    <MESSAGE value=\"application.yml\" />\n    <MESSAGE value=\"knife4j documentation\" />\n    <MESSAGE value=\"controller正常使用\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"controller正常使用\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/.idea/workspace.xml b/backend/.idea/workspace.xml
+--- a/backend/.idea/workspace.xml	(revision bed92b1c50c1f45b31e2305c7a779ac768dd868f)
++++ b/backend/.idea/workspace.xml	(date 1698108048745)
+@@ -4,16 +4,8 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="4ff41828-906e-47da-9528-4fff5f66fe50" name="Changes" comment="controller正常使用">
+-      <change afterPath="$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/LogoutController.java" afterDir="false" />
++    <list default="true" id="4ff41828-906e-47da-9528-4fff5f66fe50" name="Changes" comment="log out">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/backend-common/src/main/java/com/comp90018/ConstantEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend-common/src/main/java/com/comp90018/ConstantEnum.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/config/Knife4jConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/config/Knife4jConfig.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/LoginController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/MailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend-controller/src/main/java/com/comp90018/controller/MailController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/backend-controller/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend-controller/target/classes/application.yml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/backend-controller/target/classes/com/comp90018/config/Knife4jConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend-controller/target/classes/com/comp90018/config/Knife4jConfig.class" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/backend-model/src/main/java/com/comp90018/vo/UserVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend-model/src/main/java/com/comp90018/vo/UserVO.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -28,6 +20,7 @@
+     </option>
+   </component>
+   <component name="Git.Settings">
++    <option name="PUSH_AUTO_UPDATE" value="true" />
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+   </component>
+   <component name="ProjectColorInfo">{
+@@ -159,18 +152,39 @@
+       <option name="project" value="LOCAL" />
+       <updated>1698061416461</updated>
+     </task>
+-    <option name="localTasksCounter" value="6" />
++    <task id="LOCAL-00006" summary="log out">
++      <option name="closed" value="true" />
++      <created>1698107962235</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1698107962235</updated>
++    </task>
++    <option name="localTasksCounter" value="7" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
+   </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
++  </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="mapper and pojo" />
+     <MESSAGE value="mapper, pojo and json result" />
+     <MESSAGE value="application.yml" />
+     <MESSAGE value="knife4j documentation" />
+     <MESSAGE value="controller正常使用" />
+-    <option name="LAST_COMMIT_MESSAGE" value="controller正常使用" />
++    <MESSAGE value="log out" />
++    <option name="LAST_COMMIT_MESSAGE" value="log out" />
++    <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
+   </component>
+ </project>
+\ No newline at end of file

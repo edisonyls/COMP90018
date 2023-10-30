@@ -20,18 +20,12 @@ import javax.validation.Valid;
 
 @RestController
 @Slf4j
-@Api(tags = "mail controller")
+@Api(tags = "sign up controller")
 @RequestMapping("verify")
-public class MailController {
-
-    @Autowired
-    RedisOperator redis;
+public class SignUpController extends BaseController{
 
     @Autowired
     MailService mailService;
-
-    @Autowired
-    UserService userService;
 
     @PostMapping("/sendMail")
     public JSONResult send(@RequestParam String email, HttpServletRequest httpServletRequest) {

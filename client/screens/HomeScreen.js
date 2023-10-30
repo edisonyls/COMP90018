@@ -19,8 +19,51 @@ const Tab = createBottomTabNavigator();
 const HomeScreen = () => {
   const [type, setType] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
-  const [mainData, setMainData] = useState(["hi"]);
-  const [selectedMenu, setSelectedMenu] = useState("all"); 
+  const [mainData, setMainData] = useState([
+    {
+      id: "post_id_1",
+      imageSrc: require("./../assets/dog_example_1.jpg"),
+      badge: "Missing",
+      petName: "Ross",
+      petKind: "British",
+      location: "West Melbourne",
+      title: "$100 Reward",
+    },
+    {
+      id: "post_id_2",
+      imageSrc: require("./../assets/logo.jpg"),
+      badge: "Found",
+      petName: "Miso",
+      petKind: "Sausage",
+      location: "Carlton",
+      title: "Seen at Carlton",
+    },
+    {
+      id: "post_id_3",
+      imageSrc: require("./../assets/logo.jpg"),
+      badge: "General",
+      petName: "Miso",
+      petKind: "Sausage",
+      location: "Carlton",
+      title:
+        "This is a really long title, I want to see how it looks like when it is too long to fit in the card",
+    },
+  ]);
+
+  const filteredData = mainData.filter((item) => {
+    switch (type) {
+      case "all":
+        return true;
+      case "missing":
+        return item.badge === "Missing";
+      case "found":
+        return item.badge === "Found";
+      case "general":
+        return item.badge === "General";
+      default:
+        return true;
+    }
+  });
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -36,7 +79,7 @@ const HomeScreen = () => {
           <ActivityIndicator size="large" color="#0B646B" />
         </View>
       ) : (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
           <View className="flex-row items-between justify-between px-8">
             <View>
               <Text className="text-[40px] text-[#0B646B] font-bold">
@@ -118,37 +161,18 @@ const HomeScreen = () => {
 
             ):null}
             <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">
-              {mainData?.length > 0 ? (
-                <>
-                  {/* need unique key */}
+              {filteredData?.length > 0 ? (
+                filteredData.map((item) => (
                   <ItemCardContainer
-                    key={"post_id_1"}
-                    imageSrc={require("./../assets/dog_example_1.jpg")}
-                    badge="Missing"
-                    petName="Ross"
-                    petKind="British"
-                    location="West Melbourne"
-                    title="$100 Reward"
+                    key={item.id}
+                    imageSrc={item.imageSrc}
+                    badge={item.badge}
+                    petName={item.petName}
+                    petKind={item.petKind}
+                    title={item.title}
+                    location={item.location}
                   />
-                  <ItemCardContainer
-                    key={"post_id_2"}
-                    imageSrc={require("./../assets/logo.jpg")}
-                    badge="Found"
-                    petName="Miso"
-                    petKind="Sausage"
-                    title="Seen at Carlton"
-                    location="Carlton"
-                  />
-                  <ItemCardContainer
-                    key={"post_id_3"}
-                    imageSrc={require("./../assets/logo.jpg")}
-                    badge="General"
-                    petName="Miso"
-                    petKind="Sausage"
-                    title="This is a really long title, I want to see how it looks like when it is too long to fit in the card"
-                    location="Carlton"
-                  />
-                </>
+                ))
               ) : (
                 <>
                   <View className="w-full h-[400px] items-center space-y-8 justify-center">
