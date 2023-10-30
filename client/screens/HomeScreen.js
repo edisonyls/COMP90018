@@ -19,6 +19,7 @@ const Tab = createBottomTabNavigator();
 const HomeScreen = () => {
   const [type, setType] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState("All");
   const [mainData, setMainData] = useState([
     {
       id: "post_id_1",
@@ -100,13 +101,19 @@ const HomeScreen = () => {
               Category
             </Text>
           </View>
-          <View className="flex-row item-center justify-center px-8 mt-4">
+          <ScrollView 
+            horizontal={true} // 开启横向滚动
+            showsHorizontalScrollIndicator={false} // 当你不想显示滚动条时
+            // 你也可以添加一些额外的样式和属性，例如分页等
+          >
+             <View className="flex-row item-center justify-center px-8 mt-4">
             <MenuContainer
               key={"all"}
               title="All"
               imageSrc={require("../assets/dog.png")}
               type={type}
               setType={setType}
+              setSelectedMenu={setSelectedMenu} 
             />
             <MenuContainer
               key={"missing"}
@@ -114,6 +121,7 @@ const HomeScreen = () => {
               imageSrc={require("../assets/dog.png")}
               type={type}
               setType={setType}
+              setSelectedMenu={setSelectedMenu} 
             />
             <MenuContainer
               key={"found"}
@@ -121,6 +129,7 @@ const HomeScreen = () => {
               imageSrc={require("../assets/dog.png")}
               type={type}
               setType={setType}
+              setSelectedMenu={setSelectedMenu} 
             />
             <MenuContainer
               key={"general"}
@@ -128,8 +137,13 @@ const HomeScreen = () => {
               imageSrc={require("../assets/dog.png")}
               type={type}
               setType={setType}
+              setSelectedMenu={setSelectedMenu} 
             />
-          </View>
+          </View> 
+
+            
+          </ScrollView>
+          
           <View>
             <View className="flex-row items-center justify-between px-4 mt-4">
               <Text className="text-[#2C7379] text-[20px] font-bold">
@@ -142,7 +156,11 @@ const HomeScreen = () => {
                 <AntDesign name="doubleright" size={12} color="#A0C4C7" />
               </TouchableOpacity>
             </View>
+            {selectedMenu === "all" ? (
+                <View>
+                </View>
 
+            ):null}
             <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">
               {filteredData?.length > 0 ? (
                 filteredData.map((item) => (

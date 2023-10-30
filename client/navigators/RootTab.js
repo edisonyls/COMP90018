@@ -8,6 +8,8 @@ import Register from "../screens/RegisterScreen";
 import { Entypo } from "@expo/vector-icons";
 import Landing from "../screens/Landing";
 import { Ionicons } from "@expo/vector-icons";
+import MapScreen from "../screens/MapScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -53,8 +55,8 @@ const RootTab = ({ navigation }) => {
         }}
       />
       <Tab.Screen
-        name="SignInTab"
-        component={SignIn}
+        name="MapScreen"
+        component={MapScreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
@@ -104,8 +106,8 @@ const RootTab = ({ navigation }) => {
       />
 
       <Tab.Screen
-        name="RegisterTab"
-        component={Register}
+        name="Landing"
+        component={Landing}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
@@ -129,8 +131,8 @@ const RootTab = ({ navigation }) => {
       />
       <Tab.Screen
         name="ProfileTab"
-        component={Landing}
-        options={{
+        component={ProfileScreen}
+        options={{ 
           tabBarIcon: ({ focused }) => {
             return (
               <View className="items-center justify-center">
