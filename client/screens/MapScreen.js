@@ -61,6 +61,7 @@ const scaleValue = new Animated.Value(0); // 初始值为0
 });
   const MapScreen = () => {
     const [type, setType] = useState("all");
+    const [selectedMenu, setSelectedMenu] = useState("all"); 
     const [isLoading, setIsLoading] = useState(false); 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
