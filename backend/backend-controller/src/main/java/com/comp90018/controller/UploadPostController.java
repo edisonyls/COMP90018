@@ -54,7 +54,7 @@ public class UploadPostController extends BaseController {
         try {
             byte[] imageBytes = Base64.getDecoder().decode(postImg);
             InputStream imageStream = new ByteArrayInputStream(imageBytes);
-            String extension = ".jpg"; // Defaulting to .jpg, you can adjust this if you have the extension.
+            String extension = ".jpg";
             String uniqueFileName = userId + "_" + System.currentTimeMillis() + extension;
             MinIOUtils.uploadFile(minIOConfig.getBucketName(), uniqueFileName, imageStream);
             postImg = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + uniqueFileName;
