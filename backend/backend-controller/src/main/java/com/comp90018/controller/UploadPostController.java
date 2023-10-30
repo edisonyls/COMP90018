@@ -28,7 +28,7 @@ public class UploadPostController extends BaseController {
     PostService postService;
 
     @PostMapping("/uploadPost")
-    public JSONResult uploadPost(@ModelAttribute UploadPostBO uploadPostBO, @RequestParam("file") MultipartFile file) {
+    public JSONResult uploadPost(@RequestPart("uploadPostBO") UploadPostBO uploadPostBO, @RequestParam("file") MultipartFile file) {
 
         String userId = uploadPostBO.getUserId();
         String postType = uploadPostBO.getPostType();
