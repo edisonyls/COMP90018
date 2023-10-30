@@ -19,6 +19,7 @@ const Tab = createBottomTabNavigator();
 const HomeScreen = () => {
   const [type, setType] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState("post");
   const [mainData, setMainData] = useState([
     {
       id: "post_id_1",
@@ -112,7 +113,7 @@ const HomeScreen = () => {
               imageSrc={require("../assets/dog.png")}
               type={type}
               setType={setType}
-              //setSelectedMenu={setSelectedMenu} 
+              setSelectedMenu={setSelectedMenu} 
             />
             <MenuContainer
               key={"missing"}
@@ -120,7 +121,7 @@ const HomeScreen = () => {
               imageSrc={require("../assets/dog.png")}
               type={type}
               setType={setType}
-              //setSelectedMenu={setSelectedMenu} 
+              setSelectedMenu={setSelectedMenu} 
             />
             <MenuContainer
               key={"found"}
@@ -128,7 +129,7 @@ const HomeScreen = () => {
               imageSrc={require("../assets/dog.png")}
               type={type}
               setType={setType}
-              //setSelectedMenu={setSelectedMenu} 
+              setSelectedMenu={setSelectedMenu} 
             />
             <MenuContainer
               key={"general"}
@@ -136,7 +137,7 @@ const HomeScreen = () => {
               imageSrc={require("../assets/dog.png")}
               type={type}
               setType={setType}
-              //setSelectedMenu={setSelectedMenu} 
+              setSelectedMenu={setSelectedMenu} 
             />
           </View> 
 
