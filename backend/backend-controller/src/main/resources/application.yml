@@ -13,7 +13,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/comp-test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/mobile?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: root
     password: root
     hikari:
