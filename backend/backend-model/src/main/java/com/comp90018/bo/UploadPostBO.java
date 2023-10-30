@@ -35,4 +35,8 @@ public class UploadPostBO {
 
     private String postImg;
 
+    private String rewards;
+
+    private String tag;
+
 }
