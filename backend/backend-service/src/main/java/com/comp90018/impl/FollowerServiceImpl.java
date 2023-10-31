@@ -6,11 +6,13 @@ import com.comp90018.mapper.FollowersMapper;
 import com.comp90018.pojo.Followers;
 import com.comp90018.service.FollowerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
+@Service
 public class FollowerServiceImpl implements FollowerService {
     @Autowired
     private Sid sid;
