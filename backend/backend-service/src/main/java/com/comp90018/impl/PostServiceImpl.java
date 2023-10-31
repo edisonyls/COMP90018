@@ -150,6 +150,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public Post updatePost(UploadPostBO uploadPostBO) {
         Example example = new Example(Post.class);
         example.createCriteria().andEqualTo("id", uploadPostBO.getPostId());
