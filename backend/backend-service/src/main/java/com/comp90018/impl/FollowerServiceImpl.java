@@ -33,14 +33,32 @@ public class FollowerServiceImpl implements FollowerService {
         //the sequence of following and follower should be inverse
         Followers following = queryIsFollower(followingId, followerId);
         if(following != null) {
-            following.setIsFollowerFriendOfMine(FriendEnum.YES.getFriend());
+            following.setIsFollowerFriendOfMine(FriendEnum.YES.getFriendRelation());
             followersMapper.updateByPrimaryKey(following);
 
-            follower.setIsFollowerFriendOfMine(FriendEnum.YES.getFriend());
+            follower.setIsFollowerFriendOfMine(FriendEnum.YES.getFriendRelation());
         }else {
-            follower.setIsFollowerFriendOfMine(FriendEnum.NO.getFriend());
+            follower.setIsFollowerFriendOfMine(FriendEnum.NO.getFriendRelation());
         }
         followersMapper.insert(follower);
+    }
+
+    @Transactional
+    @Override
+    public void unFollow(String followerId, String followingId) {
+        Followers following = queryIsFollower(followerId, followingId);
+        if(following == null) {
+            return;
+        }
+
+        if(following.getIsFollowerFriendOfMine() == FriendEnum.NO.getFriendRelation()) {
+            followersMapper.delete(following);
+        }else {
+            Followers following2 = queryIsFollower(followingId, followerId);
+            following2.setIsFollowerFriendOfMine(FriendEnum.NO.getFriendRelation());
+            followersMapper.updateByPrimaryKeySelective(following2);
+            followersMapper.delete(following);
+        }
     }
 
     public Followers queryIsFollower(String followerId, String followingId) {

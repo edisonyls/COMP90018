@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public enum FriendEnum {
     NO(0),
     YES(1);
-    private int friend;
+    private int friendRelation;
 }
