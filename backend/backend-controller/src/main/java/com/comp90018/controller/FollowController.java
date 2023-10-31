@@ -1,6 +1,7 @@
 package com.comp90018.controller;
 
 import com.comp90018.bo.PostBO;
+import com.comp90018.enums.RedisEnum;
 import com.comp90018.enums.ResponseStatusEnum;
 import com.comp90018.jsonResult.JSONResult;
 import com.comp90018.pojo.Users;
@@ -37,6 +38,12 @@ public class FollowController extends BaseController{
         }
 
         followerService.doFollow(id, posterId);
+
+        redis.set(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + id + ":" + posterId, "0");
+
+        redis.increment(RedisEnum.REDIS_FOLLOW_NUM + id, 1);
+        redis.increment(RedisEnum.REDIS_FAN_NUM + posterId, 1);
+
         return JSONResult.ok();
     }
 }
