@@ -24,6 +24,11 @@ public class FollowerServiceImpl implements FollowerService {
     @Autowired
     private FollowersMapper followersMapper;
 
+    @Override
+    public boolean checkFollow(String followerId, String followingId) {
+        return queryIsFollower(followerId, followingId) != null;
+    }
+
     @Transactional
     @Override
     public void doFollow(String followerId, String followingId) {

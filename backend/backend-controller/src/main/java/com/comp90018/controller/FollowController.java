@@ -41,4 +41,18 @@ public class FollowController extends BaseController{
 
         return JSONResult.ok();
     }
+
+    @PostMapping("unfollow")
+    public JSONResult unfollow(@RequestParam String id, @RequestParam String posterId) {
+
+        followerService.unFollow(id, posterId);
+
+        return JSONResult.ok();
+    }
+
+    @PostMapping("checkfollow")
+    public JSONResult checkfollow(@RequestParam String id, @RequestParam String posterId) {
+        return followerService.checkFollow(id, posterId)? JSONResult.ok(ResponseStatusEnum.ALREADY_FOLLOW)
+                : JSONResult.ok(ResponseStatusEnum.HAS_NOT_FOLLOW);
+    }
 }
