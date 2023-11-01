@@ -1,10 +1,12 @@
 package com.comp90018.impl;
 
 import com.comp90018.enums.FriendEnum;
+import com.comp90018.enums.RedisEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.FollowersMapper;
 import com.comp90018.pojo.Followers;
 import com.comp90018.service.FollowerService;
+import com.comp90018.utils.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ public class FollowerServiceImpl implements FollowerService {
     @Autowired
     private Sid sid;
 
+    @Autowired
+    private RedisOperator redis;
     @Autowired
     private FollowersMapper followersMapper;
 
@@ -41,6 +45,10 @@ public class FollowerServiceImpl implements FollowerService {
             follower.setIsFollowerFriendOfMine(FriendEnum.NO.getFriendRelation());
         }
         followersMapper.insert(follower);
+        redis.set(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + followerId + ":" + followingId, "0");
+
+        redis.increment(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1);
+        redis.increment(RedisEnum.REDIS_FAN_NUM + followingId, 1);
     }
 
     @Transactional
@@ -59,6 +67,10 @@ public class FollowerServiceImpl implements FollowerService {
             followersMapper.updateByPrimaryKeySelective(following2);
             followersMapper.delete(following);
         }
+        redis.del(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + followerId + ":" + followingId);
+
+        redis.decrement(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1);
+        redis.decrement(RedisEnum.REDIS_FAN_NUM + followingId, 1);
     }
 
     public Followers queryIsFollower(String followerId, String followingId) {

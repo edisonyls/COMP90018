@@ -39,11 +39,6 @@ public class FollowController extends BaseController{
 
         followerService.doFollow(id, posterId);
 
-        redis.set(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + id + ":" + posterId, "0");
-
-        redis.increment(RedisEnum.REDIS_FOLLOW_NUM + id, 1);
-        redis.increment(RedisEnum.REDIS_FAN_NUM + posterId, 1);
-
         return JSONResult.ok();
     }
 }
