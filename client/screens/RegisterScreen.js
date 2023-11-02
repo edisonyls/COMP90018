@@ -29,6 +29,8 @@ import {
   WelcomeText,
   CheckBoxView,
   StyledCheckBox,
+  ModalViewWrap,
+  ModalInnerView,
 } from "../components/styles";
 import { Octicons, Ionicons } from "@expo/vector-icons";
 
@@ -190,27 +192,11 @@ const Register = ({ navigation }) => {
               console.log("close modal");
             }}
           >
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#00000040",
-              }}
-            >
-              <View
-                style={{
-                  width: 100,
-                  height: 100,
-                  backgroundColor: "white",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 10,
-                }}
-              >
+            <ModalViewWrap>
+              <ModalInnerView>
                 <ActivityIndicator size="large" color={brand} />
-              </View>
-            </View>
+              </ModalInnerView>
+            </ModalViewWrap>
           </Modal>
         )}
       </StyledContainer>
