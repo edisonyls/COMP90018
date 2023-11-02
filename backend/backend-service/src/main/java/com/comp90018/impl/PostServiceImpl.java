@@ -31,7 +31,6 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public Post createPost(UploadPostBO uploadPostBO) {
         Post post = new Post();
-
         post.setLikesCounts(0);
         post.setCommentsCounts(0);
         post.setPrivateLevel(0);
@@ -140,11 +139,12 @@ public class PostServiceImpl implements PostService {
     public boolean deletedPost(String postId) {
         Example example = new Example(Post.class);
         example.createCriteria().andEqualTo("id", postId);
-        if (postMapper.selectByExample(example).isEmpty()) {
+        List<Post> post = postMapper.selectByExample(example);
+        if (post.isEmpty()) {
             return false;
         }
         else {
-            postMapper.delete(postMapper.selectOneByExample(example));
+            postMapper.delete(post.get(0));
             return true;
         }
     }

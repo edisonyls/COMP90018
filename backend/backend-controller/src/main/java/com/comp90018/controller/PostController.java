@@ -19,10 +19,10 @@ import java.util.List;
 @Slf4j
 @Api(tags = "post")
 @RequestMapping("post")
-public class UploadPostController extends BaseController {
+public class PostController extends BaseController {
 
-    @Autowired
-    RedisOperator redis;
+//    @Autowired
+//    RedisOperator redis;
 
     @Autowired
     PostService postService;
@@ -43,7 +43,7 @@ public class UploadPostController extends BaseController {
             String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
             uploadPostBO.setPostImg(imgUrl);
         }
-        Post post = postService.createPost(uploadPostBO);
+        Post post = postService. createPost(uploadPostBO);
         if (post == null) {
             return JSONResult.errorMsg("Required information cannot be blank");
         }
@@ -60,7 +60,7 @@ public class UploadPostController extends BaseController {
     }
 
     @GetMapping("getAllPostsPerUser")
-    public JSONResult getAllPostsPerUser(@RequestParam String userId) {
+    public JSONResult getAllPostsPerUser(@RequestBody String userId) {
         List<Post> postList = postService.getAllPostPerUser(userId);
         if (postList.isEmpty()) {
             return JSONResult.errorMsg("This user does not have post");
@@ -78,7 +78,7 @@ public class UploadPostController extends BaseController {
     }
 
     @PostMapping("updatePost")
-    public JSONResult updatePost(@RequestBody UploadPostBO uploadPostBO, MultipartFile multipartFile) {
+    public JSONResult updatePost(@RequestParam UploadPostBO uploadPostBO, MultipartFile multipartFile) {
         Post post = null;
         if (multipartFile == null) {
             post = postService.updatePost(uploadPostBO);
@@ -99,6 +99,5 @@ public class UploadPostController extends BaseController {
         }
         return JSONResult.ok(post);
     }
-
 
 }

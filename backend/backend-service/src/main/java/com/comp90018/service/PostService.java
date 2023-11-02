@@ -2,7 +2,6 @@ package com.comp90018.service;
 import com.comp90018.bo.UploadPostBO;
 import com.comp90018.pojo.Post;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface PostService {
