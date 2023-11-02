@@ -47,47 +47,20 @@ const Register = ({ navigation }) => {
     ]);
   };
 
-  // const handleFormSubmission = async (values) => {
-  //   setIsLoading(true);
-  //   console.log(values);
-  //   const res = await sendVerifyRequest(values.email);
-  //   if (res.success) {
-  //     navigation.navigate("Verify", {
-  //       email: values.email,
-  //       password: values.password,
-  //       username: values.userName,
-  //     });
-  //   } else {
-  //     console.log("Register failing...");
-  //   }
-  //   setIsLoading(false);
-  // };
-
-  const handleFormSubmission = (values) => {
-    axios
-      .post(
-        "http://192.168.0.10:8080/verify/sendMail",
-        {},
-        {
-          params: {
-            email: values.email,
-          },
-        }
-      )
-      .then((response) => {
-        if (response.data) {
-          navigation.navigate("Verify", {
-            email: values.email,
-            password: values.password,
-            username: values.userName,
-          });
-        } else {
-          console.log("Register failing...");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
+  const handleFormSubmission = async (values) => {
+    setIsLoading(true);
+    const res = await sendVerifyRequest(values.email);
+    if (res.data) {
+      setIsLoading(false);
+      navigation.navigate("Verify", {
+        email: values.email,
+        password: values.password,
+        username: values.userName,
       });
+    } else {
+      console.log("Register failing...");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -195,7 +168,7 @@ const Register = ({ navigation }) => {
             )}
           </Formik>
         </InnerContainer>
-        {/* {isLoading && (
+        {isLoading && (
           <Modal
             transparent={true}
             animationType="none"
@@ -226,7 +199,7 @@ const Register = ({ navigation }) => {
               </View>
             </View>
           </Modal>
-        )} */}
+        )}
       </StyledContainer>
     </KeyboardAvoidingWrapper>
   );

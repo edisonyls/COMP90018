@@ -15,9 +15,6 @@ import { Feather } from "@expo/vector-icons";
 import { verifyEmail } from "../api/auth";
 
 let newInputIndex = 0;
-const isObjValid = (obj) => {
-  Object.values(obj).every((val) => val.trim());
-};
 
 const VerifyScreen = ({ navigation, route }) => {
   const [OTP, setOTP] = useState({ 0: "", 1: "", 2: "", 3: "", 4: "", 5: "" });
@@ -52,14 +49,16 @@ const VerifyScreen = ({ navigation, route }) => {
     };
 
     const code = convertToObject(OTP);
-    console.log(code);
-
-    const res = await verifyEmail(code, email, password, username);
-    if (!res.success) {
-      console.log("Register is failed");
+    if (code.length !== 6) {
+      Alert.alert("Invalid Verification", "Please Enter 6 Digits");
+    } else {
+      const res = await verifyEmail(code, email, password, username);
+      if (!res.success) {
+        console.log("Register is failed");
+      }
+      console.log(res.data);
+      navigation.navigate("Home", { user: res.data });
     }
-    console.log(res.data);
-    navigation.navigate("Home", { user: res.data });
   };
 
   return (
