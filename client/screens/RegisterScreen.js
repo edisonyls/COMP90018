@@ -3,13 +3,11 @@ import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import axios from "axios";
 import { Text, View, Alert, ActivityIndicator, Modal } from "react-native";
-import Checkbox from "expo-checkbox";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import {
   StyledContainer,
   InnerContainer,
   PageLogo,
-  PageTitle,
   SubTitle,
   StyledFormArea,
   LeftIcon,
