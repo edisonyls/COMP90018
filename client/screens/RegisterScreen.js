@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import axios from "axios";
-import { Text, View, Alert } from "react-native";
+import { Text, View, Alert, ActivityIndicator, Modal } from "react-native";
 import Checkbox from "expo-checkbox";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import {
@@ -30,14 +30,15 @@ import {
   CheckBoxView,
   StyledCheckBox,
 } from "../components/styles";
-import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
+import { Octicons, Ionicons } from "@expo/vector-icons";
 
-const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
+const { darkLight, brand } = Colors;
 
 const Register = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const AlertPopUp = () => {
     Alert.alert("Password not matched", "Please re-enter your password", [
@@ -46,6 +47,7 @@ const Register = ({ navigation }) => {
   };
 
   const handleFormSubmission = (values) => {
+    setIsLoading(true);
     axios
       .post(
         "http://localhost:8080/verify/sendMail",
@@ -66,9 +68,11 @@ const Register = ({ navigation }) => {
         } else {
           console.log("Register failing...");
         }
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log("There is an error while registering");
+        setIsLoading(false);
       });
   };
 
@@ -177,6 +181,38 @@ const Register = ({ navigation }) => {
             )}
           </Formik>
         </InnerContainer>
+        {isLoading && (
+          <Modal
+            transparent={true}
+            animationType="none"
+            visible={isLoading}
+            onRequestClose={() => {
+              console.log("close modal");
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#00000040",
+              }}
+            >
+              <View
+                style={{
+                  width: 100,
+                  height: 100,
+                  backgroundColor: "white",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 10,
+                }}
+              >
+                <ActivityIndicator size="large" color={brand} />
+              </View>
+            </View>
+          </Modal>
+        )}
       </StyledContainer>
     </KeyboardAvoidingWrapper>
   );
