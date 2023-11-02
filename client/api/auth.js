@@ -2,12 +2,15 @@ import axios from "axios";
 
 export const verifyEmail = async (code, email, password, username) => {
   try {
-    const response = await axios.post("http://localhost:8080/verify/signup", {
-      code: code,
-      email: email,
-      password: password,
-      username: username,
-    });
+    const response = await axios.post(
+      "http://192.168.0.10:8080/verify/signup",
+      {
+        code: code,
+        email: email,
+        password: password,
+        username: username,
+      }
+    );
     return response;
   } catch (error) {
     console.log(error);

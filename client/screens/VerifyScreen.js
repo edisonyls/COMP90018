@@ -44,18 +44,22 @@ const VerifyScreen = ({ navigation, route }) => {
   }, [nextInputIndex]);
 
   const submitOTP = async () => {
-    Keyboard.dismiss();
-    if (isObjValid(OTP)) {
-      let code = "";
-      Object.values(OTP).forEach((value) => {
-        code += value;
-      });
-      // const res = await verifyEmail(code, email, password, username);
-      // if (!res.success) {
-      //   console.log("Register is failed");
-      // }
-      // navigation.dispatch(StackActions.replace("Home", { profile: res.data }));
+    const convertToObject = (otpObj) => {
+      return Object.keys(otpObj)
+        .sort()
+        .map((key) => otpObj[key])
+        .join("");
+    };
+
+    const code = convertToObject(OTP);
+    console.log(code);
+
+    const res = await verifyEmail(code, email, password, username);
+    if (!res.success) {
+      console.log("Register is failed");
     }
+    console.log(res.data);
+    navigation.navigate("Home", { user: res.data });
   };
 
   return (

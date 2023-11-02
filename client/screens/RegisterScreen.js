@@ -66,7 +66,7 @@ const Register = ({ navigation }) => {
   const handleFormSubmission = (values) => {
     axios
       .post(
-        "http://localhost:8080/verify/sendMail",
+        "http://192.168.0.10:8080/verify/sendMail",
         {},
         {
           params: {
