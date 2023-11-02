@@ -31,6 +31,7 @@ import {
   ModalInnerView,
 } from "../components/styles";
 import { Octicons, Ionicons } from "@expo/vector-icons";
+import { sendVerifyRequest } from "../api/auth";
 
 const { darkLight, brand } = Colors;
 
@@ -46,8 +47,23 @@ const Register = ({ navigation }) => {
     ]);
   };
 
+  // const handleFormSubmission = async (values) => {
+  //   setIsLoading(true);
+  //   console.log(values);
+  //   const res = await sendVerifyRequest(values.email);
+  //   if (res.success) {
+  //     navigation.navigate("Verify", {
+  //       email: values.email,
+  //       password: values.password,
+  //       username: values.userName,
+  //     });
+  //   } else {
+  //     console.log("Register failing...");
+  //   }
+  //   setIsLoading(false);
+  // };
+
   const handleFormSubmission = (values) => {
-    setIsLoading(true);
     axios
       .post(
         "http://localhost:8080/verify/sendMail",
@@ -59,7 +75,7 @@ const Register = ({ navigation }) => {
         }
       )
       .then((response) => {
-        if (response.data.success) {
+        if (response.data) {
           navigation.navigate("Verify", {
             email: values.email,
             password: values.password,
@@ -68,11 +84,9 @@ const Register = ({ navigation }) => {
         } else {
           console.log("Register failing...");
         }
-        setIsLoading(false);
       })
       .catch((error) => {
-        console.log("There is an error while registering");
-        setIsLoading(false);
+        console.log(error);
       });
   };
 
@@ -181,7 +195,7 @@ const Register = ({ navigation }) => {
             )}
           </Formik>
         </InnerContainer>
-        {isLoading && (
+        {/* {isLoading && (
           <Modal
             transparent={true}
             animationType="none"
@@ -190,13 +204,29 @@ const Register = ({ navigation }) => {
               console.log("close modal");
             }}
           >
-            <ModalViewWrap>
-              <ModalInnerView>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#00000040",
+              }}
+            >
+              <View
+                style={{
+                  width: 100,
+                  height: 100,
+                  backgroundColor: "white",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 10,
+                }}
+              >
                 <ActivityIndicator size="large" color={brand} />
-              </ModalInnerView>
-            </ModalViewWrap>
+              </View>
+            </View>
           </Modal>
-        )}
+        )} */}
       </StyledContainer>
     </KeyboardAvoidingWrapper>
   );

@@ -181,19 +181,3 @@ export const StyledCheckBox = styled(Checkbox)`
   margin-right: 10px;
   margin-left: 10px;
 `;
-
-export const ModalViewWrap = styled.View`
-  flex: 1;
-  align-items: "center";
-  justify-content: "center";
-  background-color: "#00000040";
-`;
-
-export const ModalInnerView = styled.View`
-  width: 100;
-  height: 100;
-  background-color: "white";
-  align-items: "center";
-  justify-content: "center";
-  border-radius: 10;
-`;

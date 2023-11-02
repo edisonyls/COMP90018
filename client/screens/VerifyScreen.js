@@ -1,55 +1,97 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Alert,
+  KeyboardAvoidingView,
+  Dimensions,
+  TouchableOpacity,
+  Keyboard,
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { verifyEmail } from "../api/auth";
+
+let newInputIndex = 0;
+const isObjValid = (obj) => {
+  Object.values(obj).every((val) => val.trim());
+};
 
 const VerifyScreen = ({ navigation, route }) => {
-  const [code, setCode] = useState("");
+  const [OTP, setOTP] = useState({ 0: "", 1: "", 2: "", 3: "", 4: "", 5: "" });
+  const [nextInputIndex, setNextInputIndex] = useState(0);
 
+  const inputs = Array(6).fill("");
+  const input = useRef();
   const { email, password, username } = route.params;
+  const { width } = Dimensions.get("window");
+  const inputWidth = Math.round(width / 8);
 
-  const handleVerification = () => {
-    axios
-      .post("http://localhost:8080/verify/signup", {
-        code: code,
-        email: email,
-        password: password,
-        username: username,
-      })
-      .then((response) => {
-        if (response.data.success) {
-          // Handle successful signup e.g., navigate to a welcome screen or home screen
-          navigation.navigate("Home");
-        } else {
-          Alert.alert(
-            "Signup Failed",
-            "There was an error during signup. Please try again."
-          );
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error during signup.", error);
+  const handleChangeText = (text, index) => {
+    const newOTP = { ...OTP };
+    newOTP[index] = text;
+    setOTP(newOTP);
+    const lastInputIndex = inputs.length - 1;
+    if (!text) newInputIndex = index === 0 ? 0 : index - 1;
+    else newInputIndex = index === lastInputIndex ? lastInputIndex : index + 1;
+    setNextInputIndex(newInputIndex);
+  };
+
+  useEffect(() => {
+    input.current.focus();
+  }, [nextInputIndex]);
+
+  const submitOTP = async () => {
+    Keyboard.dismiss();
+    if (isObjValid(OTP)) {
+      let code = "";
+      Object.values(OTP).forEach((value) => {
+        code += value;
       });
+      // const res = await verifyEmail(code, email, password, username);
+      // if (!res.success) {
+      //   console.log("Register is failed");
+      // }
+      // navigation.dispatch(StackActions.replace("Home", { profile: res.data }));
+    }
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Enter the 4-digit code sent to your email:</Text>
-      <TextInput
-        style={{
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          width: 200,
-          textAlign: "center",
-          marginTop: 20,
-        }}
-        keyboardType="numeric"
-        maxLength={6}
-        onChangeText={(text) => setCode(text)}
-        value={code}
-      />
-      <Button title="Verify" onPress={handleVerification} />
-    </View>
+    <KeyboardAvoidingView className="flex-1 justify-center">
+      <Text className="text-[#6D28D9] text-center mb-3">
+        Please Verify your email, PIN has been sent yo your email
+      </Text>
+      <View
+        className="flex-row justify-between"
+        style={{ paddingHorizontal: inputWidth / 2 }}
+      >
+        {inputs.map((inp, index) => {
+          return (
+            <View
+              key={index.toString()}
+              className="border-[#6D28D9] border-2 justify-center items-center"
+              style={{ width: inputWidth, height: inputWidth }}
+            >
+              <TextInput
+                value={OTP[index]}
+                onChangeText={(text) => handleChangeText(text, index)}
+                placeholder="0"
+                className="text-[25px]"
+                keyboardType="numeric"
+                maxLength={1}
+                ref={nextInputIndex === index ? input : null}
+                style={{ paddingHorizontal: 15, paddingVertical: 15 }}
+              />
+            </View>
+          );
+        })}
+      </View>
+      <TouchableOpacity className="mt-10 items-center" onPress={submitOTP}>
+        <Feather name="check-circle" size={36} color="#6D28D9" />
+      </TouchableOpacity>
+    </KeyboardAvoidingView>
   );
 };
 
