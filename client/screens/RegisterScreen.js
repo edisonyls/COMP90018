@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
+import axios from "axios";
 import { Text, View, Alert } from "react-native";
 import Checkbox from "expo-checkbox";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
@@ -44,6 +45,33 @@ const Register = ({ navigation }) => {
     ]);
   };
 
+  const handleFormSubmission = (values) => {
+    axios
+      .post(
+        "http://localhost:8080/verify/sendMail",
+        {},
+        {
+          params: {
+            email: values.email,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.data.success) {
+          navigation.navigate("Verify", {
+            email: values.email,
+            password: values.password,
+            username: values.userName,
+          });
+        } else {
+          console.log("Register failing...");
+        }
+      })
+      .catch((error) => {
+        console.log("There is an error while registering");
+      });
+  };
+
   return (
     <KeyboardAvoidingWrapper>
       <StyledContainer>
@@ -69,9 +97,7 @@ const Register = ({ navigation }) => {
               password: "",
               confirmPassword: "",
             }}
-            onSubmit={(values) => {
-              console.log(values);
-            }}
+            onSubmit={handleFormSubmission}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
               <StyledFormArea>
