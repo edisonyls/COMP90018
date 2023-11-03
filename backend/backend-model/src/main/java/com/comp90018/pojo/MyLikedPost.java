@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
+//@Entity
 @Table(name = "my_liked_post")
 public class MyLikedPost {
     @Id
