@@ -10,11 +10,14 @@ import {
     Dimensions, 
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState,useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import profileData from '../assets/profileData.json';
+import { useProfile } from '../navigators/ProfileContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,14 +26,42 @@ const ProfileScreen = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [mainData, setMainData] = useState(["hi"]);
     const [selectedMenu, setSelectedMenu] = useState("post"); // 默认选中“post”
-  
+    const [backgroundUri, setBackgroundUri] = useState(null);
+    const [headUri, setHeadUri] = useState(null);
+    //const { backgroundUri, headUri } = useProfile();
     const navigation = useNavigation();
+    
     useLayoutEffect(() => {
       navigation.setOptions({
         headerShown: false,
       });
     },[navigation]);
-  
+   
+    useEffect(() => {
+      const loadImages = async () => {
+          const savedBackgroundUri = await AsyncStorage.getItem('@backgroundUri');
+          const savedHeadUri = await AsyncStorage.getItem('@headUri');
+          if (savedBackgroundUri) {
+              setBackgroundUri(savedBackgroundUri);
+          }
+          if (savedHeadUri) {
+              setHeadUri(savedHeadUri);
+          }
+      };
+
+      loadImages();
+  }, []);
+    const getImageSource = (image) => {
+      if (typeof image === 'string') {
+        // 添加时间戳查询参数以绕过缓存
+        const uriWithTimestamp = `${image}?timestamp=${new Date().getTime()}`;
+        return { uri: uriWithTimestamp };
+      } else {
+        return image;
+      }
+    };
+
+    
     return (
       <SafeAreaView className="flex-1 bg-white relative">
         {isLoading ? (
@@ -41,16 +72,24 @@ const ProfileScreen = () => {
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.imageContainer}>
             <Image
+              key={backgroundUri} 
               style={styles.backgroundImage}
-              source={require("../assets/BcakGround.jpg")}
+              source={getImageSource(backgroundUri)}
+              
             />
+          
+            
             {/* 新的容器开始 */}
             <View style={styles.profileContainer}>
               <Image
+                key={headUri}
                 style={styles.headImage}
-                source={require("../assets/ProfileHead.jpg")}
+                source={getImageSource(headUri)}
+                
               />
-              <Text style={styles.profileName}>John</Text>
+             
+             
+               <Text style={styles.profileName}>{profileData.profile.name}</Text> 
             </View>
             {/* 新的容器结束 */}
           </View>
@@ -104,7 +143,7 @@ const ProfileScreen = () => {
             ) : selectedMenu === "settings" ? (
               <View>
                 <Text style={styles.sectionTitle}>Account</Text>
-                <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Account")}>
                 
                   <Image 
                     source={require('../assets/ProfileAccount.jpg')} // replace with your image's path
@@ -147,10 +186,12 @@ const ProfileScreen = () => {
 };
 
 const styles = StyleSheet.create({
+
     profileContainer: {
+      position: 'relative', // 同上
       alignItems: 'center',
-      paddingTop: 50,  // 头像图片下方的空间，可以根据需要调整
-      paddingBottom: 10,  // “John”文字下方的空间，可以根据需要调整
+      paddingTop: 50,
+      paddingBottom: 10,
     },
     menuSection: {
       flexDirection: 'row', // 使 menuContainer 内的元素水平排列
@@ -172,7 +213,7 @@ const styles = StyleSheet.create({
       height: 83,
       position: 'absolute', // 设置为绝对定位
       bottom: 40, // 这意味着图片的底部将位于容器边界以下的位置，实现重叠效果
-      // marginTop, position 和其他相关样式将被移除，因为我们不再使用绝对定位
+      borderRadius: 83 / 2,
     },
     profileName: {
       fontSize: 20,
@@ -192,43 +233,24 @@ const styles = StyleSheet.create({
       marginTop:20,
       textAlign: 'left',  // 靠左对齐
       marginBottom: 10,  // 和图片之间的距离
-      marginLeft:40,
+      marginLeft:10,
     },
     sectionImage: {
       width: 350,  // 图片宽度为容器宽度
       height: 45,  // 高度根据宽度和比例自动调整
       
       marginBottom: 40,  // 图片之间的距离
-      marginLeft:38,
+      marginLeft:20,
       resizeMode: 'cover',  // 如果图片宽度和高度与容器不符，确保图片完整覆盖
+    },
+    editIcon: {
+      position: 'absolute', // 使用绝对定位
+      top: 10, // 距离容器顶部10单位
+      right: 10, // 距离容器右侧10单位
     },
 
   });
-//   const MenuContainer = ({ title, imageSrc, type, setType, setSelectedMenu }) => {
-//     const handlePress = () => {
-//       setType(title.toLowerCase());
-//       setSelectedMenu(title.toLowerCase()); // 设置当前选中的菜单
-//     };
-  
-//     return (
-//       <TouchableOpacity
-//         className="items-center justify-center space-y-2"
-//         onPress={handlePress}
-//       >
-//         <View
-//           className={`w-20 h-20 p-2 shadow-sm rounded-full items-center justify-center m-1 ${
-//             type === title.toLowerCase() ? "bg-gray-300" : "bg-white"
 
-//           }`}
-//         >
-//           <Image className="w-full h-full object-contain" source={imageSrc} />
-//           <Text className="text-[#00BCC9] text-[16px] font-semibold">
-//             {title}
-//           </Text>
-//         </View>
-//       </TouchableOpacity>
-//     );
-//   };
   
   
  export default ProfileScreen;

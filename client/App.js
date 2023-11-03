@@ -1,6 +1,10 @@
 import React from "react";
 import RootStack from "./navigators/RootStack";
-
+import { ProfileProvider } from "./navigators/ProfileContext";
 export default function App() {
-  return <RootStack />;
+  return (
+    <ProfileProvider>
+      <RootStack />
+    </ProfileProvider>
+  );
 }
