@@ -5,6 +5,8 @@ public enum ResponseStatusEnum {
     SUCCESS(200, true, "success!"),
     ALREADY_FOLLOW(201, true, "already follow!"),
     HAS_NOT_FOLLOW(202, true, "has not follow!"),
+    NO_FOLLOWERS(203, true, "no followers"),
+    NO_FOLLOWINGS(204, true, "no followings"),
     FAILED(500, false, "failure!"),
     WRONG_CODE(501, false, "verify code is wrong or outdated"),
     USER_NOT_EXIST(502, false, "user does not exist!"),

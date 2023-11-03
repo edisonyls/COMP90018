@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.comp90018.mapper.ListFollowingMapper" >
+
+  <select id="listFollowing" resultType="com.comp90018.vo.ListFollowerVO" parameterType="map">
+    SELECT
+        users.id as id,
+        users.nickname as nickname,
+        users.picture as picture,
+        users.description as description
+    FROM
+        users
+    INNER JOIN
+        followers
+    ON
+        users.id = followers.following_id
+    WHERE
+        followers.follower_id = #{paramMap.id}
+  </select>
+
+</mapper>

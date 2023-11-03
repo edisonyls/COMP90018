@@ -4,21 +4,30 @@ import com.comp90018.enums.FriendEnum;
 import com.comp90018.enums.RedisEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.FollowersMapper;
+import com.comp90018.mapper.ListFollowerMapper;
+import com.comp90018.mapper.ListFollowingMapper;
 import com.comp90018.pojo.Followers;
 import com.comp90018.service.FollowerService;
 import com.comp90018.utils.RedisOperator;
+import com.comp90018.vo.ListFollowerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FollowerServiceImpl implements FollowerService {
     @Autowired
     private Sid sid;
 
+    @Autowired
+    private ListFollowingMapper listFollowingMapper;
+    @Autowired
+    private ListFollowerMapper listFollowerMapper;
     @Autowired
     private RedisOperator redis;
     @Autowired
@@ -78,6 +87,24 @@ public class FollowerServiceImpl implements FollowerService {
         redis.decrement(RedisEnum.REDIS_FAN_NUM + followingId, 1);
     }
 
+    @Override
+    public List<ListFollowerVO> listFollower(String id) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        List<ListFollowerVO> listFollowerVOs = listFollowerMapper.listFollower(map);
+        return listFollowerVOs;
+    }
+
+    @Override
+    public List<ListFollowerVO> listFollowing(String id) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+
+        List<ListFollowerVO> listFollowerVOs = listFollowingMapper.listFollowing(map);
+
+        return listFollowerVOs;
+    }
+
     public Followers queryIsFollower(String followerId, String followingId) {
         Example example = new Example(Followers.class);
         Example.Criteria criteria = example.createCriteria().andEqualTo("followingId", followingId).andEqualTo("followerId", followerId);
@@ -89,5 +116,6 @@ public class FollowerServiceImpl implements FollowerService {
 
         return null;
     }
+
 
 }
