@@ -1,9 +1,13 @@
 package com.comp90018.pojo;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+//@Entity
+//@Table(name = "post")
 public class Post {
     @Id
     private String id;
@@ -25,7 +29,7 @@ public class Post {
     private Double longitude;
 
     /**
-     * post type, 0: find my pet, 1: help pets go home, 2: share experience
+     * post type, 0: pet missing 1: found a pet 2: general
      */
     @Column(name = "post_type")
     private Integer postType;
@@ -278,7 +282,7 @@ public class Post {
      *
      * @param petBreed pet breed
      */
-    public void setPetBreed(String petBreed) {
+    public void setPetBread(String petBreed) {
         this.petBreed = petBreed;
     }
 

@@ -4,8 +4,9 @@ server:
     uri-encoding: UTF-8
     max-swallow-size: -1
 spring:
-  #  profiles:
-  #    active: dev
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
   servlet:
     multipart:
       max-file-size: 2MB
@@ -13,7 +14,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/comp-test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/mobile?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: root
     password: root
     hikari:
@@ -41,6 +42,19 @@ spring:
     host: 180.76.230.251
     database: 10
     port: 6379
+  data:
+    mongodb:
+      uri: mongodb://root:12345678@180.76.230.251:27017
+      database: comp90018
+
+minio:
+  endpoint: http://180.76.230.251:9000
+  fileHost: http://180.76.230.251:9000
+  bucketName: comp90018
+  accessKey: root
+  secretKey: 12345678
+  imgSize: 1024
+  fileSize: 1024
 
 mybatis:
   type-aliases-package: com.comp90018.pojo
@@ -54,4 +68,3 @@ mapper:
 pagehelper:
   helper-dialect: MYSQL
   support-methods-arguments: true
-

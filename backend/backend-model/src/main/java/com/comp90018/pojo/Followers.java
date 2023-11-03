@@ -1,8 +1,12 @@
 package com.comp90018.pojo;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
+//@Entity
+//@Table(name = "followers")
 public class Followers {
     @Id
     private String id;
