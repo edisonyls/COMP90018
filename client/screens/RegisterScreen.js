@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
-import { Text, View, Alert } from "react-native";
-import Checkbox from "expo-checkbox";
+import axios from "axios";
+import { Text, View, Alert, ActivityIndicator, Modal } from "react-native";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import {
   StyledContainer,
   InnerContainer,
   PageLogo,
-  PageTitle,
   SubTitle,
   StyledFormArea,
   LeftIcon,
@@ -28,20 +27,40 @@ import {
   WelcomeText,
   CheckBoxView,
   StyledCheckBox,
+  ModalViewWrap,
+  ModalInnerView,
 } from "../components/styles";
-import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
+import { Octicons, Ionicons } from "@expo/vector-icons";
+import { sendVerifyRequest } from "../api/auth";
 
-const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
+const { darkLight, brand } = Colors;
 
 const Register = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const AlertPopUp = () => {
     Alert.alert("Password not matched", "Please re-enter your password", [
       { text: "OK", onPress: () => console.log("OK Pressed") },
     ]);
+  };
+
+  const handleFormSubmission = async (values) => {
+    setIsLoading(true);
+    const res = await sendVerifyRequest(values.email);
+    if (res.data) {
+      setIsLoading(false);
+      navigation.navigate("Verify", {
+        email: values.email,
+        password: values.password,
+        username: values.userName,
+      });
+    } else {
+      console.log("Register failing...");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -69,9 +88,7 @@ const Register = ({ navigation }) => {
               password: "",
               confirmPassword: "",
             }}
-            onSubmit={(values) => {
-              console.log(values);
-            }}
+            onSubmit={handleFormSubmission}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
               <StyledFormArea>
@@ -151,6 +168,38 @@ const Register = ({ navigation }) => {
             )}
           </Formik>
         </InnerContainer>
+        {isLoading && (
+          <Modal
+            transparent={true}
+            animationType="none"
+            visible={isLoading}
+            onRequestClose={() => {
+              console.log("close modal");
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#00000040",
+              }}
+            >
+              <View
+                style={{
+                  width: 100,
+                  height: 100,
+                  backgroundColor: "white",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 10,
+                }}
+              >
+                <ActivityIndicator size="large" color={brand} />
+              </View>
+            </View>
+          </Modal>
+        )}
       </StyledContainer>
     </KeyboardAvoidingWrapper>
   );
