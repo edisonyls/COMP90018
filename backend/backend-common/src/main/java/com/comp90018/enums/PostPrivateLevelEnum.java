@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public enum FriendEnum {
-    NO(0),
-    YES(1);
-    private int friendRelation;
+public enum PostPrivateLevelEnum {
+
+    PUBLIC(0),
+    PRIVATE(1);
+
+    private int privateLevel;
 }

@@ -6,7 +6,6 @@ import {
   StyledContainer,
   InnerContainer,
   PageLogo,
-  PageTitle,
   SubTitle,
   StyledFormArea,
   LeftIcon,
@@ -27,7 +26,7 @@ import {
 } from "../components/styles";
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
 
-const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
+const { primary, darkLight, brand } = Colors;
 
 const SignIn = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
