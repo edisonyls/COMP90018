@@ -35,3 +35,21 @@ export const sendVerifyRequest = async (email) => {
     console.log(err);
   }
 };
+
+export const loginRequest = async (email, password) => {
+  try {
+    const res = await axios.post(
+      "http://" + BASE_URL + ":8080/login/login",
+      {},
+      {
+        params: {
+          email: email,
+          password: password,
+        },
+      }
+    );
+    return res;
+  } catch (err) {
+    console.log("while sending login request -> \n" + err);
+  }
+};
