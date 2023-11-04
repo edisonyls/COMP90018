@@ -54,7 +54,7 @@ public class PostController extends BaseController {
     public JSONResult getAllPosts(@RequestBody String postType) {
         List<Post> postList = postService.getAllPost(postType);
         if (postList == null) {
-            return JSONResult.errorMsg("No exist post");
+            return JSONResult.errorMsg("No valid post");
         }
         return JSONResult.ok(postList);
     }
