@@ -31,7 +31,6 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public Post createPost(UploadPostBO uploadPostBO) {
         Post post = new Post();
-
         post.setLikesCounts(0);
         post.setCommentsCounts(0);
         post.setPrivateLevel(0);
@@ -120,9 +119,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAllPost() {
+    public List<Post> getAllPost(String postType) {
         Example example = new Example(Post.class);
-        example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
+        switch (postType) {
+            case "Missing":
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                        .andEqualTo("0", PostTypeEnum.MISSING);
+                break;
+            case "Found":
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                        .andEqualTo("0", PostTypeEnum.FOUND);
+                break;
+            case "General":
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                        .andEqualTo("0", PostTypeEnum.GENERAL);
+                break;
+            default:
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
+                break;
+        }
         List<Post> postList = postMapper.selectByExample(example);
         return new ArrayList<>(postList);
     }
@@ -140,11 +155,12 @@ public class PostServiceImpl implements PostService {
     public boolean deletedPost(String postId) {
         Example example = new Example(Post.class);
         example.createCriteria().andEqualTo("id", postId);
-        if (postMapper.selectByExample(example).isEmpty()) {
+        List<Post> post = postMapper.selectByExample(example);
+        if (post.isEmpty()) {
             return false;
         }
         else {
-            postMapper.delete(postMapper.selectOneByExample(example));
+            postMapper.delete(post.get(0));
             return true;
         }
     }
