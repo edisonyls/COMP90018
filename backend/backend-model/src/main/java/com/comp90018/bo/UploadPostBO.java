@@ -51,6 +51,10 @@ public class UploadPostBO {
 
     private String subject;
 
+    private int likeCounts;
+
+    private int commentCounts;
+
 
 
 }
