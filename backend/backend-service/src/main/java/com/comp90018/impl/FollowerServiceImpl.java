@@ -1,6 +1,7 @@
 package com.comp90018.impl;
 
 import com.comp90018.enums.FriendEnum;
+import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.enums.RedisEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.FollowersMapper;
@@ -8,6 +9,7 @@ import com.comp90018.mapper.ListFollowerMapper;
 import com.comp90018.mapper.ListFollowingMapper;
 import com.comp90018.pojo.Followers;
 import com.comp90018.service.FollowerService;
+import com.comp90018.service.MessageService;
 import com.comp90018.utils.RedisOperator;
 import com.comp90018.vo.ListFollowerVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,8 @@ import java.util.Map;
 public class FollowerServiceImpl implements FollowerService {
     @Autowired
     private Sid sid;
-
+    @Autowired
+    private MessageService messageService;
     @Autowired
     private ListFollowingMapper listFollowingMapper;
     @Autowired
@@ -63,6 +66,10 @@ public class FollowerServiceImpl implements FollowerService {
 
         redis.increment(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1);
         redis.increment(RedisEnum.REDIS_FAN_NUM + followingId, 1);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("behavior", "follow");
+        messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
     }
 
     @Transactional
@@ -85,6 +92,10 @@ public class FollowerServiceImpl implements FollowerService {
 
         redis.decrement(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1);
         redis.decrement(RedisEnum.REDIS_FAN_NUM + followingId, 1);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("behavior", "unfollow");
+        messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
     }
 
     @Override

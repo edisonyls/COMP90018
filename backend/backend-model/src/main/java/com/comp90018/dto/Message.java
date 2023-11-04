@@ -25,15 +25,15 @@ public class Message {
     private String senderId;
     @Field("senderNickname")
     private String senderNickname;
-    @Field("senderPicture")
-    private String senderPicture;
+    @Field("senderProfile")
+    private String senderProfile;
 
     @Field("receiverId")
     private String receiverId;
     @Field("receiverNickname")
     private String receiverNickname;
-    @Field
-    private String receiverPicture;
+    @Field("receiverProfile")
+    private String receiverProfile;
 
     @Field("type")
     private Integer type;
@@ -41,4 +41,16 @@ public class Message {
     private Map content;
     @Field("time")
     private Date time;
+
+    public Message(String senderId, String senderNickname, String senderProfile, String receiverId, String receiverNickname, String receiverProfile, Integer type, Map content, Date time) {
+        this.senderId = senderId;
+        this.senderNickname = senderNickname;
+        this.senderProfile = senderProfile;
+        this.receiverId = receiverId;
+        this.receiverNickname = receiverNickname;
+        this.receiverProfile = receiverProfile;
+        this.type = type;
+        this.content = content;
+        this.time = time;
+    }
 }
