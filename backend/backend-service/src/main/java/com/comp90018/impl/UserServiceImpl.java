@@ -7,7 +7,6 @@ import com.comp90018.mapper.UsersMapper;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.UserService;
 import com.comp90018.utils.DateUtil;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

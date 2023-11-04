@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import {
   StyledContainer,
   InnerContainer,
@@ -25,11 +25,31 @@ import {
   WelcomeText,
 } from "../components/styles";
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
+import { loginRequest } from "../api/auth";
+import LoadingView from "../components/LoadingView";
+import { useUserContext } from "../context/userContext";
 
 const { primary, darkLight, brand } = Colors;
 
 const SignIn = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const { setUser } = useUserContext();
+
+  const handleFormSubmission = async (values) => {
+    setLoading(true);
+    const res = await loginRequest(values.email, values.password);
+    if (!res.success) {
+      Alert.alert("Login Failed!", res.msg);
+      setLoading(false);
+    } else {
+      setUser(res.data);
+      setLoading(false);
+      navigation.navigate("Home");
+    }
+    setLoading(false);
+  };
 
   return (
     <StyledContainer>
@@ -51,10 +71,7 @@ const SignIn = ({ navigation }) => {
 
         <Formik
           initialValues={{ email: "", password: "" }}
-          onSubmit={(values) => {
-            console.log(values);
-            navigation.navigate("Home");
-          }}
+          onSubmit={handleFormSubmission}
         >
           {({ handleChange, handleBlur, handleSubmit, values }) => (
             <StyledFormArea>
@@ -100,6 +117,7 @@ const SignIn = ({ navigation }) => {
           )}
         </Formik>
       </InnerContainer>
+      {loading && <LoadingView loading={loading} />}
     </StyledContainer>
   );
 };
