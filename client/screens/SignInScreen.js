@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import {
   StyledContainer,
   InnerContainer,
@@ -26,6 +26,7 @@ import {
 } from "../components/styles";
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
 import { loginRequest } from "../api/auth";
+import LoadingView from "../components/LoadingView";
 
 const { primary, darkLight, brand } = Colors;
 
@@ -36,7 +37,14 @@ const SignIn = ({ navigation }) => {
   const handleFormSubmission = async (values) => {
     setLoading(true);
     const res = await loginRequest(values.email, values.password);
-    console.log(res);
+    if (!res.success) {
+      Alert.alert("Login Failed!", res.msg);
+    } else {
+      setLoading(false);
+      navigation.navigate("Home", {
+        user: res.data,
+      });
+    }
     setLoading(false);
   };
 
@@ -106,6 +114,7 @@ const SignIn = ({ navigation }) => {
           )}
         </Formik>
       </InnerContainer>
+      {loading && <LoadingView loading={loading} />}
     </StyledContainer>
   );
 };
