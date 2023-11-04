@@ -1,6 +1,7 @@
 package com.comp90018.controller;
 
 import com.comp90018.bo.UploadPostBO;
+import com.comp90018.enums.RedisEnum;
 import com.comp90018.jsonResult.JSONResult;
 import com.comp90018.pojo.Post;
 import com.comp90018.service.PostService;
@@ -21,17 +22,14 @@ import java.util.List;
 @RequestMapping("post")
 public class PostController extends BaseController {
 
-//    @Autowired
-//    RedisOperator redis;
-
     @Autowired
     PostService postService;
 
-    @PostMapping("/uploadPost")
-    public JSONResult uploadPost(@Valid @RequestBody UploadPostBO uploadPostBO, MultipartFile multipartFile) {
+    @PostMapping("/uploadImg")
+    public JSONResult uploadPostImg(@Valid @RequestParam MultipartFile multipartFile, String userId) {
         if (multipartFile == null) {
-            uploadPostBO.setPostImg("1");
-            //return JSONResult.errorMsg("Must contain an img.");
+            //uploadPostBO.setPostImg("1");
+            return JSONResult.errorMsg("No img!");
         }
         else {
             String fileName = multipartFile.getOriginalFilename();
@@ -41,9 +39,18 @@ public class PostController extends BaseController {
                 JSONResult.errorMsg("Upload error, please try again.");
             }
             String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
-            uploadPostBO.setPostImg(imgUrl);
+            redis.set(RedisEnum.REDIS_POST_IMG_URL + userId, imgUrl, 90);
+            return JSONResult.ok(imgUrl);
         }
-        Post post = postService. createPost(uploadPostBO);
+    }
+
+
+    @PostMapping("/uploadPost")
+    public JSONResult uploadPost(@Valid @RequestBody UploadPostBO uploadPostBO) {
+        String userId = uploadPostBO.getUserId();
+        uploadPostBO.setPostImg(redis.get(RedisEnum.REDIS_POST_IMG_URL + userId));
+        redis.del(RedisEnum.REDIS_POST_IMG_URL + userId);
+        Post post = postService.createPost(uploadPostBO);
         if (post == null) {
             return JSONResult.errorMsg("Required information cannot be blank");
         }
@@ -51,7 +58,7 @@ public class PostController extends BaseController {
     }
 
     @GetMapping("getAllPosts")
-    public JSONResult getAllPosts(@RequestBody String postType) {
+    public JSONResult getAllPosts(@RequestParam String postType) {
         List<Post> postList = postService.getAllPost(postType);
         if (postList == null) {
             return JSONResult.errorMsg("No valid post");
@@ -60,7 +67,7 @@ public class PostController extends BaseController {
     }
 
     @GetMapping("getAllPostsPerUser")
-    public JSONResult getAllPostsPerUser(@RequestBody String userId) {
+    public JSONResult getAllPostsPerUser(@RequestParam String userId) {
         List<Post> postList = postService.getAllPostPerUser(userId);
         if (postList.isEmpty()) {
             return JSONResult.errorMsg("This user does not have post");
@@ -79,24 +86,14 @@ public class PostController extends BaseController {
     }
 
     @PostMapping("updatePost")
-    public JSONResult updatePost(@RequestParam UploadPostBO uploadPostBO, MultipartFile multipartFile) {
+    public JSONResult updatePost(@RequestParam UploadPostBO uploadPostBO) {
+        String userId = uploadPostBO.getUserId();
+        uploadPostBO.setPostImg(redis.get(RedisEnum.REDIS_POST_IMG_URL + userId));
+        redis.del(RedisEnum.REDIS_POST_IMG_URL + userId);
         Post post = null;
-        if (multipartFile == null) {
-            post = postService.updatePost(uploadPostBO);
-        }
-        else {
-            String fileName = multipartFile.getOriginalFilename();
-            try {
-                MinIOUtils.uploadFile(minIOConfig.getBucketName(), fileName, multipartFile.getInputStream());
-            } catch (Exception e) {
-                JSONResult.errorMsg("Update error, please try again.");
-            }
-            String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
-            uploadPostBO.setPostImg(imgUrl);
-            post = postService.updatePost(uploadPostBO);
-            if (post == null) {
-                return JSONResult.errorMsg("Update error, post not exist");
-            }
+        post = postService.updatePost(uploadPostBO);
+        if (post == null) {
+            return JSONResult.errorMsg("Update error, post not exist");
         }
         return JSONResult.ok(post);
     }
