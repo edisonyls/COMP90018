@@ -27,6 +27,7 @@ import {
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
 import { loginRequest } from "../api/auth";
 import LoadingView from "../components/LoadingView";
+import { useUserContext } from "../context/userContext";
 
 const { primary, darkLight, brand } = Colors;
 
@@ -34,16 +35,18 @@ const SignIn = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
 
+  const { setUser } = useUserContext();
+
   const handleFormSubmission = async (values) => {
     setLoading(true);
     const res = await loginRequest(values.email, values.password);
     if (!res.success) {
       Alert.alert("Login Failed!", res.msg);
-    } else {
       setLoading(false);
-      navigation.navigate("Home", {
-        user: res.data,
-      });
+    } else {
+      setUser(res.data);
+      setLoading(false);
+      navigation.navigate("Home");
     }
     setLoading(false);
   };

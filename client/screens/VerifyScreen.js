@@ -1,15 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import {
   View,
   Text,
   TextInput,
-  Button,
   Alert,
   KeyboardAvoidingView,
   Dimensions,
   TouchableOpacity,
-  Keyboard,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { verifyEmail } from "../api/auth";
