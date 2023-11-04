@@ -3,6 +3,7 @@ package com.comp90018.impl;
 import com.comp90018.enums.FriendEnum;
 import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.enums.RedisEnum;
+import com.comp90018.enums.SystemMessageEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.FollowersMapper;
 import com.comp90018.mapper.ListFollowerMapper;
@@ -51,9 +52,12 @@ public class FollowerServiceImpl implements FollowerService {
         follower.setFollowerId(followerId);
         follower.setFollowingId(followingId);
 
+        //query if the following follows follower
         //the sequence of following and follower should be inverse
         Followers following = queryIsFollower(followingId, followerId);
+
         if(following != null) {
+            //update the following
             following.setIsFollowerFriendOfMine(FriendEnum.YES.getFriendRelation());
             followersMapper.updateByPrimaryKey(following);
 
@@ -62,13 +66,14 @@ public class FollowerServiceImpl implements FollowerService {
             follower.setIsFollowerFriendOfMine(FriendEnum.NO.getFriendRelation());
         }
         followersMapper.insert(follower);
-        redis.set(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + followerId + ":" + followingId, "0");
 
-        redis.increment(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1);
-        redis.increment(RedisEnum.REDIS_FAN_NUM + followingId, 1);
+        redis.set(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + followerId + ":" + followingId, "0"); // redis add new relationship
+        redis.increment(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1); // follows num ++
+        redis.increment(RedisEnum.REDIS_FAN_NUM + followingId, 1); // fans num ++
 
+        //send notify message
         HashMap<String, Object> map = new HashMap<>();
-        map.put("behavior", "follow");
+        map.put(SystemMessageEnum.BEHAVIOR.getSystemMessage(), SystemMessageEnum.FOLLOW_NOTIFY.getSystemMessage());
         messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
     }
 
@@ -88,13 +93,13 @@ public class FollowerServiceImpl implements FollowerService {
             followersMapper.updateByPrimaryKeySelective(following2);
             followersMapper.delete(following);
         }
-        redis.del(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + followerId + ":" + followingId);
 
+        redis.del(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + followerId + ":" + followingId);
         redis.decrement(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1);
         redis.decrement(RedisEnum.REDIS_FAN_NUM + followingId, 1);
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("behavior", "unfollow");
+        map.put(SystemMessageEnum.BEHAVIOR.getSystemMessage(), SystemMessageEnum.UNFOLLOW_NOTIFY.getSystemMessage());
         messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
     }
 
@@ -116,6 +121,12 @@ public class FollowerServiceImpl implements FollowerService {
         return listFollowerVOs;
     }
 
+    /**
+     * query if the follower follows the following
+     * @param followerId
+     * @param followingId
+     * @return
+     */
     public Followers queryIsFollower(String followerId, String followingId) {
         Example example = new Example(Followers.class);
         Example.Criteria criteria = example.createCriteria().andEqualTo("followingId", followingId).andEqualTo("followerId", followerId);
