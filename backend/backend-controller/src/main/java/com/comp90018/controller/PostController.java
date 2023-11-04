@@ -6,7 +6,6 @@ import com.comp90018.jsonResult.JSONResult;
 import com.comp90018.pojo.Post;
 import com.comp90018.service.PostService;
 import com.comp90018.utils.MinIOUtils;
-import com.comp90018.utils.RedisOperator;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
