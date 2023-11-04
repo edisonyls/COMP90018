@@ -124,15 +124,15 @@ public class PostServiceImpl implements PostService {
         switch (postType) {
             case "Missing":
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
-                        .andEqualTo("0", PostTypeEnum.MISSING);
+                        .andEqualTo("postType", PostTypeEnum.MISSING.getPostType());
                 break;
             case "Found":
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
-                        .andEqualTo("0", PostTypeEnum.FOUND);
+                        .andEqualTo("postType", PostTypeEnum.FOUND.getPostType());
                 break;
             case "General":
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
-                        .andEqualTo("0", PostTypeEnum.GENERAL);
+                        .andEqualTo("postType", PostTypeEnum.GENERAL.getPostType());
                 break;
             default:
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
