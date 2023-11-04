@@ -11,13 +11,14 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useLayoutEffect, useState,useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import profileData from '../assets/profileData.json';
 import { useProfile } from '../navigators/ProfileContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -30,27 +31,56 @@ const ProfileScreen = () => {
     const [headUri, setHeadUri] = useState(null);
     //const { backgroundUri, headUri } = useProfile();
     const navigation = useNavigation();
-    
+    const [name, setName] = useState(''); // 新的状态变量来存储用户名
+    const isFocused = useIsFocused();
+
+    const loadProfileData = async () => {
+      setIsLoading(true);
+      const storedName = await AsyncStorage.getItem('@name');
+      if (storedName) {
+        setName(storedName);
+      }
+      setIsLoading(false);
+    };
+
+    const loadImages = async () => {
+      const savedBackgroundUri = await AsyncStorage.getItem('@backgroundUri');
+      const savedHeadUri = await AsyncStorage.getItem('@headUri');
+      if (savedBackgroundUri) {
+        setBackgroundUri(savedBackgroundUri);
+      }
+      if (savedHeadUri) {
+        setHeadUri(savedHeadUri);
+      }
+    };
+
+    useEffect(() => {
+      if (isFocused) {
+        loadProfileData();
+        loadImages();
+      }
+    }, [isFocused]);
+
     useLayoutEffect(() => {
       navigation.setOptions({
         headerShown: false,
       });
     },[navigation]);
    
-    useEffect(() => {
-      const loadImages = async () => {
-          const savedBackgroundUri = await AsyncStorage.getItem('@backgroundUri');
-          const savedHeadUri = await AsyncStorage.getItem('@headUri');
-          if (savedBackgroundUri) {
-              setBackgroundUri(savedBackgroundUri);
-          }
-          if (savedHeadUri) {
-              setHeadUri(savedHeadUri);
-          }
-      };
+  //   useEffect(() => {
+  //     const loadImages = async () => {
+  //         const savedBackgroundUri = await AsyncStorage.getItem('@backgroundUri');
+  //         const savedHeadUri = await AsyncStorage.getItem('@headUri');
+  //         if (savedBackgroundUri) {
+  //             setBackgroundUri(savedBackgroundUri);
+  //         }
+  //         if (savedHeadUri) {
+  //             setHeadUri(savedHeadUri);
+  //         }
+  //     };
 
-      loadImages();
-  }, []);
+  //     loadImages();
+  // }, []);
     const getImageSource = (image) => {
       if (typeof image === 'string') {
         // 添加时间戳查询参数以绕过缓存
@@ -89,7 +119,7 @@ const ProfileScreen = () => {
               />
              
              
-               <Text style={styles.profileName}>{profileData.profile.name}</Text> 
+               <Text style={styles.profileName}>{name}</Text> 
             </View>
             {/* 新的容器结束 */}
           </View>
