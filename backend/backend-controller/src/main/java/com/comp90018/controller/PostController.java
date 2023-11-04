@@ -67,7 +67,7 @@ public class PostController extends BaseController {
     @GetMapping("getAllPosts")
     public JSONResult getAllPosts(@RequestParam String postType) {
         List<Post> postList = postService.getAllPost(postType);
-        if (postList == null) {
+        if (postList == null || postList.isEmpty()) {
             return JSONResult.errorMsg("No valid post");
         }
         return JSONResult.ok(postList);
@@ -76,7 +76,7 @@ public class PostController extends BaseController {
     @GetMapping("getAllPostsPerUser")
     public JSONResult getAllPostsPerUser(@RequestParam String userId) {
         List<Post> postList = postService.getAllPostPerUser(userId);
-        if (postList.isEmpty()) {
+        if (postList.isEmpty() || postList == null) {
             return JSONResult.errorMsg("This user does not have post");
         }
         return JSONResult.ok(postList);
