@@ -48,13 +48,20 @@ public class PostController extends BaseController {
     @PostMapping("/uploadPost")
     public JSONResult uploadPost(@Valid @RequestBody UploadPostBO uploadPostBO) {
         String userId = uploadPostBO.getUserId();
-        uploadPostBO.setPostImg(redis.get(RedisEnum.REDIS_POST_IMG_URL + userId));
-        redis.del(RedisEnum.REDIS_POST_IMG_URL + userId);
-        Post post = postService.createPost(uploadPostBO);
-        if (post == null) {
-            return JSONResult.errorMsg("Required information cannot be blank");
+        String url = redis.get(RedisEnum.REDIS_POST_IMG_URL + userId);
+        log.info(url);
+        if (url == null) {
+            return JSONResult.errorMsg("Img cannot be blank");
         }
-        return JSONResult.ok(post);
+        else {
+            uploadPostBO.setPostImg(redis.get(RedisEnum.REDIS_POST_IMG_URL + userId));
+            redis.del(RedisEnum.REDIS_POST_IMG_URL + userId);
+            Post post = postService.createPost(uploadPostBO);
+            if (post == null) {
+                return JSONResult.errorMsg("Required information cannot be blank");
+            }
+            return JSONResult.ok(post);
+        }
     }
 
     @GetMapping("getAllPosts")
@@ -88,14 +95,20 @@ public class PostController extends BaseController {
     @PostMapping("updatePost")
     public JSONResult updatePost(@RequestParam UploadPostBO uploadPostBO) {
         String userId = uploadPostBO.getUserId();
-        uploadPostBO.setPostImg(redis.get(RedisEnum.REDIS_POST_IMG_URL + userId));
-        redis.del(RedisEnum.REDIS_POST_IMG_URL + userId);
-        Post post = null;
-        post = postService.updatePost(uploadPostBO);
-        if (post == null) {
-            return JSONResult.errorMsg("Update error, post not exist");
+        String url = redis.get(RedisEnum.REDIS_POST_IMG_URL + userId);
+        if (url == null) {
+            return JSONResult.errorMsg("Img cannot be blank");
         }
-        return JSONResult.ok(post);
+        else {
+            uploadPostBO.setPostImg(url);
+            redis.del(RedisEnum.REDIS_POST_IMG_URL + userId);
+            Post post = null;
+            post = postService.updatePost(uploadPostBO);
+            if (post == null) {
+                return JSONResult.errorMsg("Update error, post not exist");
+            }
+            return JSONResult.ok(post);
+        }
     }
 
 }
