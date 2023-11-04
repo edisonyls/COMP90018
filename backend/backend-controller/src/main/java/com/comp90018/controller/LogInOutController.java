@@ -6,28 +6,31 @@ import com.comp90018.jsonResult.JSONResult;
 import com.comp90018.enums.ResponseStatusEnum;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.MailService;
-import com.comp90018.service.UserService;
 import com.comp90018.utils.IPUtil;
-import com.comp90018.utils.RedisOperator;
+import com.comp90018.vo.UserVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.UUID;
 
 
 @RestController
 @Slf4j
-@Api(tags = "sign up controller")
-@RequestMapping("verify")
-public class SignUpController extends BaseController{
+@Api(tags = "login controller")
+@RequestMapping("login")
+public class LogInOutController extends BaseController{
 
     @Autowired
     MailService mailService;
 
     @PostMapping("/sendMail")
+    @ApiOperation("send verify email when registering")
     public JSONResult send(@RequestParam String email, HttpServletRequest httpServletRequest) {
         if(email == null || email.length() == 0) {
             return JSONResult.errorCustom(ResponseStatusEnum.FAILED);
@@ -40,8 +43,9 @@ public class SignUpController extends BaseController{
         return JSONResult.ok(email);
     }
 
-    @PostMapping("/signup")
-    public JSONResult signUp(@Valid@RequestBody SignUpBO signUpBO) {
+    @ApiOperation("register by username, password, email and verify code")
+    @PostMapping("/register")
+    public JSONResult signUp(@Valid @RequestBody SignUpBO signUpBO) {
         String code = signUpBO.getCode();
         String email = signUpBO.getEmail();
         String username = signUpBO.getUsername();
@@ -55,5 +59,33 @@ public class SignUpController extends BaseController{
         redis.del(RedisEnum.REDIS_CODE + email);
 
         return JSONResult.ok(user);
+    }
+    @ApiOperation("login by email and password")
+    @PostMapping("/login")
+    public JSONResult login(@RequestParam String email, @RequestParam String password, HttpServletRequest httpServletRequest) {
+
+        Users user = userService.queryUserIsExistByEmailAndPassword(email, password);
+        if(user == null) {
+            return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
+        }
+
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        String userToken = UUID.randomUUID().toString();
+        userVO.setUserToken(userToken);
+
+        redis.set(RedisEnum.REDIS_TOKEN + userVO.getId(), userToken, 60 * 60 * 24 * 7);
+
+        return JSONResult.ok(userVO);
+    }
+
+    @ApiOperation("logout by userId")
+    @PostMapping("/logout")
+    public JSONResult logout(@RequestParam String usrId, HttpServletRequest httpServletRequest) {
+        if(!redis.keyIsExist(RedisEnum.REDIS_TOKEN + usrId)) {
+            return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_LOGIN);
+        }
+        redis.del(RedisEnum.REDIS_TOKEN + usrId);
+        return JSONResult.ok();
     }
 }
