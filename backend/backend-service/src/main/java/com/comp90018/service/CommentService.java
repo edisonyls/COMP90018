@@ -11,6 +11,8 @@ public interface CommentService {
 
     boolean deleteComment(String commentId);
 
+    Comment likeComment(String commentId, String userId);
+
     List<CommentDTO> getCommentsWithHierarchy(String postId);
 
 }

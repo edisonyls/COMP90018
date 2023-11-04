@@ -51,6 +51,16 @@ public class CommentController extends BaseController{
         }
     }
 
+    @GetMapping("/LikeAComment")
+    public JSONResult likeAComment(@RequestParam String commentId, String userId) {
+        Comment comment = commentService.likeComment(commentId, userId);
+        if (comment == null) {
+            return JSONResult.errorMsg("No such comment.");
+        } else {
+            return JSONResult.ok(comment);
+        }
+    }
+
 
 
 

@@ -78,6 +78,20 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public Comment likeComment(String commentId, String userId) {
+        Example example = new Example(Comment.class);
+        example.createCriteria().andEqualTo("id", commentId);
+        List<Comment> commentList = commentMapper.selectByExample(example);
+        if (commentList.isEmpty() || commentList == null) {
+            return null;
+        } else {
+            Comment comment = commentList.get(0);
+            comment.setLikeCounts(comment.getLikeCounts() + 1);
+            return comment;
+        }
+    }
+
+    @Override
     public List<CommentDTO> getCommentsWithHierarchy(String postId) {
 
         Example example = new Example(Comment.class);
