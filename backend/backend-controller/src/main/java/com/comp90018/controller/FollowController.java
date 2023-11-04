@@ -6,6 +6,7 @@ import com.comp90018.pojo.Users;
 import com.comp90018.service.FollowerService;
 import com.comp90018.vo.ListFollowerVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,52 +23,57 @@ public class FollowController extends BaseController{
     private FollowerService followerService;
 
     @PostMapping("follow")
-    public JSONResult follow(@RequestParam String id,@RequestParam String posterId) {
-        if(id == null || id.length() == 0 || posterId == null || posterId.length() == 0) {
+    @ApiOperation("a follower follows a following ")
+    public JSONResult follow(@RequestParam String followerId, @RequestParam String followingId) {
+        if(followerId == null || followerId.isEmpty() || followingId == null || followingId.isEmpty()) {
             return JSONResult.errorCustom(ResponseStatusEnum.FAILED);
         }
 
-        if(id.toLowerCase().equals(posterId.toLowerCase())) {
+        if(followerId.toLowerCase().equals(followingId.toLowerCase())) {
             return JSONResult.errorCustom(ResponseStatusEnum.CAN_NOT_FOLLOW_SELF);
         }
 
-        Users follower = userService.queryUser(id);
-        Users following = userService.queryUser(posterId);
+        Users follower = userService.queryUser(followerId);
+        Users following = userService.queryUser(followingId);
 
         if(following == null || follower == null) {
             return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
         }
 
-        followerService.doFollow(id, posterId);
+        followerService.doFollow(followerId, followingId);
 
         return JSONResult.ok();
     }
 
     @PostMapping("unfollow")
-    public JSONResult unfollow(@RequestParam String id, @RequestParam String posterId) {
+    @ApiOperation("a follower unfollows a following ")
+    public JSONResult unfollow(@RequestParam String followerId, @RequestParam String followingId) {
 
-        followerService.unFollow(id, posterId);
+        followerService.unFollow(followerId, followingId);
 
         return JSONResult.ok();
     }
 
-    @PostMapping("checkfollow")
-    public JSONResult checkFollow(@RequestParam String id, @RequestParam String posterId) {
-        return followerService.checkFollow(id, posterId)? JSONResult.ok(ResponseStatusEnum.ALREADY_FOLLOW)
+    @PostMapping("checkFollow")
+    @ApiOperation("check if follower follows following")
+    public JSONResult checkFollow(@RequestParam String followerId, @RequestParam String followingId) {
+        return followerService.checkFollow(followerId, followingId)? JSONResult.ok(ResponseStatusEnum.ALREADY_FOLLOW)
                 : JSONResult.ok(ResponseStatusEnum.HAS_NOT_FOLLOW);
     }
 
-    @GetMapping("listfollower")
-    public JSONResult listFollower(@RequestParam String id) {
-        List<ListFollowerVO> listFollowerVOs = followerService.listFollower(id);
+    @GetMapping("listFollower")
+    @ApiOperation("list all followers of an user")
+    public JSONResult listFollower(@RequestParam String userId) {
+        List<ListFollowerVO> listFollowerVOs = followerService.listFollower(userId);
         if(listFollowerVOs != null) {
             return JSONResult.ok(listFollowerVOs);
         }
         return JSONResult.errorCustom(ResponseStatusEnum.NO_FOLLOWERS);
     }
-    @GetMapping("listfollowing")
-    public JSONResult listFollowing(@RequestParam String id) {
-        List<ListFollowerVO> listFollowerVOs = followerService.listFollowing(id);
+    @GetMapping("listFollowing")
+    @ApiOperation("list all followings of an user")
+    public JSONResult listFollowing(@RequestParam String userId) {
+        List<ListFollowerVO> listFollowerVOs = followerService.listFollowing(userId);
         if(listFollowerVOs != null) {
             return JSONResult.ok(listFollowerVOs);
         }
