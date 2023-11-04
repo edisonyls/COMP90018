@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
-import axios from "axios";
-import { Text, View, Alert, ActivityIndicator, Modal } from "react-native";
+import { Text, View, Alert } from "react-native";
 import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import {
   StyledContainer,
@@ -27,11 +26,10 @@ import {
   WelcomeText,
   CheckBoxView,
   StyledCheckBox,
-  ModalViewWrap,
-  ModalInnerView,
 } from "../components/styles";
 import { Octicons, Ionicons } from "@expo/vector-icons";
 import { sendVerifyRequest } from "../api/auth";
+import LoadingView from "../components/LoadingView";
 
 const { darkLight, brand } = Colors;
 
@@ -50,7 +48,8 @@ const Register = ({ navigation }) => {
   const handleFormSubmission = async (values) => {
     setIsLoading(true);
     const res = await sendVerifyRequest(values.email);
-    if (res.data) {
+    console.log(res);
+    if (res.success) {
       setIsLoading(false);
       navigation.navigate("Verify", {
         email: values.email,
@@ -168,38 +167,7 @@ const Register = ({ navigation }) => {
             )}
           </Formik>
         </InnerContainer>
-        {isLoading && (
-          <Modal
-            transparent={true}
-            animationType="none"
-            visible={isLoading}
-            onRequestClose={() => {
-              console.log("close modal");
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#00000040",
-              }}
-            >
-              <View
-                style={{
-                  width: 100,
-                  height: 100,
-                  backgroundColor: "white",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 10,
-                }}
-              >
-                <ActivityIndicator size="large" color={brand} />
-              </View>
-            </View>
-          </Modal>
-        )}
+        {isLoading && <LoadingView loading={isLoading} />}
       </StyledContainer>
     </KeyboardAvoidingWrapper>
   );
