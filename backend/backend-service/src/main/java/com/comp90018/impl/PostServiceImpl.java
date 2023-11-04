@@ -124,15 +124,15 @@ public class PostServiceImpl implements PostService {
         switch (postType) {
             case "Missing":
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
-                        .andEqualTo("0", PostTypeEnum.MISSING);
+                        .andEqualTo("postType", PostTypeEnum.MISSING.getPostType());
                 break;
             case "Found":
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
-                        .andEqualTo("0", PostTypeEnum.FOUND);
+                        .andEqualTo("postType", PostTypeEnum.FOUND.getPostType());
                 break;
             case "General":
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
-                        .andEqualTo("0", PostTypeEnum.GENERAL);
+                        .andEqualTo("postType", PostTypeEnum.GENERAL.getPostType());
                 break;
             default:
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
@@ -156,7 +156,7 @@ public class PostServiceImpl implements PostService {
         Example example = new Example(Post.class);
         example.createCriteria().andEqualTo("id", postId);
         List<Post> post = postMapper.selectByExample(example);
-        if (post.isEmpty()) {
+        if (post.isEmpty() || post == null) {
             return false;
         }
         else {
@@ -169,9 +169,10 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public Post updatePost(UploadPostBO uploadPostBO) {
         Example example = new Example(Post.class);
-        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId());
+        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId())
+                .andEqualTo("posterId", uploadPostBO.getUserId());
         List<Post> postList = postMapper.selectByExample(example);
-        if (postList == null || postList.isEmpty()) {
+        if (postList.isEmpty() || postList == null) {
             return null;
         }
         else {
