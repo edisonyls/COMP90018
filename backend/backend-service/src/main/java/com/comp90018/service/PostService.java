@@ -8,7 +8,7 @@ public interface PostService {
 
     Post createPost(UploadPostBO uploadPostBO);
 
-    List<Post> getAllPost();
+    List<Post> getAllPost(String postType);
     List<Post> getAllPostPerUser(String userId);
 
     boolean deletedPost(String postId);

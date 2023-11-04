@@ -119,9 +119,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAllPost() {
+    public List<Post> getAllPost(String postType) {
         Example example = new Example(Post.class);
-        example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
+        switch (postType) {
+            case "Missing":
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                        .andEqualTo("0", PostTypeEnum.MISSING);
+                break;
+            case "Found":
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                        .andEqualTo("0", PostTypeEnum.FOUND);
+                break;
+            case "General":
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                        .andEqualTo("0", PostTypeEnum.GENERAL);
+                break;
+            default:
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
+                break;
+        }
         List<Post> postList = postMapper.selectByExample(example);
         return new ArrayList<>(postList);
     }

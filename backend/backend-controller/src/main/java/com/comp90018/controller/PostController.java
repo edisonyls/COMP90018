@@ -51,8 +51,8 @@ public class PostController extends BaseController {
     }
 
     @GetMapping("getAllPosts")
-    public JSONResult getAllPosts() {
-        List<Post> postList = postService.getAllPost();
+    public JSONResult getAllPosts(@RequestBody String postType) {
+        List<Post> postList = postService.getAllPost(postType);
         if (postList == null) {
             return JSONResult.errorMsg("No exist post");
         }
@@ -67,6 +67,7 @@ public class PostController extends BaseController {
         }
         return JSONResult.ok(postList);
     }
+
 
     @PostMapping("deleteAPost")
     public JSONResult deletePost(@RequestParam String postId) {
