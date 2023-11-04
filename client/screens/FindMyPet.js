@@ -129,36 +129,65 @@ const FindMyPet = () => {
       try {
         // Fetch the detailed information of the selected location
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
-    
+        
+        
+
         if (response.data.result) {
           // Extract the coordinates
           const location = response.data.result.geometry.location;
-    
-          // Log the coordinates
-          
-          console.log('Form submitted with the following data:');
-          console.log('Selected location coordinates:', location);
-          console.log(`Image URI: ${imageUri}`);
-          console.log(`Pet Category: ${petCategory}`);
-          console.log(`Pet Breed: ${petBreed}`);
-          console.log(`Pet Name: ${petName}`);
-          console.log(`Contact Number: ${contactNumber}`);
-          console.log(`Reward: ${reward}`);
 
-          const petData = {
-            pet_name: petName,
-            pet_category: petCategory,
-            pet_breed: petBreed,
-            contact_number: contactNumber,
-            reward: reward,
-            image_uri: imageUri,
-            location_lat: location.lat,
-            location_lng: location.lng
+          // Create a new FormData object
+          const formData = new FormData();
+
+          // Convert the imageUri to a blob or file object and append it to the FormData
+          const image = {
+            uri: imageUri,
+            type: 'image/jpeg', // or the correct mime type of your image
+            name: 'photo.jpg', // or any name you want to give to the file
           };
+          formData.append('image', image);
+
+          // Append other form fields to the FormData
+          formData.append('pet_name', petName);
+          formData.append('pet_category', petCategory);
+          formData.append('pet_breed', petBreed);
+          formData.append('contact_number', contactNumber);
+          formData.append('reward', reward);
+          formData.append('location_lat', location.lat);
+          formData.append('location_lng', location.lng);
+
+        
+  
+      
+          
+          
+          // console.log('Form submitted with the following data:');
+          // console.log('Selected location coordinates:', location);
+          // console.log(`Image URI: ${imageUri}`);
+          // console.log(`Pet Category: ${petCategory}`);
+          // console.log(`Pet Breed: ${petBreed}`);
+          // console.log(`Pet Name: ${petName}`);
+          // console.log(`Contact Number: ${contactNumber}`);
+          // console.log(`Reward: ${reward}`);
+
+          // const petData = {
+          //   pet_name: petName,
+          //   pet_category: petCategory,
+          //   pet_breed: petBreed,
+          //   contact_number: contactNumber,
+          //   reward: reward,
+          //   image_uri: imageUri,
+          //   location_lat: location.lat,
+          //   location_lng: location.lng
+          // };
 
           try {
-            const serverResponse = await axios.post('http://192.168.1.106:8080/comp-test', petData);
-        
+            const serverResponse = await axios.post('http://192.168.1.106:8080/comp-test', formData,{
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+
             if (serverResponse.data.status === 'success') {
                 console.log('Data submitted successfully. ID:', serverResponse.data.id);
                 // ... (clear your form fields and navigate away)
