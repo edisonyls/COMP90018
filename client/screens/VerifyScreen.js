@@ -10,12 +10,17 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { verifyEmail } from "../api/auth";
+import { useUserContext } from "../context/userContext";
+import LoadingView from "../components/LoadingView";
 
 let newInputIndex = 0;
 
 const VerifyScreen = ({ navigation, route }) => {
   const [OTP, setOTP] = useState({ 0: "", 1: "", 2: "", 3: "", 4: "", 5: "" });
   const [nextInputIndex, setNextInputIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const { setUser } = useUserContext();
 
   const inputs = Array(6).fill("");
   const input = useRef();
@@ -49,40 +54,57 @@ const VerifyScreen = ({ navigation, route }) => {
     if (code.length !== 6) {
       Alert.alert("Invalid Verification", "Please Enter 6 Digits");
     } else {
+      setLoading(true);
       const res = await verifyEmail(code, email, password, username);
+      console.log(res);
       if (!res.success) {
+        setLoading(false);
         console.log("Register is failed");
       }
       console.log(res.data);
-      navigation.navigate("Home", { user: res.data });
+      setUser(res.data);
+      setLoading(false);
+      navigation.navigate("Home");
     }
   };
 
   return (
     <KeyboardAvoidingView className="flex-1 justify-center">
       <Text className="text-[#6D28D9] text-center mb-3">
-        Please Verify your email, PIN has been sent yo your email
+        Please Verify your email
+      </Text>
+      <Text className="text-[#6D28D9] text-center mb-1">
+        PIN has been sent yo your email
       </Text>
       <View
         className="flex-row justify-between"
-        style={{ paddingHorizontal: inputWidth / 2 }}
+        style={{
+          paddingHorizontal: inputWidth / 2,
+          paddingVertical: inputWidth / 2,
+        }}
       >
         {inputs.map((inp, index) => {
           return (
             <View
               key={index.toString()}
               className="border-[#6D28D9] border-2 justify-center items-center"
-              style={{ width: inputWidth, height: inputWidth }}
+              style={{
+                width: inputWidth,
+                height: inputWidth,
+              }}
             >
               <TextInput
                 value={OTP[index]}
                 onChangeText={(text) => handleChangeText(text, index)}
                 placeholder="0"
-                className="text-[25px]"
+                className="text-[15px]"
                 keyboardType="numeric"
                 maxLength={1}
                 ref={nextInputIndex === index ? input : null}
-                style={{ paddingHorizontal: 15, paddingVertical: 15 }}
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 15,
+                }}
               />
             </View>
           );
@@ -91,6 +113,7 @@ const VerifyScreen = ({ navigation, route }) => {
       <TouchableOpacity className="mt-10 items-center" onPress={submitOTP}>
         <Feather name="check-circle" size={36} color="#6D28D9" />
       </TouchableOpacity>
+      {loading && <LoadingView loading={loading} />}
     </KeyboardAvoidingView>
   );
 };
