@@ -119,14 +119,11 @@ public class CommentServiceImpl implements CommentService {
 
 
         List<CommentDTO> commentDTOList = commentDTOMap.values().stream()
-                .peek(dto -> log.info("Processing DTO with ID: {} and fatherID: {}", dto.getId(), dto.getFatherCommentId())) // 调试输出每个DTO
-                .filter(commentDTO -> commentDTO.getFatherCommentId().equals("-1")) // 确保过滤逻辑正确
+                .peek(dto -> log.info("Processing DTO with ID: {} and fatherID: {}", dto.getId(), dto.getFatherCommentId()))
+                .filter(commentDTO -> commentDTO.getFatherCommentId().equals("-1"))
                 .collect(Collectors.toList());
         System.out.println(commentDTOList);
         return commentDTOList;
-//        return commentDTOMap.values().stream()
-//                .filter(commentDTO -> commentDTO.getFatherCommentId() == null)
-//                .collect(Collectors.toList());
     }
 
     private CommentDTO convertToDTO(Comment comment) {
