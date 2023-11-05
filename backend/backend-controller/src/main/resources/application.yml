@@ -42,6 +42,7 @@ spring:
     host: 180.76.230.251
     database: 10
     port: 6379
+    password: root
   data:
     mongodb:
       uri: mongodb://root:12345678@180.76.230.251:27017

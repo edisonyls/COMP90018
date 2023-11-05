@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useUserContext } from "../context/userContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +52,8 @@ const HomeScreen = () => {
     },
   ]);
 
+  const { user } = useUserContext();
+
   const filteredData = mainData.filter((item) => {
     switch (type) {
       case "all":
@@ -86,7 +89,9 @@ const HomeScreen = () => {
               <Text className="text-[40px] text-[#0B646B] font-bold">
                 {"Welcome :)"}
               </Text>
-              <Text className="text-[20px] text-[#527283]">Test User</Text>
+              <Text className="text-[20px] text-[#527283]">
+                {user.nickname}
+              </Text>
             </View>
             <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
               <Image
@@ -107,49 +112,47 @@ const HomeScreen = () => {
               Category
             </Text>
           </View>
-          <ScrollView 
+          <ScrollView
             horizontal={true} // 开启横向滚动
             showsHorizontalScrollIndicator={false} // 当你不想显示滚动条时
             // 你也可以添加一些额外的样式和属性，例如分页等
           >
-             <View className="flex-row item-center justify-center px-8 mt-4">
-            <MenuContainer
-              key={"all"}
-              title="All"
-              imageSrc={require("../assets/dog.png")}
-              type={type}
-              setType={setType}
-              setSelectedMenu={setSelectedMenu} 
-            />
-            <MenuContainer
-              key={"missing"}
-              title="Missing"
-              imageSrc={require("../assets/dog.png")}
-              type={type}
-              setType={setType}
-              setSelectedMenu={setSelectedMenu} 
-            />
-            <MenuContainer
-              key={"found"}
-              title="Found"
-              imageSrc={require("../assets/dog.png")}
-              type={type}
-              setType={setType}
-              setSelectedMenu={setSelectedMenu} 
-            />
-            <MenuContainer
-              key={"general"}
-              title="General"
-              imageSrc={require("../assets/dog.png")}
-              type={type}
-              setType={setType}
-              setSelectedMenu={setSelectedMenu} 
-            />
-          </View> 
-
-            
+            <View className="flex-row item-center justify-center px-8 mt-4">
+              <MenuContainer
+                key={"all"}
+                title="All"
+                imageSrc={require("../assets/dog.png")}
+                type={type}
+                setType={setType}
+                setSelectedMenu={setSelectedMenu}
+              />
+              <MenuContainer
+                key={"missing"}
+                title="Missing"
+                imageSrc={require("../assets/dog.png")}
+                type={type}
+                setType={setType}
+                setSelectedMenu={setSelectedMenu}
+              />
+              <MenuContainer
+                key={"found"}
+                title="Found"
+                imageSrc={require("../assets/dog.png")}
+                type={type}
+                setType={setType}
+                setSelectedMenu={setSelectedMenu}
+              />
+              <MenuContainer
+                key={"general"}
+                title="General"
+                imageSrc={require("../assets/dog.png")}
+                type={type}
+                setType={setType}
+                setSelectedMenu={setSelectedMenu}
+              />
+            </View>
           </ScrollView>
-          
+
           <View>
             <View className="flex-row items-center justify-between px-4 mt-4">
               <Text className="text-[#2C7379] text-[20px] font-bold">
@@ -162,11 +165,7 @@ const HomeScreen = () => {
                 <AntDesign name="doubleright" size={12} color="#A0C4C7" />
               </TouchableOpacity>
             </View>
-            {selectedMenu === "all" ? (
-                <View>
-                </View>
-
-            ):null}
+            {selectedMenu === "all" ? <View></View> : null}
             <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">
               {filteredData?.length > 0 ? (
                 filteredData.map((item) => (

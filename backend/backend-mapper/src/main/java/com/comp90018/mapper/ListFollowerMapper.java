@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * list all followers
+ */
 @Repository
 public interface ListFollowerMapper extends MyMapper<Followers> {
     public List<ListFollowerVO> listFollower(@Param("paramMap") Map<String, Object> map);
