@@ -32,7 +32,7 @@ public class PostController extends BaseController {
             return JSONResult.errorMsg("No img!");
         }
         else {
-            String postId = RedisEnum.REDIS_POST_ID + userId + ":" + System.currentTimeMillis();
+            String postId = RedisEnum.REDIS_ID_NUM + userId + ":" + System.currentTimeMillis();
             String fileName = multipartFile.getOriginalFilename();
             try {
                 MinIOUtils.uploadFile(minIOConfig.getBucketName(), fileName, multipartFile.getInputStream());

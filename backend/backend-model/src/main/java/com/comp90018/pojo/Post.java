@@ -282,7 +282,7 @@ public class Post {
      *
      * @param petBreed pet breed
      */
-    public void setPetBread(String petBreed) {
+    public void setPetBreed(String petBreed) {
         this.petBreed = petBreed;
     }
 
