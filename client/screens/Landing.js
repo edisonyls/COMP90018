@@ -41,7 +41,7 @@ const Landing = ({ navigation }) => {
           can meet your animal needs.
         </SubTitle>
 
-        <StyledButton onPress={() => navigation.navigate("SignIn")}>
+        <StyledButton onPress={() => navigation.navigate("Post")}>
           <ButtonText> Get Start</ButtonText>
         </StyledButton>
       </InnerContainer>
