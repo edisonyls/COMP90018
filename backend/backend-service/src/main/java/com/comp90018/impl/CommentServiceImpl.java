@@ -1,12 +1,15 @@
 package com.comp90018.impl;
 
 import com.comp90018.dto.CommentDTO;
+import com.comp90018.enums.MessageContentEnum;
+import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.CommentMapper;
 import com.comp90018.mapper.PostMapper;
 import com.comp90018.pojo.Comment;
 import com.comp90018.pojo.Post;
 import com.comp90018.service.CommentService;
+import com.comp90018.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
 @Service
 public class CommentServiceImpl implements CommentService {
 
+    @Autowired
+    private MessageService messageService;
     @Autowired
     private CommentMapper commentMapper;
 
@@ -58,6 +63,11 @@ public class CommentServiceImpl implements CommentService {
             comment.setContent(commentDTO.getContent());
             comment.setFatherCommentId(commentDTO.getFatherCommentId());
             commentMapper.insert(comment);
+
+            HashMap<String, Object> map = new HashMap<>();
+            map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.COMMENT_NOTIFY.getSystemMessage()); // (behavior, comment)
+            messageService.createMessage(commentDTO.getCommentUserId(), commentDTO.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+
             return comment;
         }
     }
@@ -90,6 +100,10 @@ public class CommentServiceImpl implements CommentService {
             if (commentMapper.updateByPrimaryKeySelective(comment) == 0) {
                 return null;
             }
+
+            HashMap<String, Object> map = new HashMap<>();
+            map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.COMMENT_LIKE_NOTIFY.getSystemMessage()); // (behavior, like)
+            messageService.createMessage(comment.getCommentUserId(), comment.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
             return comment;
         }
     }

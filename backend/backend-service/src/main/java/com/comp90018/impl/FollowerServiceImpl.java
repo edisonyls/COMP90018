@@ -3,7 +3,7 @@ package com.comp90018.impl;
 import com.comp90018.enums.FriendEnum;
 import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.enums.RedisEnum;
-import com.comp90018.enums.SystemMessageEnum;
+import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.FollowersMapper;
 import com.comp90018.mapper.ListFollowerMapper;
@@ -24,6 +24,11 @@ import java.util.Map;
 
 @Service
 public class FollowerServiceImpl implements FollowerService {
+
+    final String Follow = "Follow";
+    final Integer MyFollower = 0;
+    final Integer MyFollowing = 1;
+
     @Autowired
     private Sid sid;
     @Autowired
@@ -55,25 +60,24 @@ public class FollowerServiceImpl implements FollowerService {
         //query if the following follows follower
         //the sequence of following and follower should be inverse
         Followers following = queryIsFollower(followingId, followerId);
-
-        if(following != null) {
+        if(following == null) {//the following doesn't follow the follower
+            follower.setIsFollowerFriendOfMine(FriendEnum.NO.getFriendRelation());
+        }else {
             //update the following
             following.setIsFollowerFriendOfMine(FriendEnum.YES.getFriendRelation());
             followersMapper.updateByPrimaryKey(following);
 
             follower.setIsFollowerFriendOfMine(FriendEnum.YES.getFriendRelation());
-        }else {
-            follower.setIsFollowerFriendOfMine(FriendEnum.NO.getFriendRelation());
         }
         followersMapper.insert(follower);
 
-        redis.set(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + followerId + ":" + followingId, "0"); // redis add new relationship
-        redis.increment(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1); // follows num ++
-        redis.increment(RedisEnum.REDIS_FAN_NUM + followingId, 1); // fans num ++
+        redis.set(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + followerId + ":" + followingId, Follow); // redis add new relationship
+        redis.increment(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1); // num of follows of the follower ++
+        redis.increment(RedisEnum.REDIS_FAN_NUM + followingId, 1); // num of fans of the following ++
 
         //send notify message
         HashMap<String, Object> map = new HashMap<>();
-        map.put(SystemMessageEnum.BEHAVIOR.getSystemMessage(), SystemMessageEnum.FOLLOW_NOTIFY.getSystemMessage());
+        map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.FOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
         messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
     }
 
@@ -81,13 +85,16 @@ public class FollowerServiceImpl implements FollowerService {
     @Override
     public void unFollow(String followerId, String followingId) {
         Followers following = queryIsFollower(followerId, followingId);
-        if(following == null) {
+        if(following == null) { // the follower doesn't follow the following
             return;
         }
 
         if(following.getIsFollowerFriendOfMine() == FriendEnum.NO.getFriendRelation()) {
+            //if the follower isn't the friend. just delete the record of followers table
             followersMapper.delete(following);
         }else {
+            //if the follower is the friend of the following
+            //delete the record and update the relationship
             Followers following2 = queryIsFollower(followingId, followerId);
             following2.setIsFollowerFriendOfMine(FriendEnum.NO.getFriendRelation());
             followersMapper.updateByPrimaryKeySelective(following2);
@@ -95,30 +102,62 @@ public class FollowerServiceImpl implements FollowerService {
         }
 
         redis.del(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + followerId + ":" + followingId);
-        redis.decrement(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1);
-        redis.decrement(RedisEnum.REDIS_FAN_NUM + followingId, 1);
+        redis.decrement(RedisEnum.REDIS_FOLLOW_NUM + followerId, 1); // num of follows of the follower --
+        redis.decrement(RedisEnum.REDIS_FAN_NUM + followingId, 1); // num of fans of the following --
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put(SystemMessageEnum.BEHAVIOR.getSystemMessage(), SystemMessageEnum.UNFOLLOW_NOTIFY.getSystemMessage());
+        map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.UNFOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
         messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
     }
 
     @Override
-    public List<ListFollowerVO> listFollower(String id) {
+    public List<ListFollowerVO> listFollower(String userId) {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
+        map.put("userId", userId);
+
         List<ListFollowerVO> listFollowerVOs = listFollowerMapper.listFollower(map);
-        return listFollowerVOs;
+        return indentifyFriends(userId, listFollowerVOs, MyFollower);
     }
 
     @Override
-    public List<ListFollowerVO> listFollowing(String id) {
+    public List<ListFollowerVO> listFollowing(String userId) {
         Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
+        map.put("userId", userId);
 
         List<ListFollowerVO> listFollowerVOs = listFollowingMapper.listFollowing(map);
 
-        return listFollowerVOs;
+        return indentifyFriends(userId, listFollowerVOs, MyFollowing);
+    }
+
+    /**
+     * update friends of the followers or followings list
+     * @return
+     */
+    public List<ListFollowerVO> indentifyFriends(String userId, List<ListFollowerVO> listFollowerVOS, int type) {
+
+        if(type == MyFollower) {
+            for(ListFollowerVO listFollowerVO: listFollowerVOS) {
+                //if the user also follows its follower
+                String s = redis.get(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + userId + ":" + listFollowerVO.getId());
+                if(Follow.equals(s)) {
+                    listFollowerVO.setFriendOfMine(true);
+                }else {
+                    listFollowerVO.setFriendOfMine(false);
+                }
+            }
+        } else if (type == MyFollowing) {
+            for(ListFollowerVO listFollowerVO: listFollowerVOS) {
+                //if the following also follows the user
+                String s = redis.get(RedisEnum.REDIS_FOLLOWER_FOLLOWING_RELATION + listFollowerVO.getId() + ":" + userId);
+                if(Follow.equals(s)) {
+                    listFollowerVO.setFriendOfMine(true);
+                }else {
+                    listFollowerVO.setFriendOfMine(false);
+                }
+            }
+        }
+
+        return listFollowerVOS;
     }
 
     /**

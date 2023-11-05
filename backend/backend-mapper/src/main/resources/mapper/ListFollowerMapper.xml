@@ -6,7 +6,7 @@
     SELECT
         users.id as id,
         users.nickname as nickname,
-        users.picture as picture,
+        users.profile as profile,
         users.description as description
     FROM
         users
@@ -15,7 +15,7 @@
     ON
         users.id = followers.follower_id
     WHERE
-        followers.following_id = #{paramMap.id}
+        followers.following_id = #{paramMap.userId}
   </select>
 
 </mapper>

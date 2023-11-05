@@ -34,7 +34,6 @@ public class JSONResult {
         return new JSONResult(ResponseStatusEnum.SUCCESS);
     }
     public JSONResult(Object data) {
-        this.status = ResponseStatusEnum.SUCCESS.status();
         this.msg = ResponseStatusEnum.SUCCESS.msg();
         this.success = ResponseStatusEnum.SUCCESS.success();
         this.data = data;
@@ -81,18 +80,15 @@ public class JSONResult {
     }
 
     public JSONResult(ResponseStatusEnum responseStatus) {
-        this.status = responseStatus.status();
         this.msg = responseStatus.msg();
         this.success = responseStatus.success();
     }
     public JSONResult(ResponseStatusEnum responseStatus, Object data) {
-        this.status = responseStatus.status();
         this.msg = responseStatus.msg();
         this.success = responseStatus.success();
         this.data = data;
     }
     public JSONResult(ResponseStatusEnum responseStatus, String msg) {
-        this.status = responseStatus.status();
         this.msg = msg;
         this.success = responseStatus.success();
     }
