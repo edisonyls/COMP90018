@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public enum SystemMessageEnum {
+public enum MessageContentEnum {
     BEHAVIOR("behavior"),
     FOLLOW_NOTIFY("follow"),
     UNFOLLOW_NOTIFY("unfollow"),
     LIKE_NOTIFY("like"),
     UNLIKE_NOTIFY("unlike"),
-    COMMENT_NOTIFY("comment")
+    COMMENT_NOTIFY("comment"),
+    DETAIL("detail")
     ;
 
     private String systemMessage;

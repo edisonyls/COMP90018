@@ -3,7 +3,7 @@ package com.comp90018.impl;
 import com.comp90018.enums.FriendEnum;
 import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.enums.RedisEnum;
-import com.comp90018.enums.SystemMessageEnum;
+import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.FollowersMapper;
 import com.comp90018.mapper.ListFollowerMapper;
@@ -77,7 +77,7 @@ public class FollowerServiceImpl implements FollowerService {
 
         //send notify message
         HashMap<String, Object> map = new HashMap<>();
-        map.put(SystemMessageEnum.BEHAVIOR.getSystemMessage(), SystemMessageEnum.FOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
+        map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.FOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
         messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
     }
 
@@ -106,7 +106,7 @@ public class FollowerServiceImpl implements FollowerService {
         redis.decrement(RedisEnum.REDIS_FAN_NUM + followingId, 1); // num of fans of the following --
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put(SystemMessageEnum.BEHAVIOR.getSystemMessage(), SystemMessageEnum.UNFOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
+        map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.UNFOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
         messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
     }
 
