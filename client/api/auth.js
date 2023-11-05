@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "192.168.1.112";
+const BASE_URL = "192.168.1.111";
 
 export const verifyEmail = async (code, email, password, username) => {
   try {
@@ -16,6 +16,7 @@ export const verifyEmail = async (code, email, password, username) => {
     return response.data;
   } catch (error) {
     console.log(error);
+    return false;
   }
 };
 
@@ -33,6 +34,7 @@ export const sendVerifyRequest = async (email) => {
     return response.data;
   } catch (err) {
     console.log(err);
+    return false;
   }
 };
 
@@ -51,5 +53,6 @@ export const loginRequest = async (email, password) => {
     return res.data;
   } catch (err) {
     console.log("while sending login request -> \n" + err);
+    return false;
   }
 };

@@ -40,7 +40,12 @@ const SignIn = ({ navigation }) => {
   const handleFormSubmission = async (values) => {
     setLoading(true);
     const res = await loginRequest(values.email, values.password);
-    if (!res.success) {
+    if (res === false) {
+      setLoading(false);
+      console.log("Server side is down. Check api connection.");
+      Alert.alert("Login Failed!", res.msg);
+      setLoading(false);
+    } else if (!res.success) {
       Alert.alert("Login Failed!", res.msg);
       setLoading(false);
     } else {
