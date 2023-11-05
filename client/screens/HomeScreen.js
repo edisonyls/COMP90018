@@ -156,6 +156,7 @@ const HomeScreen = () => {
               {filteredData?.length > 0 ? (
                 filteredData.map((item) => (
                   <ItemCardContainer
+                    navigation={navigation}
                     key={item.id}
                     imageSrc={item.imageSrc}
                     badge={item.badge}
@@ -173,7 +174,7 @@ const HomeScreen = () => {
                       className="w-32 h-32 object-cover"
                     />
                     <Text className="text-2xl text-[#428288] font-semibold">
-                      oops... No Data Found
+                      There are no posts from the community YET..
                     </Text>
                   </View>
                 </>
