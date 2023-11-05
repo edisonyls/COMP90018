@@ -12,9 +12,8 @@ import lombok.ToString;
 public class ListFollowerVO {
     private String id;
     private String nickname;
-    private String picture;
+    private String profile;
     private String description;
-
     private boolean isFriendOfMine;
 
 }
