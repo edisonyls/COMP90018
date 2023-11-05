@@ -19,22 +19,26 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageDao messageDao;
     @Override
-    public void createMessage(String senderId, String receiverId, Integer type, Map content) {
+    public Message createMessage(String senderId, String receiverId, Integer type, Map content) {
         Users sender = userService.queryUser(senderId);
         Users receiver = userService.queryUser(receiverId);
-        messageDao.save(new Message(senderId, sender.getNickname(), sender.getProfile(),
-                receiverId, receiver.getNickname(), receiver.getProfile(),
-                type, content, new Date()));
 
+        if(sender == null || receiver == null) {
+            return null;
+        }
+
+        Message message = new Message(senderId, sender.getNickname(), sender.getProfile(),
+                                receiverId, receiver.getNickname(), receiver.getProfile(),
+                                type, content, new Date());
+        messageDao.save(message);
+        return message;
     }
 
     @Override
-    public List<Message> listAllMessage(String receiverId) {
-        return null;
+    public List<Message> listAllMessage(String userId) {
+        List<Message> messageList = messageDao.findAllBySenderIdOrReceiverIdOrderByTimeDesc(userId, userId);
+        return messageList;
     }
 
-    @Override
-    public List<Message> listMessageWith1User() {
-        return null;
-    }
+
 }

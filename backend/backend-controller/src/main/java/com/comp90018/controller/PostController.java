@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -25,41 +27,44 @@ public class PostController extends BaseController {
     PostService postService;
 
     @PostMapping("/uploadImg")
-    public JSONResult uploadPostImg(@Valid @RequestParam MultipartFile multipartFile, String userId, String postId) {
+    public JSONResult uploadPostImg(@Valid @RequestParam MultipartFile multipartFile, String userId) {
         if (multipartFile == null) {
-            //uploadPostBO.setPostImg("1");
             return JSONResult.errorMsg("No img!");
         }
         else {
+            String postId = RedisEnum.REDIS_POST_ID + userId + ":" + System.currentTimeMillis();
             String fileName = multipartFile.getOriginalFilename();
             try {
                 MinIOUtils.uploadFile(minIOConfig.getBucketName(), fileName, multipartFile.getInputStream());
             } catch (Exception e) {
-                JSONResult.errorMsg("Upload error, please try again.");
+                return JSONResult.errorMsg("Upload error, please try again.");
             }
             String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
-            redis.set(RedisEnum.REDIS_POST_IMG_URL + userId + postId, imgUrl, 90);
-            return JSONResult.ok(imgUrl);
+//            redis.set(postId, imgUrl, 90);
+            Map<String, Object> map = new HashMap<String, Object>() {{
+                put("imgUrl", imgUrl);
+                put("postId", postId);
+            }};
+            return JSONResult.ok(map);
         }
     }
 
-
     @PostMapping("/uploadPost")
     public JSONResult uploadPost(@Valid @RequestBody UploadPostBO uploadPostBO) {
-        String userId = uploadPostBO.getUserId();
         String postId = uploadPostBO.getPostId();
-        String url = redis.get(RedisEnum.REDIS_POST_IMG_URL + userId + postId);
-        log.info(url);
+        Post post = postService.createPost(uploadPostBO);
+        if (post == null) {
+            return JSONResult.errorMsg("Required information cannot be blank");
+        }
+//        String url = redis.get(postId);
+//        log.info(url);
+        String url = uploadPostBO.getPostImg();
         if (url == null) {
             return JSONResult.errorMsg("Img cannot be blank");
         }
         else {
-            uploadPostBO.setPostImg(url);
-            redis.del(url);
-            Post post = postService.createPost(uploadPostBO);
-            if (post == null) {
-                return JSONResult.errorMsg("Required information cannot be blank");
-            }
+            post.setPicture(url);
+//            redis.del(url);
             return JSONResult.ok(post);
         }
     }
@@ -76,7 +81,7 @@ public class PostController extends BaseController {
     @GetMapping("getAllPostsPerUser")
     public JSONResult getAllPostsPerUser(@RequestParam String userId) {
         List<Post> postList = postService.getAllPostPerUser(userId);
-        if (postList.isEmpty() || postList == null) {
+        if (postList == null) {
             return JSONResult.errorMsg("This user does not have post");
         }
         return JSONResult.ok(postList);
@@ -94,15 +99,16 @@ public class PostController extends BaseController {
 
     @PostMapping("updatePost")
     public JSONResult updatePost(@RequestBody UploadPostBO uploadPostBO) {
-        String userId = uploadPostBO.getUserId();
         String postId = uploadPostBO.getPostId();
-        String url = redis.get(RedisEnum.REDIS_POST_IMG_URL + userId + postId);
-        if (url != null) {
-            uploadPostBO.setPostImg(url);
-            redis.del(url);
-        }
         Post post = null;
         post = postService.updatePost(uploadPostBO);
+//        String url = redis.get(postId);
+        String url = uploadPostBO.getPostImg();
+        if (url != null) {
+//            uploadPostBO.setPostImg(url);
+            post.setPicture(url);
+//            redis.del(url);
+        }
         if (post == null) {
             return JSONResult.errorMsg("Update error, post not exist");
         }

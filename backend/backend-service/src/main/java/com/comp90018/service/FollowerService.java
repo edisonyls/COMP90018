@@ -6,13 +6,18 @@ import java.util.List;
 
 public interface FollowerService {
 
+    //check if the follower follows the following
     public boolean checkFollow(String followerId, String followingId);
 
+    //follower follows the following
     public void doFollow(String followerId, String followingId);
 
+    //follower unfollows the following
     public void unFollow(String followerId, String followingId);
 
-    public List<ListFollowerVO> listFollower(String id);
+    //list all followers of the user
+    public List<ListFollowerVO> listFollower(String userId);
 
-    public List<ListFollowerVO> listFollowing(String id);
+    //list all followings of the user
+    public List<ListFollowerVO> listFollowing(String userId);
 }

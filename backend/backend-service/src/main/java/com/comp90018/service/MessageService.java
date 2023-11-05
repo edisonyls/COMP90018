@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 public interface MessageService {
-    public void createMessage(String senderId, String receiverId, Integer type, Map content);
 
-    public List<Message> listAllMessage(String receiverId);
-    public List<Message> listMessageWith1User();
+    //create a system message or user message
+    public Message createMessage(String senderId, String receiverId, Integer type, Map content);
+
+    //list all messages of an user
+    public List<Message> listAllMessage(String userId);
 }

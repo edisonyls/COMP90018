@@ -42,7 +42,7 @@ public class PostServiceImpl implements PostService {
         post.setCreatedTime(date);
         post.setUpdatedTime(date);
         post.setId(postId);
-        if (uploadPostBO.getPostImg() == null || uploadPostBO.getUserId() == null
+        if (uploadPostBO.getUserId() == null
         || uploadPostBO.getLatitude() == null || uploadPostBO.getLongitude() == null
         || uploadPostBO.getPostType() == null) {
             return null;
