@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -31,6 +32,10 @@ public class MessageController extends BaseController{
     @PostMapping("/sendMessage")
     @ApiOperation("sender sends a message to receiver")
     public JSONResult send(@RequestParam String senderId, @RequestParam String receiverId, @RequestParam String content, HttpServletRequest httpServletRequest) {
+        if(senderId == null || receiverId == null || senderId.equals(receiverId)) {
+            return JSONResult.errorCustom(ResponseStatusEnum.MESSAGE_SEND_FAIL);
+        }
+
         HashMap<String, String> contentMap = new HashMap<>();
         contentMap.put(MessageContentEnum.DETAIL.getSystemMessage(), content);
         Message message = messageService.createMessage(senderId, receiverId, MessageTypeEnum.USER_MESSAGE.getType(), contentMap);
@@ -41,4 +46,20 @@ public class MessageController extends BaseController{
 
         return JSONResult.errorCustom(ResponseStatusEnum.MESSAGE_SEND_FAIL);
     }
+
+    @PostMapping("/listMessages")
+    @ApiOperation("list all messages of an user")
+    public JSONResult send(@RequestParam String userId, HttpServletRequest httpServletRequest) {
+        if (userId == null) {
+            return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
+        }
+
+        List<Message> messages = messageService.listAllMessage(userId);
+        if (messages == null || messages.size() == 0) {
+            return JSONResult.errorCustom(ResponseStatusEnum.NO_MESSAGES);
+        }
+
+        return JSONResult.ok(messages);
+    }
+
 }

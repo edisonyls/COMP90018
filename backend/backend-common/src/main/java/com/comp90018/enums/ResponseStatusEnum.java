@@ -13,7 +13,8 @@ public enum ResponseStatusEnum {
     USER_NOT_LOGIN(false, "user not logged in"),
     CHANGE_USER_INFO_FAIL(false, "change user info fail"),
     CAN_NOT_FOLLOW_SELF(false, "user can not follow itself"),
-    MESSAGE_SEND_FAIL(false, "message send fail");
+    MESSAGE_SEND_FAIL(false, "message send fail"),
+    NO_MESSAGES(false, "no messages");
 
 
     // 调用是否成功
