@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "192.168.1.112";
+const BASE_URL = "192.168.1.107";
 
 export const verifyEmail = async (code, email, password, username) => {
   try {
@@ -51,5 +51,74 @@ export const loginRequest = async (email, password) => {
     return res.data;
   } catch (err) {
     console.log("while sending login request -> \n" + err);
+  }
+};
+
+// export const uploadBackground = async (usrId, file) => {
+//   try {
+//     const res = await axios.post(
+//       "http://" + BASE_URL + ":8080/user/uploadBgImg",
+//       {},
+//       {
+//         params: {
+//           usrId: usrId,
+//           file: file,
+//         },
+//       }
+//     );
+//     return res.data;
+//   } catch (err) {
+//     console.log("while uploadBackground request -> \n" + err);
+//   }
+// };
+
+// export const uploadHead = async (usrId, file) => {
+//   try {
+//     const res = await axios.post(
+//       "http://" + BASE_URL + ":8080/user/uploadProfile",
+//       {},
+//       {
+//         params: {
+//           usrId: usrId,
+//           file: file,
+//         },
+//       }
+//     );
+//     return res.data;
+//   } catch (err) {
+//     console.log("while uploadBackground request -> \n" + err);
+//   }
+// };
+export const uploadBackground = async (usrId, formData) => {
+  try {
+    const res = await axios.post(
+      `http://${BASE_URL}:8080/user/uploadBgImg?usrId=${usrId}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.log("while uploadBackground request -> \n" + err);
+  }
+};
+
+export const uploadHead = async (usrId, formData) => {
+  try {
+    const res = await axios.post(
+      `http://${BASE_URL}:8080/user/uploadProfile?usrId=${usrId}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.log("while uploadHead request -> \n" + err);
   }
 };

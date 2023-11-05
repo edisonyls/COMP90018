@@ -7,6 +7,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { AntDesign } from '@expo/vector-icons'; // Importing AntDesign for the dropdown icon
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
+import { useUserContext } from "../context/userContext";
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
@@ -22,8 +23,7 @@ const FindMyPet = () => {
   const[petName, setPetName] = useState('');
   const[contactNumber,setContactNumber] = useState('');
   const[reward,setReward] = useState('');
-
-
+  const { user } = useUserContext();
 
   //find pet location 
   //const [location, setLocation] = useState({latitude:37.8136,longitude:144.9631});
@@ -90,20 +90,57 @@ const FindMyPet = () => {
 
   }, []);
 
-  const handleSelectImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImageUri(result.uri);
-    }
+  const handleSelectImage = () => {
+    Alert.alert(
+      "Upload Photo",
+      "Choose an option",
+      [
+        {
+          text: "Take Photo",
+          onPress: async () => {
+            const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+            if (cameraPermission.status !== 'granted') {
+              alert('Sorry, we need camera permissions to make this work!');
+              return;
+            }
+            const cameraResult = await ImagePicker.launchCameraAsync({
+              allowsEditing: true,
+              aspect: [4, 3],
+              quality: 1,
+            });
+            if (!cameraResult.canceled) {
+              setImageUri(cameraResult.assets[0].uri);
+            }
+          }
+        },
+        {
+          text: "Choose from Library",
+          onPress: async () => {
+            const libraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (libraryPermission.status !== 'granted') {
+              alert('Sorry, we need camera roll permissions to make this work!');
+              return;
+            }
+            const libraryResult = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              allowsEditing: true,
+              aspect: [4, 3],
+              quality: 1,
+            });
+            if (!libraryResult.canceled) {
+              setImageUri(libraryResult.assets[0].uri);
+            }
+          }
+        },
+        { text: "Cancel", style: "cancel" }
+      ],
+      { cancelable: true }
+    );
   };
+
+
+
+
 
 
 
@@ -146,20 +183,23 @@ const FindMyPet = () => {
           console.log(`Reward: ${reward}`);
 
           const petData = {
-            pet_name: petName,
-            pet_category: petCategory,
-            pet_breed: petBreed,
-            contact_number: contactNumber,
-            reward: reward,
-            image_uri: imageUri,
-            location_lat: location.lat,
-            location_lng: location.lng
+            petName: petName,
+            petCategory: petCategory,
+            petBreed: petBreed,
+            contactNumber: contactNumber,
+            rewards: reward,
+            postImg: imageUri,
+            latitude: location.lat,
+            longitude: location.lng,
+            userId: user.id,
+            postType: 'Missing'
           };
 
           try {
-            const serverResponse = await axios.post('http://192.168.1.106:8080/comp-test', petData);
-        
-            if (serverResponse.data.status === 'success') {
+            const serverResponse = await axios.post('http://192.168.1.107:8080/post/uploadPost', petData);
+            console.log(serverResponse.data);
+          
+            if (serverResponse.data.success) {
                 console.log('Data submitted successfully. ID:', serverResponse.data.id);
                 // ... (clear your form fields and navigate away)
             } else {

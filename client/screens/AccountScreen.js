@@ -19,91 +19,83 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import profileData from '../assets/profileData.json';
 import { useProfile } from '../navigators/ProfileContext';
 import * as ImagePicker from 'expo-image-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+//import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useUserContext } from "../context/userContext";
+import {uploadBackground,uploadHead} from "../api/auth";
+import axios from "axios";
 
 
 const AccountScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [backgroundUri, setBackgroundUri] = useState(null);
-  const [headUri, setHeadUri] = useState(null);
-  const [name, setName] = useState('');
-  const navigation = useNavigation();
-  useEffect(() => {
-    const loadProfileData = async () => {
-        setIsLoading(true);
-        const storedName = await AsyncStorage.getItem('@name');
-        const storedBackgroundUri = await AsyncStorage.getItem('@backgroundUri');
-        const storedHeadUri = await AsyncStorage.getItem('@headUri');
-        
-        if (storedName) {
-            setName(storedName);
-        } else {
-            setName(profileData.profile.name); // 从 JSON 文件获取默认值
-        }
-        
-        if (storedBackgroundUri) {
-            setBackgroundUri(storedBackgroundUri);
-        } else {
-            setBackgroundUri(require('../assets/BcakGround.jpg')); // 设置默认背景图片
-        }
-        
-        if (storedHeadUri) {
-            setHeadUri(storedHeadUri);
-        } else {
-            setHeadUri(require('../assets/ProfileHead.jpg')); // 设置默认头像
-        }
-        
-        setIsLoading(false); // 加载完成
-    };
-
-    loadProfileData();
-}, []);
-
-    const getImageSource = (image) => {
-        if (typeof image === 'string') {
-          return { uri: image }; // 这是一个 URI
-        } else {
-          return image; // 这是一个本地资源
-        }
+    const [backgroundUri, setBackgroundUri] = useState(null);
+    const [headUri, setHeadUri] = useState(null);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const navigation = useNavigation();
+    const { user } = useUserContext();
+    
+    useEffect(() => {
+      const loadProfileData = async () => {
+          setIsLoading(true);
+          // 这里假设你会从 user 或 profileData 中加载数据
+          const storedName = user.nickname || profileData.profile.name;
+          const storedEmail = user.email || profileData.profile.email;
+          const storedBackgroundUri = user.bgImg || '../assets/Background.jpg';
+          const storedHeadUri = user.profile || '../assets/ProfileHead.jpg';
+          
+          setName(storedName);
+          setEmail(storedEmail);
+          setBackgroundUri(storedBackgroundUri);
+          setHeadUri(storedHeadUri);
+          
+          setIsLoading(false);
       };
-      const pickImage = async (isBackground) => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-  
-        if (!result.canceled) {
-          const uri = result.assets[0].uri;
-          if (isBackground) {
-              // 更新背景图片
-              setBackgroundUri(uri);
-          } else {
-              // 更新头像
-              setHeadUri(uri);
-          }
-      }
-    }
 
+      loadProfileData();
+  }, []);
+  const getImageSource = (image) => {
+    if (typeof image === 'string') {
+        return { uri: image };
+    } else {
+        return image;
+    }
+};
+const pickImage = async (isBackground) => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+  });
+
+  if (!result.canceled && result.assets) {
+      const asset = result.assets[0];
+      const uri = asset.uri;
+      const type = asset.type;
+      const name = uri.split('/').pop();
+      let formData = new FormData();
+      formData.append('file', { uri, name, type });
+
+      if (isBackground) {
+          setBackgroundUri({ uri, formData });
+      } else {
+          setHeadUri({ uri, formData });
+      }
+  }
+};
     const saveAndGoBack = async () => {
         try {
-          const backgroundUriString = typeof backgroundUri === 'string' ? backgroundUri : JSON.stringify(backgroundUri);
-        const headUriString = typeof headUri === 'string' ? headUri : JSON.stringify(headUri);
+          if (typeof backgroundUri === 'object' && backgroundUri.uri) {
+              await uploadBackground(user.id, backgroundUri.formData);
+          }
 
-            // 保存背景图片和头像的 URI 到本地存储
-            await AsyncStorage.setItem('@backgroundUri', backgroundUri);
-            await AsyncStorage.setItem('@headUri', headUri);
-            await AsyncStorage.setItem('@name', name);
-            // await AsyncStorage.setItem('@name', name);
-            profileData.profile.name = name;
-
-            // 返回上一页
-            navigation.goBack();
+          // 上传头像图片（如果有更改）
+          if (typeof headUri === 'object' && headUri.uri) {
+              await uploadHead(user.id, headUri.formData);
+          }
+          navigation.navigate('Profile');
         } catch (e) {
-            // 保存出错的处理
-            console.error("Failed to save URIs", e);
+          console.error("Failed to save profile information", e);
         }
     };
 
@@ -127,7 +119,7 @@ const AccountScreen = () => {
                     <Image
                     style={styles.backgroundImage}
                     source={getImageSource(backgroundUri)}
-                    //source={getImageFromPath(profileData.profile.backgroundImage)}
+                    
                     />
                     <TouchableOpacity 
                     style={styles.editIcon} 
@@ -140,7 +132,7 @@ const AccountScreen = () => {
                         <Image
                             style={styles.headImage}
                             source={getImageSource(headUri)}
-                            //source={getImageFromPath(profileData.profile.headImage)}
+                          
                         />
                         <TouchableOpacity 
                         style={styles.editIcon}
@@ -173,7 +165,7 @@ const AccountScreen = () => {
               <Text style={styles.saveButtonText}>Save Changes</Text>
           </TouchableOpacity>
           </>
-
+           
         )}
         </SafeAreaView>
     );

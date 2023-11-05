@@ -9,14 +9,14 @@ import {
     StyleSheet,
     Dimensions, 
 } from "react-native";
-//import { AntDesign } from "@expo/vector-icons";
+
 import React, { useLayoutEffect, useState,useEffect } from "react";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-//import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useUserContext } from "../context/userContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,39 +25,12 @@ const ProfileScreen = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [mainData, setMainData] = useState(["hi"]);
     const [selectedMenu, setSelectedMenu] = useState("post"); // 默认选中“post”
-    // const [backgroundUri, setBackgroundUri] = useState(null);
-    // const [headUri, setHeadUri] = useState(null);
-    //const { backgroundUri, headUri } = useProfile();
+    
     const navigation = useNavigation();
-    // const [name, setName] = useState(''); // 新的状态变量来存储用户名
+   
     const isFocused = useIsFocused();
     const { user } = useUserContext();
-    // const loadProfileData = async () => {
-    //   setIsLoading(true);
-    //   const storedName = await AsyncStorage.getItem('@name');
-    //   if (storedName) {
-    //     setName(storedName);
-    //   }
-    //   setIsLoading(false);
-    // };
-
-    // const loadImages = async () => {
-    //   const savedBackgroundUri = await AsyncStorage.getItem('@backgroundUri');
-    //   const savedHeadUri = await AsyncStorage.getItem('@headUri');
-    //   if (savedBackgroundUri) {
-    //     setBackgroundUri(savedBackgroundUri);
-    //   }
-    //   if (savedHeadUri) {
-    //     setHeadUri(savedHeadUri);
-    //   }
-    // };
-
-    // useEffect(() => {
-    //   if (isFocused) {
-    //     loadProfileData();
-    //     loadImages();
-    //   }
-    // }, [isFocused]);
+    
 
     useLayoutEffect(() => {
       navigation.setOptions({
@@ -65,16 +38,6 @@ const ProfileScreen = () => {
       });
     },[navigation]);
    
-
-    // const getImageSource = (image) => {
-    //   if (typeof image === 'string') {
-    //     // 添加时间戳查询参数以绕过缓存
-    //     const uriWithTimestamp = `${image}?timestamp=${new Date().getTime()}`;
-    //     return { uri: uriWithTimestamp };
-    //   } else {
-    //     return image;
-    //   }
-    // };
 
     
     return (
@@ -87,9 +50,9 @@ const ProfileScreen = () => {
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.imageContainer}>
             <Image
-              key={backgroundUri} 
+              // key={backgroundUri} 
               style={styles.backgroundImage}
-              source={user.profile}
+              source={{ uri: user.bgImg}}
               
             />
           
@@ -97,9 +60,9 @@ const ProfileScreen = () => {
             {/* 新的容器开始 */}
             <View style={styles.profileContainer}>
               <Image
-                key={headUri}
+                // key={headUri}
                 style={styles.headImage}
-                source={user.bgImg}
+                source={{ uri: user.profile }}
                 
               />
              
