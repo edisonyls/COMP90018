@@ -11,7 +11,8 @@ public enum MessageContentEnum {
     BEHAVIOR("behavior"),
     FOLLOW_NOTIFY("follow"),
     UNFOLLOW_NOTIFY("unfollow"),
-    LIKE_NOTIFY("like"),
+    POST_LIKE_NOTIFY("like post"),
+    COMMENT_LIKE_NOTIFY("like comment"),
     UNLIKE_NOTIFY("unlike"),
     COMMENT_NOTIFY("comment"),
     DETAIL("detail")
