@@ -106,16 +106,11 @@ const HomeScreen = () => {
               Category
             </Text>
           </View>
-          <ScrollView
-            horizontal={true} // 开启横向滚动
-            showsHorizontalScrollIndicator={false} // 当你不想显示滚动条时
-            // 你也可以添加一些额外的样式和属性，例如分页等
-          >
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View className="flex-row item-center justify-center px-8 mt-4">
               <MenuContainer
                 key={"all"}
                 title="All"
-                imageSrc={require("../assets/dog.png")}
                 type={type}
                 setType={setType}
                 setSelectedMenu={setSelectedMenu}
@@ -123,7 +118,6 @@ const HomeScreen = () => {
               <MenuContainer
                 key={"missing"}
                 title="Missing"
-                imageSrc={require("../assets/dog.png")}
                 type={type}
                 setType={setType}
                 setSelectedMenu={setSelectedMenu}
@@ -131,7 +125,6 @@ const HomeScreen = () => {
               <MenuContainer
                 key={"found"}
                 title="Found"
-                imageSrc={require("../assets/dog.png")}
                 type={type}
                 setType={setType}
                 setSelectedMenu={setSelectedMenu}
@@ -139,7 +132,6 @@ const HomeScreen = () => {
               <MenuContainer
                 key={"general"}
                 title="General"
-                imageSrc={require("../assets/dog.png")}
                 type={type}
                 setType={setType}
                 setSelectedMenu={setSelectedMenu}
