@@ -12,8 +12,8 @@ public enum RedisEnum {
     REDIS_FOLLOW_NUM("redis_follow_num:"),
     REDIS_FAN_NUM("redis_fan_num:"),
 
-    REDIS_POST_IMG_URL("post_img_url");
-    ;
+    REDIS_POST_IMG_URL("post_img_url"),
+    REDIS_POST_ID("postId:");
 
     private String redisKey;
 
