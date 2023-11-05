@@ -15,7 +15,7 @@
     ON
         users.id = followers.following_id
     WHERE
-        followers.follower_id = #{paramMap.id}
+        followers.follower_id = #{paramMap.userId}
   </select>
 
 </mapper>

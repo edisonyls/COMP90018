@@ -15,4 +15,6 @@ public class ListFollowerVO {
     private String picture;
     private String description;
 
+    private boolean isFriendOfMine;
+
 }
