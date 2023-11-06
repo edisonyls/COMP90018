@@ -8,6 +8,8 @@ import { AntDesign } from '@expo/vector-icons'; // Importing AntDesign for the d
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
+import {Base_URL} from "../api/auth";
+
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
@@ -196,7 +198,7 @@ const FindMyPet = () => {
           };
 
           try {
-            const serverResponse = await axios.post('http://192.168.1.106:8080/post/uploadPost', petData);
+            const serverResponse = await axios.post('http://'+Base_URL+':8080/post/uploadPost', petData);
             console.log(serverResponse.data);
           
             if (serverResponse.data.success) {

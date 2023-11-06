@@ -12,6 +12,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import AccountScreen from "../screens/AccountScreen";
 import VerifyScreen from "../screens/VerifyScreen";
 import FindLostPet from "../screens/FindLostPet";
+import GeneralPost from "../screens/GeneralPost";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,7 +33,7 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-        initialRouteName="Landing"
+        initialRouteName="FindLostPet"
         //initialRouteName="Profile"
       >
         <Stack.Screen name="SignIn" component={SignIn} />
@@ -46,6 +47,7 @@ const RootStack = () => {
         <Stack.Screen name="Account" component={AccountScreen} /> 
         <Stack.Screen name="Verify" component={VerifyScreen} />
         <Stack.Screen name="FindLostPet" component={FindLostPet} />
+        <Stack.Screen name="GeneralPost" component={GeneralPost} />
         
       </Stack.Navigator>
     </NavigationContainer>

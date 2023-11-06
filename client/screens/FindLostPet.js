@@ -15,6 +15,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
+import {Base_URL} from "../api/auth";
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
@@ -176,7 +177,7 @@ const FindLostPet = () => {
               };
 
               try {
-                const serverResponse = await axios.post('http://192.168.1.106:8080/post/uploadPost', foundData);
+                const serverResponse = await axios.post('http://'+ Base_URL+':8080/post/uploadPost', foundData);
                 console.log(serverResponse);
                 if (serverResponse.data.status === 'success') {
                     console.log('Data submitted successfully. ID:', serverResponse.data.id);
