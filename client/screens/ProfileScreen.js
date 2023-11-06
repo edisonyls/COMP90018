@@ -15,42 +15,53 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import { useUserContext } from "../context/userContext";
+import { getAllPostsPerUser } from '../api/auth';
 
 const Tab = createBottomTabNavigator();
 
 const ProfileScreen = () => {
     const [type, setType] = useState("post");
     const [isLoading, setIsLoading] = useState(false);
-    const [mainData, setMainData] = useState(["hi"]);
+    const [mainData, setMainData] = useState([]);
     const [selectedMenu, setSelectedMenu] = useState("post"); // 默认选中“post”
     
     const navigation = useNavigation();
     //const isFocused = useIsFocused();
     const { user } = useUserContext();
     
-  //   useEffect(() => {
-  //     if (isFocused) {
-  //         loadData();
-  //     }
-  // }, [isFocused]); // 当 isFocused 值变化时触发
-
-  // const loadData = async () => {
-    
-  //     setIsLoading(true);
-  //     // const { user } = useUserContext();
-  //     setTimeout(() => {
-  //         setMainData(["new data"]); // 假设您从服务器加载了新数据
-  //         setIsLoading(false);
-  //     }, 2000);
-  // };
+    const postTypeToBadge = {
+      0: "Missing",
+      1: "Found",
+      2: "General",
+    };
     useLayoutEffect(() => {
       navigation.setOptions({
         headerShown: false,
       });
     },[navigation]);
    
+    useEffect(() => {
+      const fetchPosts = async () => {
+        setIsLoading(true);
+        try {
+          const data = await getAllPostsPerUser(user.id);
+          if (data.success) {
+            setMainData(data.data);
+          } else {
+            console.error('Failed to fetch posts: ', data.msg);
+          }
+        } catch (error) {
+          console.error('Error fetching posts: ', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+    
+      if (selectedMenu === "post") {
+        fetchPosts();
+      }
+    }, [selectedMenu, user.id]);
 
     
     return (
@@ -105,18 +116,17 @@ const ProfileScreen = () => {
             {selectedMenu === "post" ? (
               <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">
                 {mainData?.length > 0 ? (
-                    <>
-                      {/* need unique key */}
-                      <ItemCardContainer
-                        key={"post_id_1"}
-                        imageSrc={require("./../assets/dog_example_1.jpg")}
-                        badge="Missing"
-                        petName="Ross"
-                        petKind="British"
-                        location="West Melbourne"
-                        title="$100 Reward"
-                      />
-                    </>
+                   mainData.map((post) => (
+                    <ItemCardContainer
+                      key={post.id}
+                      imageSrc={{ uri: post.picture }} // 使用网络图片地址
+                      badge={postTypeToBadge[post.postType] || "Unknown"} // 使用对象映射来确定badge文本
+                      petName={post.petName}
+                      petKind={post.petCategory}
+                      location={post.location}
+                      title={post.title}
+                    />
+                  ))
                   ) : (
                     <>
                       <View className="w-full h-[400px] items-center space-y-8 justify-center">
