@@ -7,6 +7,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { AntDesign } from '@expo/vector-icons'; // Importing AntDesign for the dropdown icon
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
+import { useUserContext } from "../context/userContext";
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
@@ -22,10 +23,9 @@ const FindMyPet = () => {
   const[petName, setPetName] = useState('');
   const[contactNumber,setContactNumber] = useState('');
   const[reward,setReward] = useState('');
+  const { user } = useUserContext();
 
-
-
-  //find pet location 
+  //find pet location
   //const [location, setLocation] = useState({latitude:37.8136,longitude:144.9631});
   const [region, setRegion] = useState({latitude:37.8136,longitude:144.9631});
 
@@ -33,23 +33,23 @@ const FindMyPet = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isShowingResults, setIsShowingResults] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
-  
+
 
   const searchLocation = async (text) => {
     setSearchKeyword(text);
-  
+
     // If the search keyword is empty, don't perform a search
     if (text.trim() === '') {
       setSearchResults([]);
       setIsShowingResults(false);
       return;
     }
-  
+
     try {
       const response = await axios.post(
-        `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API_KEY}&input=${text}`
+          `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API_KEY}&input=${text}`
       );
-  
+
       if (response.data.predictions.length > 0) {
         // Update the state with the new predictions, which will be displayed in the FlatList.
         // Do NOT fetch the place details here; you should do that only when the user selects a place.
@@ -63,7 +63,7 @@ const FindMyPet = () => {
       console.log(e);
     }
   };
-  
+
 
   const handleResultPress = (description, placeId) => {
     setSelectedPlaceId(placeId);
@@ -90,20 +90,57 @@ const FindMyPet = () => {
 
   }, []);
 
-  const handleSelectImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImageUri(result.uri);
-    }
+  const handleSelectImage = () => {
+    Alert.alert(
+        "Upload Photo",
+        "Choose an option",
+        [
+          {
+            text: "Take Photo",
+            onPress: async () => {
+              const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+              if (cameraPermission.status !== 'granted') {
+                alert('Sorry, we need camera permissions to make this work!');
+                return;
+              }
+              const cameraResult = await ImagePicker.launchCameraAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+              });
+              if (!cameraResult.canceled) {
+                setImageUri(cameraResult.assets[0].uri);
+              }
+            }
+          },
+          {
+            text: "Choose from Library",
+            onPress: async () => {
+              const libraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+              if (libraryPermission.status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+                return;
+              }
+              const libraryResult = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+              });
+              if (!libraryResult.canceled) {
+                setImageUri(libraryResult.assets[0].uri);
+              }
+            }
+          },
+          { text: "Cancel", style: "cancel" }
+        ],
+        { cancelable: true }
+    );
   };
+
+
+
+
 
 
 
@@ -129,13 +166,13 @@ const FindMyPet = () => {
       try {
         // Fetch the detailed information of the selected location
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
-    
+
         if (response.data.result) {
           // Extract the coordinates
           const location = response.data.result.geometry.location;
-    
+
           // Log the coordinates
-          
+
           console.log('Form submitted with the following data:');
           console.log('Selected location coordinates:', location);
           console.log(`Image URI: ${imageUri}`);
@@ -146,49 +183,52 @@ const FindMyPet = () => {
           console.log(`Reward: ${reward}`);
 
           const petData = {
-            pet_name: petName,
-            pet_category: petCategory,
-            pet_breed: petBreed,
-            contact_number: contactNumber,
-            reward: reward,
-            image_uri: imageUri,
-            location_lat: location.lat,
-            location_lng: location.lng
+            petName: petName,
+            petCategory: petCategory,
+            petBreed: petBreed,
+            contactNumber: contactNumber,
+            rewards: reward,
+            postImg: imageUri,
+            latitude: location.lat,
+            longitude: location.lng,
+            userId: user.id,
+            postType: 'Missing'
           };
 
           try {
-            const serverResponse = await axios.post('http://192.168.1.111:8080/comp-test', petData);
-        
-            if (serverResponse.data.status === 'success') {
-                console.log('Data submitted successfully. ID:', serverResponse.data.id);
-                // ... (clear your form fields and navigate away)
+            const serverResponse = await axios.post('http://192.168.1.111:8080/post/uploadPost', petData);
+            console.log(serverResponse.data);
+
+            if (serverResponse.data.id) {
+              console.log('Data submitted successfully. ID:', serverResponse.data.id);
+              // ... (clear your form fields and navigate away)
             } else {
-                console.log('Server responded with an unexpected status.');
+              console.log('Server responded with an unexpected status.');
             }
           } catch (error) {
-              //console.error('An error occurred while submitting the form:', error);
-              if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-              } else {
-                // Something happened in setting up the request and triggered an Error
-                console.log('Error', error.message);
-              }
-              
+            //console.error('An error occurred while submitting the form:', error);
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            } else if (error.request) {
+              // The request was made but no response was received
+              console.log(error.request);
+            } else {
+              // Something happened in setting up the request and triggered an Error
+              console.log('Error', error.message);
+            }
+
           }
 
-          
-          
-    
+
+
+
           // Here, you can also proceed with other form submission tasks...
           // For example, sending data to a server.
-    
+
           // After successful submission, clear the form fields
           setPetName('');
           setPetCategory('');
@@ -196,14 +236,14 @@ const FindMyPet = () => {
           setSelectedPlaceId(null);
           setReward('');
           setContactNumber('');
-        
+
           // or however you clear your location field
           // Clear other form fields as necessary
-    
+
           // Use the navigation hook to navigate to another screen
           Alert.alert('Successfully Sumbmitted!');
           navigation.navigate('Home'); // replace 'NextScreen' with the actual name of your screen
-    
+
         } else {
           console.log('Failed to retrieve location details.');
         }
@@ -214,67 +254,67 @@ const FindMyPet = () => {
   };
 
   return (
-    // <KeyboardAvoidingView
-    //     behavior={Platform.OS === "ios" ? "padding" : "height"}
-    //     style={{ flex: 1 }}
-    // >
-    <View>
-      {/* <ScrollView style={styles.mainContainer} keyboardShouldPersistTaps='handled'> */}
+      // <KeyboardAvoidingView
+      //     behavior={Platform.OS === "ios" ? "padding" : "height"}
+      //     style={{ flex: 1 }}
+      // >
+      <View>
+        {/* <ScrollView style={styles.mainContainer} keyboardShouldPersistTaps='handled'> */}
         <View style={styles.formContainer}>
 
-            {/*Pet missing Location*/}
-            <View style={styles.autocompleteContainer}>
+          {/*Pet missing Location*/}
+          <View style={styles.autocompleteContainer}>
             <Text style={styles.inputLabel}> * Location of Lost</Text>
-              <TextInput
+            <TextInput
                 placeholder="Search for an address"
                 returnKeyType="search"
                 style={styles.searchBox}
                 placeholderTextColor="#000"
                 onChangeText={(text) => searchLocation(text)}
                 value={searchKeyword}
-              />
-              {isShowingResults && (
+            />
+            {isShowingResults && (
                 <FlatList
-                  data={searchResults}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={styles.resultItem}
-                      onPress={() => handleResultPress(item.description, item.place_id)}>
-                      <Text>{item.description}</Text>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={(item,index) => item.id? item.id.toString(): index.toString()}
-                  style={styles.searchResultsContainer}
+                    data={searchResults}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={styles.resultItem}
+                            onPress={() => handleResultPress(item.description, item.place_id)}>
+                          <Text>{item.description}</Text>
+                        </TouchableOpacity>
+                    )}
+                    keyExtractor={(item,index) => item.id? item.id.toString(): index.toString()}
+                    style={styles.searchResultsContainer}
                 />
-              )}
-            </View>
-
-            
+            )}
+          </View>
 
 
-            {/* Image Selector Field */}
-            <TouchableOpacity onPress={handleSelectImage} style={styles.imageSelector}>
+
+
+          {/* Image Selector Field */}
+          <TouchableOpacity onPress={handleSelectImage} style={styles.imageSelector}>
             {imageUri ? (
                 <Image source={{ uri: imageUri }} style={styles.imagePreview} />
             ) : (
                 <Text>Select Image</Text>
             )}
-            </TouchableOpacity>
-            
+          </TouchableOpacity>
 
-            {/* Pet Category Dropdown */}
-            <View style={styles.dropdownContainer}>
+
+          {/* Pet Category Dropdown */}
+          <View style={styles.dropdownContainer}>
             <Text style={styles.inputLabel}>* Pet Category</Text>
             <RNPickerSelect
                 onValueChange={(value) => setPetCategory(value)}
                 onOpen={handlePickerFocus} // Here we use the function
                 onClose={handlePickerFocus} // Here too
                 items={[
-                    { label: 'Cat', value: 'cat' },
-                    { label: 'Dog', value: 'dog' },
-                    { label: 'Rabbit', value: 'rabbit' },
-                    { label: 'Hamster', value: 'hamster' },
-                    { label: 'Other', value: 'other' },
+                  { label: 'Cat', value: 'cat' },
+                  { label: 'Dog', value: 'dog' },
+                  { label: 'Rabbit', value: 'rabbit' },
+                  { label: 'Hamster', value: 'hamster' },
+                  { label: 'Other', value: 'other' },
                 ]}
                 style={pickerSelectStyles}
                 placeholder={{ label: "Select a pet category...", value: null }}
@@ -282,18 +322,18 @@ const FindMyPet = () => {
                 useNativeAndroidPickerStyle={false} // Required for custom styling to take effect on Android
 
                 Icon={() => {
-                    return (
-                    <View style={styles.iconContainer}>
-                        <AntDesign name={isPickerOpen ? "up" : "down"} size={30} color="gray" /> 
-                    </View>
-                    );
+                  return (
+                      <View style={styles.iconContainer}>
+                        <AntDesign name={isPickerOpen ? "up" : "down"} size={30} color="gray" />
+                      </View>
+                  );
                 }}
 
             />
-            </View>
+          </View>
 
-            {/* Pet Breed Input */}
-            <View style={styles.inputContainer}>
+          {/* Pet Breed Input */}
+          <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}> * Pet's Breed</Text>
             <TextInput
                 style={styles.textInput}
@@ -303,10 +343,10 @@ const FindMyPet = () => {
                 // Here you can set if you want the first letter to be auto-capitalized, etc.
                 autoCapitalize="words"
             />
-            </View>
+          </View>
 
-            {/* Pet Name Input */}
-            <View style={styles.inputContainer}>
+          {/* Pet Name Input */}
+          <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}> * Pet's Name</Text>
             <TextInput
                 style={styles.textInput}
@@ -316,45 +356,45 @@ const FindMyPet = () => {
                 // Here you can set if you want the first letter to be auto-capitalized, etc.
                 autoCapitalize="words"
             />
-            </View>
+          </View>
 
-            {/* Contact number input */}
-            <View style={styles.inputContainer}>
+          {/* Contact number input */}
+          <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}> * Contact Number</Text>
             <TextInput
                 style={styles.textInput}
                 onChangeText={setContactNumber}
                 value={contactNumber}
                 placeholder="Enter your phone number"
-  
-            />
-            </View>
 
-            {/* Reward input */}
-            <View style={styles.inputContainer}>
+            />
+          </View>
+
+          {/* Reward input */}
+          <View style={styles.inputContainer}>
             <Text style={styles.inputLabel}> Rewards(Optional)</Text>
             <TextInput
                 style={styles.textInput}
                 onChangeText={setReward}
                 value={reward}
                 placeholder="Enter the rewards"
-  
+
             />
-            </View>
+          </View>
 
-            {/* Submit Button */}
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
+          {/* Submit Button */}
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
 
-        
 
-            {/* Additional form fields will be added here */}
+
+          {/* Additional form fields will be added here */}
         </View>
-      {/* </ScrollView> */}
-      {/* <View style = {marginBottom:50, flex: 1}> </View> */}
+        {/* </ScrollView> */}
+        {/* <View style = {marginBottom:50, flex: 1}> </View> */}
 
-    </View>
+      </View>
   );
 }
 
@@ -492,7 +532,7 @@ const pickerSelectStyles = StyleSheet.create({
     // ... any other styling you need
   },
 
-  
+
 
 });
 
