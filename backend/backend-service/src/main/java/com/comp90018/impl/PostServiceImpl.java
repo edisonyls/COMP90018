@@ -42,11 +42,6 @@ public class PostServiceImpl implements PostService {
         post.setCreatedTime(date);
         post.setUpdatedTime(date);
         post.setId(postId);
-        if (uploadPostBO.getPostImg() == null || uploadPostBO.getUserId() == null
-        || uploadPostBO.getLatitude() == null || uploadPostBO.getLongitude() == null
-        || uploadPostBO.getPostType() == null) {
-            return null;
-        }
         post.setPrivateLevel(uploadPostBO.getPrivateLevel());
         post.setPicture(uploadPostBO.getPostImg());
         post.setPosterId(uploadPostBO.getUserId());
@@ -60,13 +55,7 @@ public class PostServiceImpl implements PostService {
         }
         String postType = uploadPostBO.getPostType();
         switch (postType) {
-            case "0":
-                if (uploadPostBO.getDescription() == null || uploadPostBO.getTitle() == null
-                        || uploadPostBO.getPetName() == null  || uploadPostBO.getPetCategory() == null
-                        || uploadPostBO.getPetBread() == null  || uploadPostBO.getRewards() == null
-                        || uploadPostBO.getContactNumber() == null ) {
-                    return null;
-                }
+            case "Missing":
                 post.setDescription(uploadPostBO.getDescription());
                 post.setTitle(uploadPostBO.getTitle());
                 post.setPetName(uploadPostBO.getPetName());
@@ -79,28 +68,20 @@ public class PostServiceImpl implements PostService {
                 post.setContent("Default");
                 post.setSubject("Default");
                 break;
-            case "1":
-                if (uploadPostBO.getDescription() == null || uploadPostBO.getTitle() == null
-                        || uploadPostBO.getPetName() == null  || uploadPostBO.getPetCategory() == null
-                        || uploadPostBO.getPetBread() == null || uploadPostBO.getContactNumber() == null ) {
-                    return null;
-                }
+            case "Found":
                 post.setDescription(uploadPostBO.getDescription());
                 post.setTitle(uploadPostBO.getTitle());
                 post.setPetBread(uploadPostBO.getPetBread());
                 post.setPetCategory(uploadPostBO.getPetCategory());
                 post.setPetName(uploadPostBO.getPetName());
                 post.setContactNum(uploadPostBO.getContactNumber());
-                post.setPostType(PostTypeEnum.MISSING.getPostType());
+                post.setPostType(PostTypeEnum.FOUND.getPostType());
                 post.setTag("Default");
                 post.setContent("Default");
                 post.setSubject("Default");
                 post.setRewards("Default");
                 break;
             default:
-                if (post.getContent() == null || post.getSubject() == null || post.getTag() == null) {
-                    return null ;
-                }
                 post.setContent(uploadPostBO.getContent());
                 post.setSubject(uploadPostBO.getSubject());
                 post.setTag(uploadPostBO.getTag());
@@ -124,15 +105,15 @@ public class PostServiceImpl implements PostService {
         switch (postType) {
             case "Missing":
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
-                        .andEqualTo("0", PostTypeEnum.MISSING);
+                        .andEqualTo("postType", PostTypeEnum.MISSING.getPostType());
                 break;
             case "Found":
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
-                        .andEqualTo("0", PostTypeEnum.FOUND);
+                        .andEqualTo("postType", PostTypeEnum.FOUND.getPostType());
                 break;
             case "General":
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
-                        .andEqualTo("0", PostTypeEnum.GENERAL);
+                        .andEqualTo("postType", PostTypeEnum.GENERAL.getPostType());
                 break;
             default:
                 example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
@@ -156,7 +137,7 @@ public class PostServiceImpl implements PostService {
         Example example = new Example(Post.class);
         example.createCriteria().andEqualTo("id", postId);
         List<Post> post = postMapper.selectByExample(example);
-        if (post.isEmpty()) {
+        if (post.isEmpty() || post == null) {
             return false;
         }
         else {
@@ -169,9 +150,10 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public Post updatePost(UploadPostBO uploadPostBO) {
         Example example = new Example(Post.class);
-        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId());
+        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId())
+                .andEqualTo("posterId", uploadPostBO.getUserId());
         List<Post> postList = postMapper.selectByExample(example);
-        if (postList == null || postList.isEmpty()) {
+        if (postList.isEmpty() || postList == null) {
             return null;
         }
         else {
