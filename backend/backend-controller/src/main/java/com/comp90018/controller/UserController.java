@@ -1,7 +1,6 @@
 package com.comp90018.controller;
 
-import com.comp90018.bo.ChangeUserImgBO;
-import com.comp90018.bo.ChangeUserInfoBO;
+import com.comp90018.bo.ChangeUserBO;
 import com.comp90018.enums.RedisEnum;
 import com.comp90018.enums.ResponseStatusEnum;
 import com.comp90018.jsonResult.JSONResult;
@@ -24,8 +23,8 @@ public class UserController extends BaseController{
 
     @ApiOperation("change user information except profile and bgImg")
     @PostMapping("/changeUserInfo")
-    public JSONResult changeinfo(@RequestBody ChangeUserInfoBO changeUserInfoBO) {
-        Users newUser = userService.changeUserInfo(changeUserInfoBO);
+    public JSONResult changeinfo(@RequestBody ChangeUserBO changeUserBO) {
+        Users newUser = userService.changeUserInfo(changeUserBO);
 
         if(newUser == null) {
             return JSONResult.errorCustom(ResponseStatusEnum.CHANGE_USER_INFO_FAIL);
@@ -36,7 +35,7 @@ public class UserController extends BaseController{
     @PostMapping("uploadProfile")
     @ApiOperation("upload profile picture")
     public JSONResult uploadProfile(@RequestParam String usrId, MultipartFile file) throws Exception {
-        ChangeUserImgBO changeUserImgBO = new ChangeUserImgBO();
+        ChangeUserBO changeUserBO = new ChangeUserBO();
 
         String fileName = file.getOriginalFilename();
 
@@ -44,17 +43,17 @@ public class UserController extends BaseController{
 
         String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
 
-        changeUserImgBO.setId(usrId);
-        changeUserImgBO.setProfile(imgUrl);
+        changeUserBO.setId(usrId);
+        changeUserBO.setProfile(imgUrl);
 
-        Users newUser = userService.changeUserInfo(changeUserImgBO);
+        Users newUser = userService.changeUserInfo(changeUserBO);
         return JSONResult.ok(newUser);
     }
 
     @PostMapping("uploadBgImg")
     @ApiOperation("upload bgImg")
     public JSONResult uploadBgImg(@RequestParam String usrId, MultipartFile file) throws Exception {
-        ChangeUserImgBO changeUserImgBO = new ChangeUserImgBO();
+        ChangeUserBO changeUserBO = new ChangeUserBO();
 
         String fileName = file.getOriginalFilename();
 
@@ -62,10 +61,10 @@ public class UserController extends BaseController{
 
         String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
 
-        changeUserImgBO.setId(usrId);
-        changeUserImgBO.setBgImg(imgUrl);
+        changeUserBO.setId(usrId);
+        changeUserBO.setBgImg(imgUrl);
 
-        Users newUser = userService.changeUserInfo(changeUserImgBO);
+        Users newUser = userService.changeUserInfo(changeUserBO);
         return JSONResult.ok(newUser);
     }
 
@@ -74,16 +73,16 @@ public class UserController extends BaseController{
     public JSONResult queryUserInfo(@RequestParam String userId) {
         Users user = userService.queryUser(userId);
         UserVO usersVO = new UserVO();
-        BeanUtils.copyProperties(user, usersVO);
+        BeanUtils.copyProperties(usersVO, usersVO);
 
         int myFollows = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FOLLOW_NUM + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FOLLOW_NUM + userId));
         int myFans = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FAN_NUM + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FAN_NUM + userId));
-        int myPostLikes = StringUtils.isBlank(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId));
+        int myVlogLikes = StringUtils.isBlank(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId));
         int myCommentLikes = StringUtils.isBlank(redis.get(RedisEnum.REDIS_COMMENT_LIKES + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_COMMENT_LIKES + userId));
 
         usersVO.setMyFollows(myFollows);
         usersVO.setMyFans(myFans);
-        usersVO.setMyPostLikes(myPostLikes);
+        usersVO.setMyVlogLikes(myVlogLikes);
         usersVO.setMyCommentLikes(myCommentLikes);
 
         return JSONResult.ok(usersVO);

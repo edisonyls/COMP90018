@@ -100,8 +100,14 @@ const HomeScreen = () => {
               />
             </View>
           </View>
-
+          
           <View className="px-4 mt-4">
+          <View className="items-center justify-center">
+            <Image
+              source={require("../assets/HomeScreenImage.jpg")} // 替换为你的图片路径
+              style={{ width: 300, height: 180 }} // 根据需要调整宽度和高度
+            />
+          </View>
             <Text className="text-[#2C7379] text-[20px] font-bold">
               Category
             </Text>

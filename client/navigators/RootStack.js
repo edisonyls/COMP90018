@@ -7,11 +7,14 @@ import Landing from "../screens/Landing";
 import RootTab from "./RootTab";
 import PostOption from "../screens/PostOption";
 import FindMyPet from "../screens/FindMyPet";
-
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import AccountScreen from "../screens/AccountScreen";
 import VerifyScreen from "../screens/VerifyScreen";
-import PostScreen from "../screens/PostScreen";
+import FindLostPet from "../screens/FindLostPet";
+import NotificationScreen from "../screens/NotificationScreen";
+import SecurityScreen from "../screens/SecurityScreen";
+import ContactUsScreen from "../screens/ContactUsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,8 +46,13 @@ const RootStack = () => {
         <Stack.Screen name="FindMyPet" component={FindMyPet} />
         <Stack.Screen name="Map" component={MapScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Account" component={AccountScreen} /> 
         <Stack.Screen name="Verify" component={VerifyScreen} />
-        <Stack.Screen name="Post" component={PostScreen} />
+
+        <Stack.Screen name="Notification" component={NotificationScreen} />
+        <Stack.Screen name="Security" component={SecurityScreen} />
+        <Stack.Screen name="ContactUs" component={ContactUsScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

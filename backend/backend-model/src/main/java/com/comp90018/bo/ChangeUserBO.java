@@ -11,8 +11,8 @@ import java.util.Date;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangeUserInfoBO {
-    // can not change id
+public class ChangeUserBO {
+    // can not change id, email
     private String id;
 
     private String password;
@@ -20,6 +20,8 @@ public class ChangeUserInfoBO {
     private String mobile;
 
     private String nickname;
+
+    private String profile;
 
     private Integer sex;
 
@@ -33,4 +35,5 @@ public class ChangeUserInfoBO {
 
     private String description;
 
+    private String bgImg;
 }

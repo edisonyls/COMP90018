@@ -45,7 +45,7 @@ public class UserVO {
     private String UserToken;
     private Integer myFollows;
     private Integer myFans;
-    private Integer myPostLikes;
+    private Integer myVlogLikes;
     private Integer myCommentLikes;
 
 }
