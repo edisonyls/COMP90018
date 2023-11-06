@@ -27,11 +27,24 @@ const ProfileScreen = () => {
     const [selectedMenu, setSelectedMenu] = useState("post"); // 默认选中“post”
     
     const navigation = useNavigation();
-   
     const isFocused = useIsFocused();
     const { user } = useUserContext();
     
+  //   useEffect(() => {
+  //     if (isFocused) {
+  //         loadData();
+  //     }
+  // }, [isFocused]); // 当 isFocused 值变化时触发
 
+  // const loadData = async () => {
+    
+  //     setIsLoading(true);
+  //     // const { user } = useUserContext();
+  //     setTimeout(() => {
+  //         setMainData(["new data"]); // 假设您从服务器加载了新数据
+  //         setIsLoading(false);
+  //     }, 2000);
+  // };
     useLayoutEffect(() => {
       navigation.setOptions({
         headerShown: false,

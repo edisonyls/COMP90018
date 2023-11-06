@@ -32,7 +32,7 @@ const AccountScreen = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const navigation = useNavigation();
-    const { user } = useUserContext();
+    const { user,setUser } = useUserContext();
     
     useEffect(() => {
       const loadProfileData = async () => {
@@ -85,15 +85,21 @@ const pickImage = async (isBackground) => {
 };
     const saveAndGoBack = async () => {
         try {
+          
+
           if (typeof backgroundUri === 'object' && backgroundUri.uri) {
-              await uploadBackground(user.id, backgroundUri.formData);
+             await uploadBackground(user.id, backgroundUri.formData);
+
           }
 
           // 上传头像图片（如果有更改）
           if (typeof headUri === 'object' && headUri.uri) {
               await uploadHead(user.id, headUri.formData);
+             
           }
-          navigation.navigate('Profile');
+
+
+          navigation.goBack();
         } catch (e) {
           console.error("Failed to save profile information", e);
         }
