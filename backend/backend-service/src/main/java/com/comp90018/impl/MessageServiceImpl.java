@@ -1,10 +1,12 @@
 package com.comp90018.impl;
 
 import com.comp90018.dto.Message;
+import com.comp90018.enums.RedisEnum;
 import com.comp90018.mongoDao.MessageDao;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.MessageService;
 import com.comp90018.service.UserService;
+import com.comp90018.utils.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import java.util.Map;
 
 @Service
 public class MessageServiceImpl implements MessageService {
+    @Autowired
+    private RedisOperator redis;
     @Autowired
     private UserService userService;
     @Autowired
@@ -31,6 +35,13 @@ public class MessageServiceImpl implements MessageService {
                                 receiverId, receiver.getNickname(), receiver.getProfile(),
                                 type, content, new Date());
         messageDao.save(message);
+        String s = redis.get(RedisEnum.REDIS_HASH.getRedisKey() + receiverId);
+        if(s == null || s.length() == 0) {
+            redis.set(RedisEnum.REDIS_HASH.getRedisKey() + receiverId, String.valueOf(1));
+        }else {
+            redis.set(RedisEnum.REDIS_HASH.getRedisKey() + receiverId, String.valueOf(Integer.parseInt(s) + 1));
+        }
+
         return message;
     }
 
