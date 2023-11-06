@@ -75,8 +75,8 @@ public class UserController extends BaseController{
         UserVO usersVO = new UserVO();
         BeanUtils.copyProperties(usersVO, usersVO);
 
-        int myFollows = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FOLLOW + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FOLLOW + userId));
-        int myFans = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FAN + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FAN + userId));
+        int myFollows = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FOLLOW_NUM + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FOLLOW_NUM + userId));
+        int myFans = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FAN_NUM + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FAN_NUM + userId));
         int myVlogLikes = StringUtils.isBlank(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId));
         int myCommentLikes = StringUtils.isBlank(redis.get(RedisEnum.REDIS_COMMENT_LIKES + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_COMMENT_LIKES + userId));
 
