@@ -142,7 +142,7 @@ const ProfileScreen = () => {
                   />
                 </TouchableOpacity>
              
-                <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
                   <Image 
                     source={require('../assets/ProfileNotification.jpg')} // replace with your image's path
                     style={styles.sectionImage}

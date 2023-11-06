@@ -19,7 +19,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import profileData from '../assets/profileData.json';
 import { useProfile } from '../navigators/ProfileContext';
 import * as ImagePicker from 'expo-image-picker';
-//import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUserContext } from "../context/userContext";
 import {uploadBackground,uploadHead,changeUserInfo} from "../api/auth";
 import axios from "axios";
@@ -31,6 +30,7 @@ const AccountScreen = () => {
     const [headUri, setHeadUri] = useState(null);
     const [name, setName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [email, setEmail] = useState('');
     const navigation = useNavigation();
     const { user,setUser } = useUserContext();
     
@@ -40,14 +40,15 @@ const AccountScreen = () => {
           // 这里假设你会从 user 或 profileData 中加载数据
           const storedName = user.nickname || profileData.profile.name;
           const storedPhoneNumber = user.mobile || "Null";
+          const storedEmail = user.email1 || profileData.profile.email; // 添加邮箱
           const storedBackgroundUri = user.bgImg || '../assets/Background.jpg';
           const storedHeadUri = user.profile || '../assets/ProfileHead.jpg';
           
           setName(storedName);
           setPhoneNumber(storedPhoneNumber); 
+          setEmail(storedEmail); // 设置邮箱
           setBackgroundUri(storedBackgroundUri);
           setHeadUri(storedHeadUri);
-          
           setIsLoading(false);
       };
 
@@ -61,6 +62,7 @@ const AccountScreen = () => {
         id: user.id,
         mobile: phoneNumber, // 更新的手机号码
         nickname: name, // 更新的昵称
+        email1: email, // 更新的邮箱
         // ... 其他用户信息 ...
       };
   
@@ -182,6 +184,15 @@ const pickImage = async (isBackground) => {
                     value={phoneNumber}
                     onChangeText={(text) => setPhoneNumber(text)}
                     placeholder="Enter your phone number"
+                  />
+                </View>
+                <View style={styles.nameContainer}>
+                  <Text style={styles.nameLabel}>Email</Text>
+                  <TextInput
+                    style={styles.nameInput}
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
+                    placeholder="Enter your email"
                   />
                 </View>
             </ScrollView>

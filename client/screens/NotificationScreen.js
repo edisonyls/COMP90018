@@ -17,11 +17,17 @@ import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import profileData from '../assets/profileData.json';
 import { useProfile } from '../navigators/ProfileContext';
-
+import { Switch } from "react-native";
 
 const NotificationScreen = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isLikePostEnabled, setIsLikePostEnabled] = useState(false);
+    const [isNewMessageEnabled, setIsNewMessageEnabled] = useState(false);
     const navigation = useNavigation();
+
+    const toggleLikePostSwitch = () => setIsLikePostEnabled(previousState => !previousState);
+    const toggleNewMessageSwitch = () => setIsNewMessageEnabled(previousState => !previousState);
+
     return(
         <SafeAreaView className="flex-1 bg-white relative">
         {isLoading ? (
@@ -35,21 +41,31 @@ const NotificationScreen = () => {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                     <AntDesign name="leftcircleo" size={24} color="black" />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Account</Text>
+                    <Text style={styles.headerTitle}>Notification</Text>
                     <View /> 
                 </View>
-                <View style={styles.imageContainer}>
-                    <Image
-                    style={styles.backgroundImage}
-                    source={getImageSource(backgroundUri)}
-                    //source={getImageFromPath(profileData.profile.backgroundImage)}
+
+
+                <View style={styles.switchContainer}>
+                    <Text style={styles.switchLabel}>Like Post</Text>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={isLikePostEnabled ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleLikePostSwitch}
+                        value={isLikePostEnabled}
                     />
-                    <TouchableOpacity 
-                    style={styles.editIcon} 
-                    onPress={() => pickImage(true)}>
-                    <AntDesign name="edit" size={24} color="black" />
-                    </TouchableOpacity>
-                    
+                </View>
+
+                <View style={styles.switchContainer}>
+                    <Text style={styles.switchLabel}>New Message</Text>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={isNewMessageEnabled ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleNewMessageSwitch}
+                        value={isNewMessageEnabled}
+                    />
                 </View>
             </ScrollView>
         )}
@@ -68,20 +84,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  imageContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    
+  switchContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginTop:30,
   },
-  backgroundImage: {
-    width: '100%', // 宽度为100%，以填满容器
-    height: 198, // 这可以根据您的背景图像进行调整
-  },
-  editIcon: {
-    position: 'absolute', // 使用绝对定位
-    top: 10, // 距离容器顶部10单位
-    right: 10, // 距离容器右侧10单位
+  switchLabel: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
