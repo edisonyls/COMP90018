@@ -353,4 +353,25 @@ public class Users {
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
     }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id='" + id + '\'' +
+                ", email1='" + email1 + '\'' +
+                ", password='" + password + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", profile='" + profile + '\'' +
+                ", sex=" + sex +
+                ", birthday=" + birthday +
+                ", country='" + country + '\'' +
+                ", state='" + state + '\'' +
+                ", postcode=" + postcode +
+                ", description='" + description + '\'' +
+                ", bgImg='" + bgImg + '\'' +
+                ", createdTime=" + createdTime +
+                ", updatedTime=" + updatedTime +
+                '}';
+    }
 }

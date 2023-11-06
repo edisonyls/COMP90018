@@ -49,7 +49,11 @@ const Register = ({ navigation }) => {
     setIsLoading(true);
     const res = await sendVerifyRequest(values.email);
     console.log(res);
-    if (res.success) {
+    if (!res) {
+      console.log("Server side is down. Check api connection.");
+      Alert.alert("Oops!", "Try again later.");
+      setIsLoading(false);
+    } else if (res.success) {
       setIsLoading(false);
       navigation.navigate("Verify", {
         email: values.email,
@@ -58,6 +62,7 @@ const Register = ({ navigation }) => {
       });
     } else {
       console.log("Register failing...");
+      Alert.alert("Oops!", res.msg);
       setIsLoading(false);
     }
   };
