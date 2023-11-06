@@ -41,7 +41,11 @@ public class PostServiceImpl implements PostService {
         post.setCreatedTime(date);
         post.setUpdatedTime(date);
         post.setId(postId);
-        post.setPosterId(uploadPostBO.getPostId());
+
+        post.setPrivateLevel(uploadPostBO.getPrivateLevel());
+        post.setPicture(uploadPostBO.getPostImg());
+        post.setPosterId(uploadPostBO.getUserId());
+        post.setLongitude(uploadPostBO.getLongitude());
 
         post.setLatitude(uploadPostBO.getLatitude());
         post.setLongitude(uploadPostBO.getLongitude());
@@ -65,12 +69,34 @@ public class PostServiceImpl implements PostService {
         switch (postType) {
             case "Missing":
 
+                post.setDescription(uploadPostBO.getDescription());
+                post.setTitle(uploadPostBO.getTitle());
+                post.setPetName(uploadPostBO.getPetName());
+                post.setPetCategory(uploadPostBO.getPetCategory());
+                post.setPetBread(uploadPostBO.getPetBread());
+                post.setRewards(uploadPostBO.getRewards());
+                post.setContactNum(uploadPostBO.getContactNumber());
+
                 post.setPostType(PostTypeEnum.MISSING.getPostType());
                 break;
             case "Found":
+
+                post.setDescription(uploadPostBO.getDescription());
+                post.setTitle(uploadPostBO.getTitle());
+                post.setPetBread(uploadPostBO.getPetBread());
+                post.setPetCategory(uploadPostBO.getPetCategory());
+                post.setPetName(uploadPostBO.getPetName());
+                post.setContactNum(uploadPostBO.getContactNumber());
                 post.setPostType(PostTypeEnum.FOUND.getPostType());
+                post.setTag("Default");
+                post.setContent("Default");
+                post.setSubject("Default");
+                post.setRewards("Default");
                 break;
             default:
+                post.setContent(uploadPostBO.getContent());
+                post.setSubject(uploadPostBO.getSubject());
+                post.setTag(uploadPostBO.getTag());
                 post.setPostType(PostTypeEnum.GENERAL.getPostType());
                 break;
         }

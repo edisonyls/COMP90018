@@ -97,11 +97,13 @@ public class CommentServiceImpl implements CommentService {
         } else {
             Comment comment = commentList.get(0);
             comment.setLikeCounts(comment.getLikeCounts() + 1);
+            if (commentMapper.updateByPrimaryKeySelective(comment) == 0) {
+                return null;
+            }
 
             HashMap<String, Object> map = new HashMap<>();
             map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.COMMENT_LIKE_NOTIFY.getSystemMessage()); // (behavior, like)
             messageService.createMessage(comment.getCommentUserId(), comment.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
-
             return comment;
         }
     }
@@ -131,7 +133,6 @@ public class CommentServiceImpl implements CommentService {
                 }
             }
         }
-
 
         List<CommentDTO> commentDTOList = commentDTOMap.values().stream()
                 .peek(dto -> log.info("Processing DTO with ID: {} and fatherID: {}", dto.getId(), dto.getFatherCommentId()))
