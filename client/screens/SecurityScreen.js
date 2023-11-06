@@ -26,36 +26,46 @@ const SecurityScreen = () => {
     const navigation = useNavigation();
     const { user,setUser } = useUserContext();
 
-    const handleSave = async () => {
-        if (oldPassword !== user.password) {
-            Alert.alert("Error", "The old password is incorrect.");
-            return;
-        }
 
-        if (newPassword !== confirmNewPassword) {
-            Alert.alert("Error", "The new password and confirmation do not match.");
-            return;
-        }
-
+    const updateUserProfile = async () => {
         try {
-            setIsLoading(true);
-            const updatedUserInfo = {
-                // ... 其他用户信息 ...
-                id: user.id,
-                password: newPassword, // 更新的密码
-                // ... 其他用户信息 ...
-            };
-
-            const response = await changeUserInfo(updatedUserInfo);
-            // 处理响应，更新上下文等
-            setUser({ ...user, password: newPassword }); // 更新上下文中的密码
-            navigation.goBack();
+          const updatedUserInfo = {
+            // ... 其他用户信息 ...
+            id: user.id,
+            mobile: user.mobile, // 更新的手机号码
+            nickname: user.nickname, // 更新的昵称
+            email1: user.email1, // 更新的邮箱
+            password: newPassword,
+            // ... 其他用户信息 ...
+          };
+      
+          const response = await changeUserInfo(updatedUserInfo);
+          // 处理响应，更新上下文等
         } catch (e) {
-            Alert.alert("Error", "Failed to update the password.");
-            console.error("Failed to update password", e);
-        } finally {
-            setIsLoading(false);
+          console.error("更新用户资料失败", e);
         }
+      };
+
+
+    const handleSave = async () => {
+        
+        try {
+            if (oldPassword !== user.password) {
+                Alert.alert("Error", "The old password is incorrect.");
+                return;
+            }
+    
+            if (newPassword !== confirmNewPassword) {
+                Alert.alert("Error", "The new password and confirmation do not match.");
+                return;
+            }
+  
+            await updateUserProfile(); // 使用新昵称和手机号更新用户资料
+            navigation.goBack();
+          } catch (e) {
+            console.error("Failed to save profile information", e);
+          }
+        
     };
 
     return(
@@ -71,10 +81,11 @@ const SecurityScreen = () => {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                     <AntDesign name="leftcircleo" size={24} color="black" />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Notification</Text>
+                    <Text style={styles.headerTitle}>Security</Text>
                     <View /> 
                 </View>
                 <View style={styles.inputContainer}>
+                <Text style={styles.nameLabel}>Old Password</Text>
                         <TextInput
                             style={styles.input}
                             value={oldPassword}
@@ -83,8 +94,10 @@ const SecurityScreen = () => {
                             secureTextEntry
                         />
                     </View>
+                    
 
                     <View style={styles.inputContainer}>
+                    <Text style={styles.nameLabel}>New Password</Text>
                         <TextInput
                             style={styles.input}
                             value={newPassword}
@@ -95,6 +108,7 @@ const SecurityScreen = () => {
                     </View>
 
                     <View style={styles.inputContainer}>
+                    <Text style={styles.nameLabel}>Confirm New Password</Text>
                         <TextInput
                             style={styles.input}
                             value={confirmNewPassword}
@@ -122,6 +136,42 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
+    fontWeight: "bold",
+  },
+  inputContainer: {
+    margin: 20,
+    marginBottom: 10,
+},
+input: {
+    fontSize: 16,
+    width: '100%', // 宽度为100%
+    height: 50, // 高度
+    borderRadius: 15, // 圆角
+    borderWidth: 1, // 边框宽度
+    borderColor: "#DDDDDD", // 边框颜色
+    marginTop: 5,
+    textAlign: 'center', // 文本居中
+    padding: 10, // 内边距
+},
+saveButton: {
+    backgroundColor: '#9747FF', // 按钮背景色
+    padding: 15,
+    borderRadius: 30,
+    alignItems: 'center',
+    marginHorizontal: 40, // 水平边距
+    marginBottom: 20, // 底部边距
+    position: 'absolute', // 添加绝对定位
+    bottom: 20, // 按钮距离底部的距离
+    left: 0, // 按钮距离左边的距离
+    right: 0, // 按钮距离右边的距离
+  },
+saveButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+},
+nameLabel: {
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

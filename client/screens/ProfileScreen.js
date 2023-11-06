@@ -150,14 +150,14 @@ const ProfileScreen = () => {
                 </TouchableOpacity>
 
              
-                <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Security")}>
                   <Image 
                     source={require('../assets/ProfileSecurity.jpg')} // replace with your image's path
                     style={styles.sectionImage}
                   />
                 </TouchableOpacity>
                 <Text style={styles.sectionTitle}>Help</Text>
-                <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <TouchableOpacity onPress={() => navigation.navigate("ContactUs")}>
                   <Image 
                     source={require('../assets/ProfileContactUs.jpg')} // replace with your image's path
                     style={styles.sectionImage}
