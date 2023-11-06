@@ -14,6 +14,8 @@ import { useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
 import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
+import { useUserContext } from "../context/userContext";
+
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
 const FindLostPet = () => {
@@ -23,6 +25,7 @@ const FindLostPet = () => {
   const [petBreed, setPetBreed] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [description, setDescription] = useState ('');
+  const { user } = useUserContext();
 
 
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -166,7 +169,9 @@ const FindLostPet = () => {
                 image_uri: imageUri,
                 description: description,
                 location_lat: location.lat,
-                location_lng: location.lng
+                location_lng: location.lng,
+                userId: user.id,
+                postType: "Found"
 
               };
 
