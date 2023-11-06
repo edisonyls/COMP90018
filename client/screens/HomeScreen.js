@@ -116,14 +116,7 @@ const HomeScreen = () => {
             <View className="flex-row item-center justify-center px-8 mt-4">
               <MenuContainer
                 key={"all"}
-<<<<<<< HEAD
                 title="All"
-                imageSrc={require("../assets/dog.png")}
-=======
-
-                title="All"
-
->>>>>>> 647b9582c5a589919925a3a5ba81f502f65df7f3
                 type={type}
                 setType={setType}
                 setSelectedMenu={setSelectedMenu}

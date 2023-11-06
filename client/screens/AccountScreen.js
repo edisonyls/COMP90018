@@ -9,6 +9,7 @@ import {
     StyleSheet,
     Dimensions,
     TextInput, 
+    Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useLayoutEffect, useState } from "react";
@@ -31,6 +32,7 @@ const AccountScreen = () => {
     const [name, setName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
+    const [confirmEmail, setConfirmEmail] = useState('');
     const navigation = useNavigation();
     const { user,setUser } = useUserContext();
     
@@ -47,6 +49,7 @@ const AccountScreen = () => {
           setName(storedName);
           setPhoneNumber(storedPhoneNumber); 
           setEmail(storedEmail); // 设置邮箱
+          setConfirmEmail(storedEmail);
           setBackgroundUri(storedBackgroundUri);
           setHeadUri(storedHeadUri);
           setIsLoading(false);
@@ -105,7 +108,11 @@ const pickImage = async (isBackground) => {
 };
     const saveAndGoBack = async () => {
         try {
-          
+          if (email !== confirmEmail) {
+            // 如果不同，显示错误提示
+            alert("Email addresses do not match. Please try again.");
+            return; // 不要继续执行函数
+        }
 
           if (typeof backgroundUri === 'object' && backgroundUri.uri) {
              await uploadBackground(user.id, backgroundUri.formData);
@@ -194,6 +201,15 @@ const pickImage = async (isBackground) => {
                     onChangeText={(text) => setEmail(text)}
                     placeholder="Enter your email"
                   />
+                </View>
+                <View style={styles.nameContainer}>
+                    <Text style={styles.nameLabel}>Confirm Email</Text>
+                    <TextInput
+                        style={styles.nameInput}
+                        value={confirmEmail}
+                        onChangeText={(text) => setConfirmEmail(text)}
+                        placeholder="Confirm your email"
+                    />
                 </View>
             </ScrollView>
               <TouchableOpacity style={styles.saveButton} onPress={saveAndGoBack}>

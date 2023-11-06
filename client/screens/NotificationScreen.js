@@ -2,20 +2,14 @@ import {
     View,
     Text,
     SafeAreaView,
-    Image,
     ScrollView,
     TouchableOpacity,
     ActivityIndicator,
     StyleSheet,
-    Dimensions, 
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useLayoutEffect, useState } from "react";
+import React, {useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import MenuContainer from "../components/MenuContainer";
-import ItemCardContainer from "../components/ItemCardContainer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import profileData from '../assets/profileData.json';
 import { useProfile } from '../navigators/ProfileContext';
 import { Switch } from "react-native";
 
