@@ -88,3 +88,15 @@ export const uploadHead = async (usrId, formData) => {
     console.log("while uploadHead request -> \n" + err);
   }
 };
+
+export const changeUserInfo = async (userInfo) => {
+  try {
+    const response = await axios.post(
+      "http://" + BASE_URL + ":8080/user/changeUserInfo",
+      userInfo
+    );
+    return response.data;
+  } catch (error) {
+    console.error("在changeUserInfo请求时出错", error);
+  }
+};

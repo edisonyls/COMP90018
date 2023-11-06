@@ -21,7 +21,7 @@ import { useProfile } from '../navigators/ProfileContext';
 import * as ImagePicker from 'expo-image-picker';
 //import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUserContext } from "../context/userContext";
-import {uploadBackground,uploadHead} from "../api/auth";
+import {uploadBackground,uploadHead,changeUserInfo} from "../api/auth";
 import axios from "axios";
 
 
@@ -30,7 +30,7 @@ const AccountScreen = () => {
     const [backgroundUri, setBackgroundUri] = useState(null);
     const [headUri, setHeadUri] = useState(null);
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const navigation = useNavigation();
     const { user,setUser } = useUserContext();
     
@@ -39,12 +39,12 @@ const AccountScreen = () => {
           setIsLoading(true);
           // 这里假设你会从 user 或 profileData 中加载数据
           const storedName = user.nickname || profileData.profile.name;
-          const storedEmail = user.email || profileData.profile.email;
+          const storedPhoneNumber = user.mobile || "Null";
           const storedBackgroundUri = user.bgImg || '../assets/Background.jpg';
           const storedHeadUri = user.profile || '../assets/ProfileHead.jpg';
           
           setName(storedName);
-          setEmail(storedEmail);
+          setPhoneNumber(storedPhoneNumber); 
           setBackgroundUri(storedBackgroundUri);
           setHeadUri(storedHeadUri);
           
@@ -53,6 +53,24 @@ const AccountScreen = () => {
 
       loadProfileData();
   }, []);
+
+  const updateUserProfile = async () => {
+    try {
+      const updatedUserInfo = {
+        // ... 其他用户信息 ...
+        id: user.id,
+        mobile: phoneNumber, // 更新的手机号码
+        nickname: name, // 更新的昵称
+        // ... 其他用户信息 ...
+      };
+  
+      const response = await changeUserInfo(updatedUserInfo);
+      // 处理响应，更新上下文等
+    } catch (e) {
+      console.error("更新用户资料失败", e);
+    }
+  };
+
   const getImageSource = (image) => {
     if (typeof image === 'string') {
         return { uri: image };
@@ -98,7 +116,7 @@ const pickImage = async (isBackground) => {
              
           }
 
-
+          await updateUserProfile(); // 使用新昵称和手机号更新用户资料
           navigation.goBack();
         } catch (e) {
           console.error("Failed to save profile information", e);
@@ -158,12 +176,12 @@ const pickImage = async (isBackground) => {
                   />
                 </View>
                 <View style={styles.nameContainer}>
-                  <Text style={styles.nameLabel}>Email</Text>
+                  <Text style={styles.nameLabel}>Phone Number</Text>
                   <TextInput
                     style={styles.nameInput}
-                    value={name}
-                    onChangeText={(text) => setName(text)}
-                    placeholder="Enter your email"
+                    value={phoneNumber}
+                    onChangeText={(text) => setPhoneNumber(text)}
+                    placeholder="Enter your phone number"
                   />
                 </View>
             </ScrollView>

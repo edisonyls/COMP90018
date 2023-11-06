@@ -27,7 +27,7 @@ const ProfileScreen = () => {
     const [selectedMenu, setSelectedMenu] = useState("post"); // 默认选中“post”
     
     const navigation = useNavigation();
-    const isFocused = useIsFocused();
+    //const isFocused = useIsFocused();
     const { user } = useUserContext();
     
   //   useEffect(() => {
