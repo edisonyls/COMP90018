@@ -56,12 +56,15 @@ const VerifyScreen = ({ navigation, route }) => {
     } else {
       setLoading(true);
       const res = await verifyEmail(code, email, password, username);
-      console.log(res);
-      if (!res.success) {
+      if (!res) {
+        setLoading(false);
+        console.log("Server side is down. Check api connection.");
+        Alter.alert("Oops!", "Try again later.");
+      } else if (!res.success) {
         setLoading(false);
         console.log("Register is failed");
+        Alert.alert("Oops!", res.msg);
       }
-      console.log(res.data);
       setUser(res.data);
       setLoading(false);
       navigation.navigate("Home");

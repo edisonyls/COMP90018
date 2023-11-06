@@ -41,8 +41,8 @@ public class PostServiceImpl implements PostService {
         post.setCreatedTime(date);
         post.setUpdatedTime(date);
         post.setId(postId);
-
         post.setPosterId(uploadPostBO.getPostId());
+
         post.setLatitude(uploadPostBO.getLatitude());
         post.setLongitude(uploadPostBO.getLongitude());
         post.setPicture(uploadPostBO.getPostImg());
@@ -64,6 +64,7 @@ public class PostServiceImpl implements PostService {
         String postType = uploadPostBO.getPostType();
         switch (postType) {
             case "Missing":
+
                 post.setPostType(PostTypeEnum.MISSING.getPostType());
                 break;
             case "Found":
