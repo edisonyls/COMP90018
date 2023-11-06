@@ -35,7 +35,7 @@ public class UploadPostBO {
 
     private String petCategory;
 
-    private String petBread;
+    private String petBreed;
 
     private String petName;
 
