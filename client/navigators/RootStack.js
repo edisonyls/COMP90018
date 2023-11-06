@@ -30,7 +30,7 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-        initialRouteName="Landing"
+        initialRouteName="FindMyPet"
         //initialRouteName="Profile"
       >
         <Stack.Screen name="SignIn" component={SignIn} />

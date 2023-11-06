@@ -157,7 +157,7 @@ const FindMyPet = () => {
           };
 
           try {
-            const serverResponse = await axios.post('http://192.168.1.101:8080/comp-test', petData);
+            const serverResponse = await axios.post('http://192.168.1.111:8080/comp-test', petData);
         
             if (serverResponse.data.status === 'success') {
                 console.log('Data submitted successfully. ID:', serverResponse.data.id);
