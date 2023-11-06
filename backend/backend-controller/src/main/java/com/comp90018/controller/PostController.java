@@ -26,28 +26,28 @@ public class PostController extends BaseController {
     @Autowired
     PostService postService;
 
-    @PostMapping("/uploadImg")
-    public JSONResult uploadPostImg(@Valid @RequestParam MultipartFile multipartFile, String userId) {
-        if (multipartFile == null) {
-            return JSONResult.errorMsg("No img!");
-        }
-        else {
-            String postId = RedisEnum.REDIS_POST_ID + userId + ":" + System.currentTimeMillis();
-            String fileName = multipartFile.getOriginalFilename();
-            try {
-                MinIOUtils.uploadFile(minIOConfig.getBucketName(), fileName, multipartFile.getInputStream());
-            } catch (Exception e) {
-                return JSONResult.errorMsg("Upload error, please try again.");
-            }
-            String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
-//            redis.set(postId, imgUrl, 90);
-            Map<String, Object> map = new HashMap<String, Object>() {{
-                put("imgUrl", imgUrl);
-                put("postId", postId);
-            }};
-            return JSONResult.ok(map);
-        }
-    }
+//    @PostMapping("/uploadImg")
+//    public JSONResult uploadPostImg(@Valid @RequestParam MultipartFile multipartFile, String userId) {
+//        if (multipartFile == null) {
+//            return JSONResult.errorMsg("No img!");
+//        }
+//        else {
+//            String postId = RedisEnum.REDIS_POST_ID + userId + ":" + System.currentTimeMillis();
+//            String fileName = multipartFile.getOriginalFilename();
+//            try {
+//                MinIOUtils.uploadFile(minIOConfig.getBucketName(), fileName, multipartFile.getInputStream());
+//            } catch (Exception e) {
+//                return JSONResult.errorMsg("Upload error, please try again.");
+//            }
+//            String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
+////            redis.set(postId, imgUrl, 90);
+//            Map<String, Object> map = new HashMap<String, Object>() {{
+//                put("imgUrl", imgUrl);
+//                put("postId", postId);
+//            }};
+//            return JSONResult.ok(map);
+//        }
+//    }
 
     @PostMapping("/uploadPost")
     public JSONResult uploadPost(@Valid @RequestBody UploadPostBO uploadPostBO) {
