@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import profileData from '../assets/profileData.json';
+
 import { useProfile } from '../navigators/ProfileContext';
 import * as ImagePicker from 'expo-image-picker';
 import { useUserContext } from "../context/userContext";
@@ -40,9 +40,9 @@ const AccountScreen = () => {
       const loadProfileData = async () => {
           setIsLoading(true);
           // 这里假设你会从 user 或 profileData 中加载数据
-          const storedName = user.nickname || profileData.profile.name;
+          const storedName = user.nickname || "Null";
           const storedPhoneNumber = user.mobile || "Null";
-          const storedEmail = user.email1 || profileData.profile.email; // 添加邮箱
+          const storedEmail = user.email1 || "Null"; // 添加邮箱
           const storedBackgroundUri = user.bgImg || '../assets/Background.jpg';
           const storedHeadUri = user.profile || '../assets/ProfileHead.jpg';
           
