@@ -11,8 +11,12 @@ import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import AccountScreen from "../screens/AccountScreen";
 import VerifyScreen from "../screens/VerifyScreen";
+<<<<<<< HEAD
 import FindLostPet from "../screens/FindLostPet";
 import NotificationScreen from "../screens/NotificationScreen";
+=======
+
+>>>>>>> 647b9582c5a589919925a3a5ba81f502f65df7f3
 
 const Stack = createNativeStackNavigator();
 
@@ -46,8 +50,13 @@ const RootStack = () => {
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Account" component={AccountScreen} /> 
         <Stack.Screen name="Verify" component={VerifyScreen} />
+<<<<<<< HEAD
         <Stack.Screen name="Notification" component={NotificationScreen} />
         
+=======
+       
+
+>>>>>>> 647b9582c5a589919925a3a5ba81f502f65df7f3
       </Stack.Navigator>
     </NavigationContainer>
   );
