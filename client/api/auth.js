@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "192.168.1.107";
+const BASE_URL = "192.168.1.101";
 
 export const verifyEmail = async (code, email, password, username) => {
   try {

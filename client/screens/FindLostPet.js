@@ -171,7 +171,7 @@ const FindLostPet = () => {
               };
 
               try {
-                const serverResponse = await axios.post('http://192.168.1.106:8080/post/uploadPost', foundData);
+                const serverResponse = await axios.post('http://192.168.1.101:8080/post/uploadPost', foundData);
                 console.log(serverResponse);
                 if (serverResponse.data.status === 'success') {
                     console.log('Data submitted successfully. ID:', serverResponse.data.id);
