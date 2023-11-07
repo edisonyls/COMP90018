@@ -87,6 +87,15 @@ public class PostController extends BaseController {
         return JSONResult.ok(postList);
     }
 
+    @GetMapping("getFilteredPost")
+    public JSONResult getFilteredPost(@RequestParam String postCategory) {
+        List<Post> postList = postService.getFilteredPost(postCategory);
+        if (postList == null) {
+            return JSONResult.errorMsg("This user does not have post");
+        }
+        return JSONResult.ok(postList);
+    }
+
 
     @PostMapping("deleteAPost")
     public JSONResult deletePost(@RequestParam String postId) {

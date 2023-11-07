@@ -1,6 +1,7 @@
 package com.comp90018.service;
 
-import com.comp90018.bo.ChangeUserBO;
+import com.comp90018.bo.ChangeUserImgBO;
+import com.comp90018.bo.ChangeUserInfoBO;
 import com.comp90018.pojo.Users;
 
 public interface UserService {
@@ -11,5 +12,6 @@ public interface UserService {
 
     public Users queryUser(String userId);
 
-    public Users changeUserInfo(ChangeUserBO changeUserBO);
+    public Users changeUserInfo(ChangeUserImgBO changeUserBO);
+    public Users changeUserInfo(ChangeUserInfoBO changeUserInfoBO);
 }

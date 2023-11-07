@@ -13,6 +13,7 @@ public enum RedisEnum {
     REDIS_POST_ID("redis_id");
 
 
+
     private String redisKey;
 
     RedisEnum(String redisKey) {
