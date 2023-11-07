@@ -70,13 +70,13 @@ const ActivitiesScreen = () => {
       console.log(response.data);
       const data = response.data.data;
 
-      const transformedData = data.map(item => ({
+      const transformedData = data?.map(item => ({
         name: item.senderNickname,
         action: item.content.behavior,
         imageProfile: 'https://www.w3schools.com/images/w3schools_green.jpg',
         imagePost: 'https://www.w3schools.com/images/w3schools_green.jpg'
 
-      }));
+      })) || [];
       setActivities(transformedData);
         
     } catch (error) {
@@ -88,16 +88,15 @@ const ActivitiesScreen = () => {
   };
       
 
-  useEffect(()=> {
+  useEffect(() => {
     fetchActivities();
-  },[]);
 
-  // const activities = [
-  //   { name: 'Momon', action: 'Liked your Post', imageProfile: 'https://www.w3schools.com/images/w3schools_green.jpg',
-  //     imagePost: 'https://www.w3schools.com/images/w3schools_green.jpg' },
-  //   { name: 'Momon', action: 'Commented your Post', imageProfile: 'https://www.w3schools.com/images/w3schools_green.jpg',
-  //     imagePost: 'https://www.w3schools.com/images/w3schools_green.jpg' },
-  // ];
+    const interval = setInterval(() => {
+      fetchActivities();
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, []);
 
 
   return (
