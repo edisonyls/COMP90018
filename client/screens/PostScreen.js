@@ -8,46 +8,35 @@ import {
   Alert,
   ScrollView,
   StyleSheet,
+  TextInput,
+  KeyboardAvoidingView, 
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from "react";
-import { queryUserInfo , getCommentList} from '../api/auth';
+import { queryUserInfo , getCommentList, addComment} from '../api/auth';
 const screenWidth = Dimensions.get("window").width;
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 import axios from 'axios';
+import { useUserContext } from "../context/userContext";
 
 const PostScreen = ({ route, navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
   const { post } = route.params; // 从路由参数中获取post对象
   const [address, setAddress] = useState('');
   const [comments, setComments] = useState([]);
-  const [commentUsers, setCommentUsers] = useState({});
+  const [commentContent, setCommentContent] = useState('');
 
-  const fetchCommentsAndUsers = async () => {
+  const { user } = useUserContext();
+
+  const fetchComments = async () => {
     try {
       const commentListData = await getCommentList(post.id);
       if (commentListData && commentListData.success) {
-        // 获取评论列表
-        const comments = commentListData.data || []; // 确保comments总是一个数组
-        setComments(comments);
-        if (comments.length > 0) {
-          // 获取评论发布者信息
-          const userInfoPromises = comments.map(comment =>
-            queryUserInfo(comment.posterId)
-          );
-          const usersInfos = await Promise.all(userInfoPromises);
-          // 将评论的发布者信息映射到一个对象中
-          const usersMapping = usersInfos.reduce((acc, userInfo, index) => {
-            if (userInfo && userInfo.success) {
-              acc[comments[index].id] = userInfo.data;
-            }
-            return acc;
-          }, {});
-          // 更新状态
-          setCommentUsers(usersMapping);
-        }
+        // 直接设置评论数据
+        setComments(commentListData.data || []);
       } else {
         console.error('获取评论失败:', commentListData.msg);
       }
@@ -55,17 +44,45 @@ const PostScreen = ({ route, navigation }) => {
       console.error('获取评论和用户信息失败:', error);
     }
   };
-  // const fetchComments = async () => {
-  //   const commentListData = await getCommentList(post.id);
-  //   if (commentListData && commentListData.success) {
-  //     setComments(commentListData.data);
-  //   } else {
-  //     console.error('获取评论失败:', commentListData.msg);
-  //   }
-  // };
+  
+  const handleSendComment = async () => {
+    // 构造评论数据
+    const commentData = {
+      commentUserId: user.id,
+      content: commentContent,
+      //createTime: new Date().toISOString(), // 使用当前时间作为评论时间
+      postId: post.id,
+      posterId: post.posterId,
+      
+      // replies:[
+      //   {
+      //     "commentUserId": "",
+      //     "content": "",
+      //     "createTime": "",
+      //     "fatherCommentId": "",
+      //     "id": "",
+      //     "likeCounts": 0,
+      //     "postId": "",
+      //     "posterId": "",
+      //     "replies": []
+      //   }
+      // ] 
+    };
+
+    // 调用接口函数发送评论
+    const response = await addComment(commentData);
+    if (response.success) {
+      // 评论成功后的操作，比如清空输入框，重新获取评论列表等
+      setCommentContent('');
+      fetchComments();
+    } else {
+      // 处理错误情况
+      console.error('评论失败:', response.message);
+    }
+  };
 
   useEffect(() => {
-    fetchCommentsAndUsers();
+    fetchComments();
   }, [post.id]);
   
 
@@ -112,6 +129,10 @@ const PostScreen = ({ route, navigation }) => {
   }, [post.posterId]);
 
   return (
+    <KeyboardAvoidingView 
+    behavior={Platform.OS === "ios" ? "padding" : "height"} 
+    style={{flex: 1}}
+  >
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView>
       <View className="flex-1 bg-white">
@@ -123,16 +144,26 @@ const PostScreen = ({ route, navigation }) => {
             >
               <AntDesign name="left" size={24} color="black" />
             </TouchableOpacity>
-            {userInfo && (
-            <>
-              <Image
-                source={{ uri: userInfo.profile }}
-                className="w-10 h-10 rounded-full mr-2 border"
-                style={{ borderColor: "#D3D3D3" }}
-              />
-              <Text className="font-bold">{userInfo.nickname}</Text>
-            </>
-          )}
+            <TouchableOpacity
+              onPress={() => {
+                // 确保有用户信息可供传递
+                if (userInfo) {
+                  navigation.navigate('Others', { otherUser: userInfo });
+                }
+              }}
+              className="flex-row items-center"
+            >
+              {userInfo && (
+                <>
+                  <Image
+                    source={{ uri: userInfo.profile }}
+                    className="w-10 h-10 rounded-full mr-2 border"
+                    style={{ borderColor: "#D3D3D3" }}
+                  />
+                  <Text className="font-bold">{userInfo.nickname}</Text>
+                </>
+              )}
+            </TouchableOpacity>
           </View>
           {/* <TouchableOpacity className="p-2 bg-[#007bff] rounded-lg">
             <Text className="text-white">Follow</Text>
@@ -235,25 +266,37 @@ const PostScreen = ({ route, navigation }) => {
       {comments.length > 0 ? (
         comments.map((comment) => (
           <View key={comment.id} style={styles.commentContainer}>
-            {commentUsers[comment.posterId] && (
+           
               <>
-                {/* <Image
-                  source={{ uri: commentUsers[comment.posterId].profile }}
+                <Image
+                  source={{ uri: comment.userProfile }}
                   style={styles.commentUserImage}
-                /> */}
-                <Text style={styles.commentUserName}>{commentUsers[comment.posterId].nickname}</Text>
+                />
+                <Text style={styles.commentUserName}>{comment.userName} : </Text>
               </>
-            )}
+            
             <Text style={styles.commentText}>{comment.content}</Text>
           </View>
         ))
       ) : (
-        <Text style={styles.commentText}>无人评论</Text>
+        <Text style={styles.commentText}>Ohh! No comment</Text>
       )}
     </View>
       </View>
       </ScrollView>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Write comment..."
+            value={commentContent}
+            onChangeText={setCommentContent}
+            style={styles.input}
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={handleSendComment}>
+            <Text style={styles.sendButtonText}>Send</Text>
+          </TouchableOpacity>
+        </View>
     </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({
@@ -302,21 +345,15 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     backgroundColor: '#EDE7F6',
     marginTop: -10,
+    marginRight:7,
+    marginLeft:7,
   },
   commentsLabel: {
     fontWeight: 'bold',
     fontSize: 18,
     marginBottom: 5,
   },
-  commentText: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: 'grey',
-    borderRadius: 10,
-    padding: 5,
-    marginLeft: 5,
-    marginTop: 5,
-  },
+
   commentUserName: {
     fontWeight: 'bold', // 字体加粗
     color: '#333', // 深色字体
@@ -329,11 +366,60 @@ const styles = StyleSheet.create({
     lineHeight: 18, // 行高，增加可读性
     marginTop: 2, // 与上方用户名的间隔
     marginBottom: 2, // 与下方内容的间隔
-    backgroundColor: '#f9f9f9', // 背景色
+    backgroundColor: '#eee', // 背景色
     borderRadius: 5, // 圆角效果
     padding: 8, // 内边距
   },
-  
+  commentContainer: {
+    backgroundColor: '#fff', // 评论部分的白色背景
+    padding: 10, // 评论容器内部的填充
+    marginVertical: 5, // 垂直方向的外边距
+    borderBottomWidth: 1, // 底部边框宽度，用于分隔评论
+    borderBottomColor: '#e1e1e1', // 底部边框颜色，浅灰色
+    flexDirection: 'row', // 水平排列用户头像和评论内容
+    alignItems: 'center', // 在交叉轴上居中对齐子元素
+  },
+  commentUserImage: {
+    width: 30, // 评论用户头像的宽度
+    height: 30, // 评论用户头像的高度
+    borderRadius: 15, // 头像的圆角半径
+    marginRight: 10, // 头像右边的外边距
+  },
+  locationText: {
+    color: '#333', // 位置文本的颜色
+    fontSize: 14, // 位置文本的字体大小
+    marginLeft: 8, // 位置文本左边的外边距
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e1e1e1',
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    marginVertical: 5,
+    marginRight: 10,
+    backgroundColor: '#f9f9f9',
+  },
+  sendButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    backgroundColor: '#9747FF',
+    borderRadius: 20,
+    justifyContent: 'center', // 按钮内部的文本垂直居中
+  },
+  sendButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
 });
 
 export default PostScreen;

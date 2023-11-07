@@ -19,6 +19,7 @@ import MessageScreen from "../screens/MessageScreen";
 import ActivitiesScreen from "../screens/ActivitiesScreen";
 import PostScreen from "..//screens/PostScreen";
 import FollowersScreen from "../screens/FollowersScreen";
+//import OthersProflie from "../screens/OthersProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +65,7 @@ const RootStack = () => {
         <Stack.Screen name="Message" component={MessageScreen} />
         <Stack.Screen name="Activities" component={ActivitiesScreen}/>
         <Stack.Screen name="Followers" component={FollowersScreen}/>
+       
       </Stack.Navigator>
     </NavigationContainer>
   );

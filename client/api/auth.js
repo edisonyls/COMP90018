@@ -167,3 +167,15 @@ export const getCommentList = async (postId) => {
   }
 };
 
+export const addComment = async (commentData) => {
+  try {
+    const response = await axios.post(
+      `http://${BASE_URL}:8080/comment/AddComment`,
+      commentData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("添加评论时出错", error);
+    return { success: false, message: error.message };
+  }
+};
