@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TextInput, KeyboardAvoidingView, Platform,SafeAreaView,FlatList,Keyboard,Alert,toString } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TextInput, KeyboardAvoidingView, Platform,SafeAreaView,FlatList,Keyboard,Alert,toString} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -8,6 +8,7 @@ import { AntDesign } from '@expo/vector-icons'; // Importing AntDesign for the d
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
+import { BASE_URL } from '../api/auth';
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
@@ -23,8 +24,9 @@ const FindMyPet = () => {
   const[petName, setPetName] = useState('');
   const[contactNumber,setContactNumber] = useState('');
   const[reward,setReward] = useState('');
+  const[description,setDescription] = useState('');
   const { user } = useUserContext();
-
+  
   //find pet location 
   //const [location, setLocation] = useState({latitude:37.8136,longitude:144.9631});
   const [region, setRegion] = useState({latitude:37.8136,longitude:144.9631});
@@ -33,6 +35,7 @@ const FindMyPet = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isShowingResults, setIsShowingResults] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
+  const [postId, setPostId] = useState(null);
   
 
   const searchLocation = async (text) => {
@@ -71,10 +74,6 @@ const FindMyPet = () => {
     setIsShowingResults(false);
     //Keyboard.dismiss();
   };
-
-
-
-
 
   useEffect(() => {
     (async () => {
@@ -138,9 +137,55 @@ const FindMyPet = () => {
     );
   };
 
+  const convertUriToMultipartFile = async (imageUri) => {
+    try {
+      // Extract file name and type from the URI
+      let uriParts = imageUri.split('/');
+      let fileName = uriParts[uriParts.length - 1];
+      let fileType = fileName.split('.').pop();
+  
+      // Fetch the blob from the local file system using the FileSystem API
+      const blob = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+      const fileBlob = new Blob([blob], { type: `image/${fileType}` });
+  
+      // Create a new FormData object and append the file
+      const formData = new FormData();
+      formData.append('image', { uri: imageUri, name: fileName, type: `image/${fileType}` });
+  
+      return formData;
+    } catch (error) {
+      console.error('Error converting image URI to multipart file:', error);
+      throw error;
+    }
+  };
+  
 
 
+  const uploadImage = async (formData) => {
 
+    // Step 3: Send the FormData object using Axios with the appropriate headers
+    try {
+      const response = await axios.post('http://'+ BASE_URL +':8080/post/uploadPostImg', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      // Handle the response from the server
+      if (response.success === 'true') {
+        console.log('Image uploaded successfully. ID:', response.data.postId);
+        setPostId(response.data.postId);
+        return true;
+
+      } else {
+        console.log('Server responded with an unexpected status.');
+        return false;
+      }
+    } catch (error) {
+      console.error('An error occurred while uploading the image:', error);
+      return false;
+    }
+  };
 
 
 
@@ -162,7 +207,10 @@ const FindMyPet = () => {
 
   // Function to handle the form submission
   const handleSubmit = async() => {
-    if (validateForm()) {
+
+    const formData = convertUriToMultipartFile(imageUri);
+
+    if (validateForm() && uploadImage(formData) ) {
       try {
         // Fetch the detailed information of the selected location
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
@@ -181,27 +229,33 @@ const FindMyPet = () => {
           console.log(`Pet Name: ${petName}`);
           console.log(`Contact Number: ${contactNumber}`);
           console.log(`Reward: ${reward}`);
-
+          console.log(`Post Id: ${postId}`);
+          
+          
           const petData = {
             petName: petName,
             petCategory: petCategory,
             petBreed: petBreed,
             contactNumber: contactNumber,
             rewards: reward,
-            postImg: imageUri,
+            postImg: formData,
             latitude: location.lat,
             longitude: location.lng,
             userId: user.id,
-            postType: 'Missing'
+            postType: 'Missing',
+            description: description,
+            postId: postId
           };
 
           try {
-            const serverResponse = await axios.post('http://192.168.1.111:8080/post/uploadPost', petData);
+            const serverResponse = await axios.post('http://'+ BASE_URL +':8080/post/uploadPost', petData);
+            
+          
             console.log(serverResponse.data);
           
-            if (serverResponse.data.success) {
+            if (serverResponse.success) {
                 console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
-
+                // ... (clear your form fields and navigate away)
             } else {
                 console.log('Server responded with an unexpected status.');
             }
@@ -236,6 +290,8 @@ const FindMyPet = () => {
           setSelectedPlaceId(null);
           setReward('');
           setContactNumber('');
+          setImageUri(null);
+          setDescription(null);
         
           // or however you clear your location field
           // Clear other form fields as necessary
@@ -258,9 +314,9 @@ const FindMyPet = () => {
     //     behavior={Platform.OS === "ios" ? "padding" : "height"}
     //     style={{ flex: 1 }}
     // >
-    <View>
+    <View style ={{flex:1}}>
       {/* <ScrollView style={styles.mainContainer} keyboardShouldPersistTaps='handled'> */}
-        <View style={styles.formContainer}>
+        <View style={styles.locationContainer}>
 
             {/*Pet missing Location*/}
             <View style={styles.autocompleteContainer}>
@@ -288,10 +344,14 @@ const FindMyPet = () => {
                 />
               )}
             </View>
+          </View>
 
             
+      <View
+      styles = {{flex: 0}}
+      >
 
-
+          <ScrollView style={styles.formContainer} keyboardShouldPersistTaps='handled' onScrollBeginDrag={Keyboard.dismiss}>
             {/* Image Selector Field */}
             <TouchableOpacity onPress={handleSelectImage} style={styles.imageSelector}>
             {imageUri ? (
@@ -300,6 +360,20 @@ const FindMyPet = () => {
                 <Text>Select Image</Text>
             )}
             </TouchableOpacity>
+
+            {/* Pet Name Input */}
+            <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}> * Pet's Name</Text>
+                  <TextInput
+                      style={styles.textInput}
+                      onChangeText={setPetName}
+                      value={petName}
+                      placeholder="Enter pet's name"
+                      // Here you can set if you want the first letter to be auto-capitalized, etc.
+                      autoCapitalize="words"
+                  />
+            </View>
+
             
 
             {/* Pet Category Dropdown */}
@@ -345,18 +419,19 @@ const FindMyPet = () => {
             />
             </View>
 
-            {/* Pet Name Input */}
+            {/* Description Input */}
             <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}> * Pet's Name</Text>
+            <Text style={styles.inputLabel}> Description</Text>
             <TextInput
                 style={styles.textInput}
-                onChangeText={setPetName}
-                value={petName}
-                placeholder="Enter pet's name"
+                onChangeText={setDescription}
+                value={description}
+                placeholder="Enter description"
                 // Here you can set if you want the first letter to be auto-capitalized, etc.
                 autoCapitalize="words"
             />
             </View>
+
 
             {/* Contact number input */}
             <View style={styles.inputContainer}>
@@ -390,10 +465,10 @@ const FindMyPet = () => {
         
 
             {/* Additional form fields will be added here */}
-        </View>
+        </ScrollView>
       {/* </ScrollView> */}
       {/* <View style = {marginBottom:50, flex: 1}> </View> */}
-
+     </View>
     </View>
   );
 }
@@ -404,9 +479,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  formContainer: {
-    paddingTop: 125,
+  locationContainer:{
+    paddingTop: 100,
     paddingHorizontal: 35,
+    zIndex:1,
+  },
+
+  formContainer: {
+    paddingTop: 120,
+    paddingHorizontal: 35,
+    //paddingBottom:-50,
   },
   imageSelector: {
     borderWidth: 1,
@@ -418,7 +500,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20, // reduced space for the next form field
-    marginTop: 35,
+    marginTop: -80,
   },
   imagePreview: {
     width: 300,
@@ -457,7 +539,11 @@ const styles = StyleSheet.create({
   },
 
   autocompleteContainer: {
-    zIndex: 1,
+    position: "absolute",
+    marginTop: 70,
+    paddingLeft:35,
+    flex: 100,
+    zIndex: 10,
   },
   searchResultsContainer: {
     width: 320, // or '100%' if you want it to have the full width of the screen
@@ -466,6 +552,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 75, // this positions your results just below the TextInput field
     borderRadius:5,
+    zIndex:10,
+    marginLeft: 35,
+    paddingLeft:5,
   },
   resultItem: {
     width: '100%',
@@ -492,7 +581,8 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     borderRadius: 5,
-    marginTop: 10, // Adjust as needed for spacing from the last form field
+    //marginTop: 10, // Adjust as needed for spacing from the last form field
+    marginBottom: 60,
   },
   submitButtonText: {
     color: '#fff',
