@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -35,6 +35,8 @@ const ActivitiesScreen = () => {
   const { user } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
 
+  const [activities, setActivities] = useState([]);
+
   const [activeTab, setActiveTab] = useState('activities');
   const [clickedItems, setClickedItems] = useState({});
 
@@ -47,12 +49,30 @@ const ActivitiesScreen = () => {
 
   console.log('ActiveTab:', activeTab); 
 
-  const activities = [
-    { name: 'Momon', action: 'Liked your Post', imageProfile: 'https://www.w3schools.com/images/w3schools_green.jpg',
-      imagePost: 'https://www.w3schools.com/images/w3schools_green.jpg' },
-    { name: 'Momon', action: 'Commented your Post', imageProfile: 'https://www.w3schools.com/images/w3schools_green.jpg',
-      imagePost: 'https://www.w3schools.com/images/w3schools_green.jpg' },
-  ];
+  const fetchActivities = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`http://192.168.1.101:8080//message/listMessages?userId=${encodeURIComponent(userId)}`);
+      const data = await response.json();
+      setActivities(data);
+      
+    } catch (error) {
+      console.error('Failed to fetch activities', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(()=> {
+    fetchActivities();
+  },[]);
+
+  // const activities = [
+  //   { name: 'Momon', action: 'Liked your Post', imageProfile: 'https://www.w3schools.com/images/w3schools_green.jpg',
+  //     imagePost: 'https://www.w3schools.com/images/w3schools_green.jpg' },
+  //   { name: 'Momon', action: 'Commented your Post', imageProfile: 'https://www.w3schools.com/images/w3schools_green.jpg',
+  //     imagePost: 'https://www.w3schools.com/images/w3schools_green.jpg' },
+  // ];
 
 
   return (
