@@ -6,8 +6,10 @@ import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.CommentMapper;
 import com.comp90018.mapper.PostMapper;
+import com.comp90018.mapper.UsersMapper;
 import com.comp90018.pojo.Comment;
 import com.comp90018.pojo.Post;
+import com.comp90018.pojo.Users;
 import com.comp90018.service.CommentService;
 import com.comp90018.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private PostMapper postMapper;
+
+    @Autowired
+    private UsersMapper usersMapper;
 
     @Autowired
     private Sid sid;
@@ -138,11 +143,36 @@ public class CommentServiceImpl implements CommentService {
                     .peek(dto -> log.info("Processing DTO with ID: {} and fatherID: {}", dto.getId(), dto.getFatherCommentId()))
                     .filter(commentDTO -> commentDTO.getFatherCommentId()==null || commentDTO.getFatherCommentId().isEmpty())
                     .collect(Collectors.toList());
+
+            processComments(commentDTOList);
+
             log.info(String.valueOf(commentDTOList));
             return commentDTOList;
         }
 
     }
+
+    public void addUserDetailsToComment(CommentDTO commentDTO) {
+        Example example = new Example(Users.class);
+        example.createCriteria().andEqualTo("id", commentDTO.getCommentUserId());
+        List<Users> usersList = usersMapper.selectByExample(example);
+        if (!usersList.isEmpty()) {
+            Users user = usersList.get(0);
+            commentDTO.addUserName(user.getNickname());
+            commentDTO.addUserProfile(user.getProfile());
+        }
+    }
+
+    public void processComments(List<CommentDTO> comments) {
+        for (CommentDTO commentDTO : comments) {
+            addUserDetailsToComment(commentDTO);
+            if (commentDTO.getReplies() != null) {
+                processComments(commentDTO.getReplies()); // 递归调用处理回复
+            }
+        }
+    }
+
+
 
     private CommentDTO convertToDTO(Comment comment) {
         CommentDTO dto = new CommentDTO();

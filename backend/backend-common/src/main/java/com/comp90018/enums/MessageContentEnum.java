@@ -9,13 +9,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public enum MessageContentEnum {
     BEHAVIOR("behavior"),
-    FOLLOW_NOTIFY("follow"),
-    UNFOLLOW_NOTIFY("unfollow"),
-    POST_LIKE_NOTIFY("like post"),
-    COMMENT_LIKE_NOTIFY("like comment"),
-    UNLIKE_NOTIFY("unlike"),
-    COMMENT_NOTIFY("comment"),
-    DETAIL("detail")
+    FOLLOW_NOTIFY("Follow your account"),
+    UNFOLLOW_NOTIFY("Unfollow your account"),
+    POST_LIKE_NOTIFY("Like your post"),
+    POST_UNLIKE_NOTIFY("Unlike your post"),
+    COMMENT_LIKE_NOTIFY("Like your comment"),
+    UNLIKE_NOTIFY("Unlike your comment"),
+    COMMENT_NOTIFY("Comment your post"),
+    DETAIL("Detail")
     ;
 
     private String systemMessage;
