@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Users changeUserInfo(ChangeUserInfoBO changeUserInfoBO) {
+        //overwrite ChangeUserInfoBO
         Users newUser = new Users();
         BeanUtils.copyProperties(changeUserInfoBO, newUser);
         String id = changeUserInfoBO.getId();
@@ -113,6 +114,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Users changeUserInfo(ChangeUserImgBO changeUserImgBO) {
+        //overwrite ChangeUserImgBO
         Users newUser = new Users();
         BeanUtils.copyProperties(changeUserImgBO, newUser);
         String id = changeUserImgBO.getId();
