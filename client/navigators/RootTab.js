@@ -11,6 +11,8 @@ import { Ionicons } from "@expo/vector-icons";
 import PostOption from "../screens/PostOption";
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import ActivitiesScreen from "../screens/ActivitiesScreen";
+import MessageScreen from "../screens/MessageScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -109,25 +111,29 @@ const RootTab = ({ navigation }) => {
       />
 
       <Tab.Screen
-        name="Landing"
-        component={Landing}
+        name="ActivitiesScreen"
+        component={ActivitiesScreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <View className="items-center justify-center">
-                <Entypo
-                  name="chat"
-                  size={24}
-                  color={focused ? "#6D28D9" : "#111"}
-                />
-                <Text
-                  className={`text-[12px] ${
-                    focused ? "text-[#6D28D9]" : "text-[#111]"
-                  }`}
-                >
-                  Chat
-                </Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ActivitiesScreen")}
+              >
+                <View className="items-center justify-center">
+                  <Entypo
+                    name="chat"
+                    size={24}
+                    color={focused ? "#6D28D9" : "#111"}
+                  />
+                  <Text
+                    className={`text-[12px] ${
+                      focused ? "text-[#6D28D9]" : "text-[#111]"
+                    }`}
+                  >
+                    Chat
+                  </Text>
+                </View>
+              </TouchableOpacity>
             );
           },
         }}

@@ -97,13 +97,11 @@ public class CommentServiceImpl implements CommentService {
         } else {
             Comment comment = commentList.get(0);
             comment.setLikeCounts(comment.getLikeCounts() + 1);
-            if (commentMapper.updateByPrimaryKeySelective(comment) == 0) {
-                return null;
-            }
 
             HashMap<String, Object> map = new HashMap<>();
             map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.COMMENT_LIKE_NOTIFY.getSystemMessage()); // (behavior, like)
             messageService.createMessage(comment.getCommentUserId(), comment.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+
             return comment;
         }
     }
@@ -115,31 +113,32 @@ public class CommentServiceImpl implements CommentService {
         example.createCriteria().andEqualTo("postId", postId);
         List<Comment> commentList = commentMapper.selectByExample(example);
 
-        if (commentList.isEmpty()) {
+        if (commentList.isEmpty() || commentList == null) {
             return null;
-        }
+        } else {
+            Map<String, CommentDTO> commentDTOMap = new HashMap<>();
+            for (Comment comment : commentList) {
+                CommentDTO commentDTO = convertToDTO(comment);
+                commentDTOMap.put(commentDTO.getId(), commentDTO);
+            }
 
-        Map<String, CommentDTO> commentDTOMap = new HashMap<>();
-        for (Comment comment : commentList) {
-            CommentDTO commentDTO = convertToDTO(comment);
-            commentDTOMap.put(commentDTO.getId(), commentDTO);
-        }
-
-        for(CommentDTO commentDTO : commentDTOMap.values()) {
-            if (commentDTO.getFatherCommentId() != null) {
-                CommentDTO parentCommentDTO = commentDTOMap.get(commentDTO.getFatherCommentId());
-                if (parentCommentDTO != null) {
-                    parentCommentDTO.addReply(commentDTO);
+            for(CommentDTO commentDTO : commentDTOMap.values()) {
+                if (commentDTO.getFatherCommentId() != null) {
+                    CommentDTO parentCommentDTO = commentDTOMap.get(commentDTO.getFatherCommentId());
+                    if (parentCommentDTO != null) {
+                        parentCommentDTO.addReply(commentDTO);
+                    }
                 }
             }
+
+            List<CommentDTO> commentDTOList = commentDTOMap.values().stream()
+                    .peek(dto -> log.info("Processing DTO with ID: {} and fatherID: {}", dto.getId(), dto.getFatherCommentId()))
+                    .filter(commentDTO -> commentDTO.getFatherCommentId()==null || commentDTO.getFatherCommentId().isEmpty())
+                    .collect(Collectors.toList());
+            log.info(String.valueOf(commentDTOList));
+            return commentDTOList;
         }
 
-        List<CommentDTO> commentDTOList = commentDTOMap.values().stream()
-                .peek(dto -> log.info("Processing DTO with ID: {} and fatherID: {}", dto.getId(), dto.getFatherCommentId()))
-                .filter(commentDTO -> commentDTO.getFatherCommentId().equals("-1"))
-                .collect(Collectors.toList());
-        System.out.println(commentDTOList);
-        return commentDTOList;
     }
 
     private CommentDTO convertToDTO(Comment comment) {

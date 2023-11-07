@@ -11,6 +11,8 @@ public interface PostService {
     List<Post> getAllPost(String postType);
     List<Post> getAllPostPerUser(String userId);
 
+    List<Post> getFilteredPost(String petCategory);
+
     boolean deletedPost(String postId);
 
     Post updatePost(UploadPostBO uploadPostBO);

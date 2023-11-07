@@ -7,5 +7,6 @@ export default function App() {
     <UserProvider>
       <RootStack />
     </UserProvider>
+
   );
 }
