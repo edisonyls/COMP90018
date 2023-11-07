@@ -12,7 +12,6 @@ import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import MapView, { Marker } from "react-native-maps";
-//import markersData from "../assets/MarkersData";
 import * as Location from "expo-location";
 import { Animated, Easing } from "react-native";
 import { useUserContext } from "../context/userContext";
@@ -37,23 +36,6 @@ const RadarAnimation = React.memo(() => {
     animateRadar(); // 开始动画
     return () => scaleValue.stopAnimation(); // 当组件卸载时停止动画
 
-    // (async () => {
-    //   let { status } = await Location.requestForegroundPermissionsAsync();
-    //   if (status !== "granted") {
-    //     setErrorMsg("Permission to access location was denied");
-    //     return;
-    //   }
-
-    //   let location = await Location.getCurrentPositionAsync({});
-    //   setLocation(location);
-    // })();
-
-    // const fetchPosts = async () => {
-    //   const postsData = await getAllPosts("All");
-    //   if (postsData && postsData.success) {
-    //     setPosts(postsData.data);
-    //   }
-    // };
   }, []);
 
   const scale = scaleValue.interpolate({
