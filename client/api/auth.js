@@ -150,3 +150,20 @@ export const queryUserInfo = async (userId) => {
   }
 };
 
+export const getCommentList = async (postId) => {
+  try {
+    const response = await axios.get(
+      `http://${BASE_URL}:8080/comment/GetCommentList`, 
+      {
+        params: {
+          postId: postId,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("获取评论列表时出错", error);
+    return { success: false, data: [] };
+  }
+};
+
