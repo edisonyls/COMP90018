@@ -15,9 +15,9 @@ import FindLostPet from "../screens/FindLostPet";
 import NotificationScreen from "../screens/NotificationScreen";
 import SecurityScreen from "../screens/SecurityScreen";
 import ContactUsScreen from "../screens/ContactUsScreen";
-
 import MessageScreen from "../screens/MessageScreen";
 import ActivitiesScreen from "../screens/ActivitiesScreen";
+import PostScreen from "../screens/PostScreen";
 
 
 const Stack = createNativeStackNavigator();
