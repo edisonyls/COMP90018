@@ -105,6 +105,7 @@ export const changeUserInfo = async (userInfo) => {
     console.error("在changeUserInfo请求时出错", error);
   }
 };
+
 export const getAllPosts = async (postType) => {
   try {
     const response = await axios.get(
@@ -119,3 +120,19 @@ export const getAllPosts = async (postType) => {
     return false;
   }
 };
+
+
+export const getAllPostsPerUser = async (userId) => {
+  try {
+    const response = await axios.get(`http://${BASE_URL}:8080/post/getAllPostsPerUser`, {
+      params: {
+        userId: userId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching posts per user", error);
+    return { success: false, data: [] };
+  }
+};
+
