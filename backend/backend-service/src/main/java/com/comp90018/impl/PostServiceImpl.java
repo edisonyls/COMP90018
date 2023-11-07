@@ -35,7 +35,8 @@ public class PostServiceImpl implements PostService {
         post.setCommentsCounts(0);
         post.setPrivateLevel(PostPrivateLevelEnum.PUBLIC.getPrivateLevel());
 
-        String postId = sid.nextShort();
+//        String postId = sid.nextShort();
+        String postId = uploadPostBO.getPostId();
         uploadPostBO.setPostId(postId);
         Date date = new Date();
         post.setCreatedTime(date);
@@ -166,26 +167,26 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    @Override
-    @Transactional
-    public Post updatePost(UploadPostBO uploadPostBO) {
-        Example example = new Example(Post.class);
-        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId())
-                .andEqualTo("posterId", uploadPostBO.getUserId());
-        List<Post> postList = postMapper.selectByExample(example);
-        if (postList.isEmpty() || postList == null) {
-            return null;
-        }
-        else {
-            Post post = postList.get(0);
-            Date date = new Date();
-            post.setUpdatedTime(date);
-            BeanUtils.copyProperties(uploadPostBO, post);
-            if (postMapper.updateByPrimaryKeySelective(post) == 0) {
-                return null;
-            }
-            return post;
-        }
-    }
+//    @Override
+//    @Transactional
+//    public Post updatePost(UploadPostBO uploadPostBO) {
+//        Example example = new Example(Post.class);
+//        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId())
+//                .andEqualTo("posterId", uploadPostBO.getUserId());
+//        List<Post> postList = postMapper.selectByExample(example);
+//        if (postList.isEmpty() || postList == null) {
+//            return null;
+//        }
+//        else {
+//            Post post = postList.get(0);
+//            Date date = new Date();
+//            post.setUpdatedTime(date);
+//            BeanUtils.copyProperties(uploadPostBO, post);
+//            if (postMapper.updateByPrimaryKeySelective(post) == 0) {
+//                return null;
+//            }
+//            return post;
+//        }
+//    }
 
 }
