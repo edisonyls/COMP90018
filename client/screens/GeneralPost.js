@@ -15,7 +15,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
-import {Base_URL} from "../api/auth";
+import {BASE_URL} from "../api/auth";
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
@@ -154,7 +154,6 @@ const GeneralPost = () => {
               console.log('Form submitted with the following data:');
               console.log('Selected location coordinates:', location);
               console.log(`Image URI: ${imageUri}`);
-              console.log(`Pet Category: ${petCategory}`);
               console.log(`Description: ${description}`);
 
               const generalPostData = {
@@ -283,7 +282,7 @@ const GeneralPost = () => {
       <View style={styles.dropdownContainer}>
         <Text style={styles.inputLabel}> Select tag</Text>
         <RNPickerSelect
-          onValueChange={(value) => setPetCategory(value)}
+          onValueChange={(value) => setPostTag(value)}
           items={[
             { label: 'food', value: 'food' },
             { label: 'park', value: 'park' },
@@ -298,7 +297,7 @@ const GeneralPost = () => {
           ]}
           style={pickerSelectStyles}
           placeholder={{ label: "Select a tag...", value: null }}
-          value={petCategory}
+          value={postTag}
           useNativeAndroidPickerStyle={false}
           Icon={() => {
             return (
