@@ -41,14 +41,28 @@ public class PostServiceImpl implements PostService {
         post.setCreatedTime(date);
         post.setUpdatedTime(date);
         post.setId(postId);
+<<<<<<< HEAD
         post.setPosterId(uploadPostBO.getPostId());
+=======
+        post.setPosterId(uploadPostBO.getUserId());
+>>>>>>> FoundPet
 
         post.setLatitude(uploadPostBO.getLatitude());
         post.setLongitude(uploadPostBO.getLongitude());
         post.setPicture(uploadPostBO.getPostImg());
+<<<<<<< HEAD
         post.setTitle(uploadPostBO.getTitle());
         post.setPetCategory(uploadPostBO.getPetCategory());
         post.setPetBread(uploadPostBO.getPetBreed());
+=======
+        String title = uploadPostBO.getTitle();
+        if (title == null) {
+            title = postId;
+        }
+        post.setTitle(title);
+        post.setPetCategory(uploadPostBO.getPetCategory());
+        post.setPetBreed(uploadPostBO.getPetBreed());
+>>>>>>> FoundPet
         post.setPetName(uploadPostBO.getPetName());
         post.setLocation("Default");
         post.setContactNum(uploadPostBO.getContactNumber());
@@ -59,12 +73,18 @@ public class PostServiceImpl implements PostService {
         post.setTag(uploadPostBO.getTag());
         post.setUpdatedTime(date);
 
+<<<<<<< HEAD
 
 
         String postType = uploadPostBO.getPostType();
         switch (postType) {
             case "Missing":
 
+=======
+        String postType = uploadPostBO.getPostType();
+        switch (postType) {
+            case "Missing":
+>>>>>>> FoundPet
                 post.setPostType(PostTypeEnum.MISSING.getPostType());
                 break;
             case "Found":
@@ -83,19 +103,19 @@ public class PostServiceImpl implements PostService {
         Example example = new Example(Post.class);
         switch (postType) {
             case "Missing":
-                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel())
                         .andEqualTo("postType", PostTypeEnum.MISSING.getPostType());
                 break;
             case "Found":
-                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel())
                         .andEqualTo("postType", PostTypeEnum.FOUND.getPostType());
                 break;
             case "General":
-                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel())
                         .andEqualTo("postType", PostTypeEnum.GENERAL.getPostType());
                 break;
             default:
-                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel());
                 break;
         }
         List<Post> postList = postMapper.selectByExample(example);
@@ -106,9 +126,47 @@ public class PostServiceImpl implements PostService {
     public List<Post> getAllPostPerUser(String userId) {
         Example example = new Example(Post.class);
         example.createCriteria().andEqualTo("posterId", userId)
-                .andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
+                .andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel());
         return postMapper.selectByExample(example);
     }
+
+    /**
+     * Can be filtered by category: Cat/Dog/All
+     * @param petCategory
+     * @return
+     */
+    @Override
+    public List<Post> getFilteredPost(String petCategory) {
+        Example example = new Example(Post.class);
+        example.createCriteria().andEqualTo("petCategory", toTitleCase(petCategory))
+                .andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel());
+        return postMapper.selectByExample(example);
+    }
+
+    public static String toTitleCase(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            } else {
+                c = Character.toLowerCase(c);
+            }
+
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
+    }
+
 
     @Override
     @Transactional
