@@ -17,6 +17,7 @@ export const verifyEmail = async (code, email, password, username) => {
     return response.data;
   } catch (error) {
     console.log(error);
+    return false;
   }
 };
 
@@ -34,6 +35,7 @@ export const sendVerifyRequest = async (email) => {
     return response.data;
   } catch (err) {
     console.log(err);
+    return false;
   }
 };
 
@@ -52,6 +54,7 @@ export const loginRequest = async (email, password) => {
     return res.data;
   } catch (err) {
     console.log("while sending login request -> \n" + err);
+    return false;
   }
 };
 

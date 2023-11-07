@@ -49,6 +49,7 @@ const RootStack = () => {
         <Stack.Screen name="FindLostPet" component={FindLostPet} />
         <Stack.Screen name="GeneralPost" component={GeneralPost} />
         
+
       </Stack.Navigator>
     </NavigationContainer>
   );
