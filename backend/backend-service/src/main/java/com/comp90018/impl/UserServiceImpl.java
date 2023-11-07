@@ -111,6 +111,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * change user profile or bgImg
+     * @param changeUserImgBO
+     * @return
+     */
     @Override
     @Transactional
     public Users changeUserInfo(ChangeUserImgBO changeUserImgBO) {

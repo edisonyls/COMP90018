@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChangeUserImgBO {
-    // profile and bgImg
+    // change profile and bgImg
     private String id;
 
     private String password;

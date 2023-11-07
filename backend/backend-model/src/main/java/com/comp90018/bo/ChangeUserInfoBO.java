@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChangeUserInfoBO {
-    // no picture
+    // change info without pictures
     private String id;
 
     private String password;

@@ -1,6 +1,8 @@
 package com.comp90018.controller;
 
-import com.comp90018.bo.ChangeUserBO;
+
+import com.comp90018.bo.ChangeUserImgBO;
+import com.comp90018.bo.ChangeUserInfoBO;
 import com.comp90018.enums.RedisEnum;
 import com.comp90018.enums.ResponseStatusEnum;
 import com.comp90018.jsonResult.JSONResult;
@@ -23,8 +25,8 @@ public class UserController extends BaseController{
 
     @ApiOperation("change user information except profile and bgImg")
     @PostMapping("/changeUserInfo")
-    public JSONResult changeinfo(@RequestBody ChangeUserBO changeUserBO) {
-        Users newUser = userService.changeUserInfo(changeUserBO);
+    public JSONResult changeinfo(@RequestBody ChangeUserInfoBO changeUserInfoBO) {
+        Users newUser = userService.changeUserInfo(changeUserInfoBO);
 
         if(newUser == null) {
             return JSONResult.errorCustom(ResponseStatusEnum.CHANGE_USER_INFO_FAIL);
@@ -35,7 +37,7 @@ public class UserController extends BaseController{
     @PostMapping("uploadProfile")
     @ApiOperation("upload profile picture")
     public JSONResult uploadProfile(@RequestParam String usrId, MultipartFile file) throws Exception {
-        ChangeUserBO changeUserBO = new ChangeUserBO();
+        ChangeUserImgBO changeUserImgBO = new ChangeUserImgBO();
 
         String fileName = file.getOriginalFilename();
 
@@ -43,17 +45,17 @@ public class UserController extends BaseController{
 
         String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
 
-        changeUserBO.setId(usrId);
-        changeUserBO.setProfile(imgUrl);
+        changeUserImgBO.setId(usrId);
+        changeUserImgBO.setProfile(imgUrl);
 
-        Users newUser = userService.changeUserInfo(changeUserBO);
+        Users newUser = userService.changeUserInfo(changeUserImgBO);
         return JSONResult.ok(newUser);
     }
 
     @PostMapping("uploadBgImg")
     @ApiOperation("upload bgImg")
     public JSONResult uploadBgImg(@RequestParam String usrId, MultipartFile file) throws Exception {
-        ChangeUserBO changeUserBO = new ChangeUserBO();
+        ChangeUserImgBO changeUserImgBO = new ChangeUserImgBO();
 
         String fileName = file.getOriginalFilename();
 
@@ -61,10 +63,10 @@ public class UserController extends BaseController{
 
         String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
 
-        changeUserBO.setId(usrId);
-        changeUserBO.setBgImg(imgUrl);
+        changeUserImgBO.setId(usrId);
+        changeUserImgBO.setBgImg(imgUrl);
 
-        Users newUser = userService.changeUserInfo(changeUserBO);
+        Users newUser = userService.changeUserInfo(changeUserImgBO);
         return JSONResult.ok(newUser);
     }
 
