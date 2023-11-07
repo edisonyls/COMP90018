@@ -136,3 +136,17 @@ export const getAllPostsPerUser = async (userId) => {
   }
 };
 
+export const queryUserInfo = async (userId) => {
+  try {
+    const response = await axios.get(`http://${BASE_URL}:8080/user/queryUserInfo`, {
+      params: {
+        userId: userId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user info", error);
+    return { success: false, data: {} };
+  }
+};
+

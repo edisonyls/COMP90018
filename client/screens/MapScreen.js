@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -15,7 +16,7 @@ import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Animated, Easing } from "react-native";
 import { useUserContext } from "../context/userContext";
-import { getAllPosts } from '../api/auth';
+import { getAllPosts, queryUserInfo } from '../api/auth';
 
 const RadarAnimation = React.memo(() => {
   const scaleValue = new Animated.Value(0); // 初始值为0
@@ -73,6 +74,8 @@ const MapScreen = () => {
   const navigation = useNavigation();
   const { user,setUser } = useUserContext();
   const [posts, setPosts] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+
   const userLocation = location
     ? {
         latitude: location.coords.latitude,
@@ -80,6 +83,21 @@ const MapScreen = () => {
       }
     : null;
 
+    const handleMarkerPress = async (post) => {
+      try {
+       
+          navigation.navigate('Post', { post: post });
+        
+          // 如果请求不成功，设置userInfo为空并可选择显示错误信息
+        
+      } catch (error) {
+        // 如果发生了其他类型的错误，如网络错误等，也设置userInfo为空并显示错误
+        setUserInfo(null);
+        console.error('Error fetching user info:', error);
+        // 同样可以显示一个错误弹窗
+        Alert.alert("Error", "An error occurred while trying to fetch user information.");
+      }
+    };
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -201,6 +219,7 @@ const MapScreen = () => {
                   latitude: post.latitude,
                   longitude: post.longitude,
                 }}
+                onPress={() => handleMarkerPress(post)}// 添加点击事件
               >
                 <Image
                   source={{ uri: post.picture }} 
@@ -211,6 +230,11 @@ const MapScreen = () => {
               </Marker>
             ))}
           </MapView>
+          <View style={styles.userInfoContainer}>
+            {userInfo && (
+              <Text style={styles.nicknameText}>{userInfo.nickname}</Text>
+            )}
+          </View>
         </ScrollView>
       )}
     </SafeAreaView>

@@ -200,11 +200,9 @@ const FindMyPet = () => {
             console.log(serverResponse.data);
           
             if (serverResponse.data.success) {
-<<<<<<< HEAD
-                console.log('Data submitted successfully. ID:', serverResponse.data.id);
-=======
+
                 console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
->>>>>>> FoundPet
+
                 // ... (clear your form fields and navigate away)
             } else {
                 console.log('Server responded with an unexpected status.');
