@@ -113,7 +113,7 @@ const ProfileScreen = () => {
                   setSelectedMenu={setSelectedMenu} 
                 />
             </View> 
-            {selectedMenu === "post" ? (
+            {selectedMenu === "Post" ? (
               <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">
                 {mainData?.length > 0 ? (
                    mainData.map((post) => (
@@ -141,7 +141,7 @@ const ProfileScreen = () => {
                     </>
                   )}
               </View>
-            ) : selectedMenu === "settings" ? (
+            ) : selectedMenu === "Settings" ? (
               <View>
                 <Text style={styles.sectionTitle}>Account</Text>
                 <TouchableOpacity onPress={() => navigation.navigate("Account")}>
