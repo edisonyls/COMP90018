@@ -55,8 +55,11 @@ public class CommentServiceImpl implements CommentService {
             Post post = postList.get(0);
             Comment comment = new Comment();
             String fatherCommentId = commentDTO.getFatherCommentId();
+            System.out.println(fatherCommentId);
             if (fatherCommentId == null) {
                 comment.setFatherCommentId("-1");
+            } else {
+                comment.setFatherCommentId(commentDTO.getFatherCommentId());
             }
             comment.setCommentUserId(commentDTO.getCommentUserId());
             String commentId = sid.nextShort();
@@ -67,7 +70,6 @@ public class CommentServiceImpl implements CommentService {
             comment.setPostId(postId);
             comment.setLikeCounts(0);
             comment.setContent(commentDTO.getContent());
-            comment.setFatherCommentId(commentDTO.getFatherCommentId());
             post.setCommentsCounts(post.getCommentsCounts() + 1);
             postMapper.updateByPrimaryKeySelective(post);
             commentMapper.insert(comment);
