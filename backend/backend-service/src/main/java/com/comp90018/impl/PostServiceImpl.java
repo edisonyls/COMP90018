@@ -41,20 +41,13 @@ public class PostServiceImpl implements PostService {
         post.setCreatedTime(date);
         post.setUpdatedTime(date);
         post.setId(postId);
-<<<<<<< HEAD
-        post.setPosterId(uploadPostBO.getPostId());
-=======
+
         post.setPosterId(uploadPostBO.getUserId());
->>>>>>> FoundPet
 
         post.setLatitude(uploadPostBO.getLatitude());
         post.setLongitude(uploadPostBO.getLongitude());
         post.setPicture(uploadPostBO.getPostImg());
-<<<<<<< HEAD
-        post.setTitle(uploadPostBO.getTitle());
-        post.setPetCategory(uploadPostBO.getPetCategory());
-        post.setPetBread(uploadPostBO.getPetBreed());
-=======
+
         String title = uploadPostBO.getTitle();
         if (title == null) {
             title = postId;
@@ -62,7 +55,6 @@ public class PostServiceImpl implements PostService {
         post.setTitle(title);
         post.setPetCategory(uploadPostBO.getPetCategory());
         post.setPetBreed(uploadPostBO.getPetBreed());
->>>>>>> FoundPet
         post.setPetName(uploadPostBO.getPetName());
         post.setLocation("Default");
         post.setContactNum(uploadPostBO.getContactNumber());
@@ -73,18 +65,9 @@ public class PostServiceImpl implements PostService {
         post.setTag(uploadPostBO.getTag());
         post.setUpdatedTime(date);
 
-<<<<<<< HEAD
-
-
         String postType = uploadPostBO.getPostType();
         switch (postType) {
             case "Missing":
-
-=======
-        String postType = uploadPostBO.getPostType();
-        switch (postType) {
-            case "Missing":
->>>>>>> FoundPet
                 post.setPostType(PostTypeEnum.MISSING.getPostType());
                 break;
             case "Found":
