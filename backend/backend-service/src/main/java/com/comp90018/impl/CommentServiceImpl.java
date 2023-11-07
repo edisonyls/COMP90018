@@ -143,7 +143,7 @@ public class CommentServiceImpl implements CommentService {
 
             List<CommentDTO> commentDTOList = commentDTOMap.values().stream()
                     .peek(dto -> log.info("Processing DTO with ID: {} and fatherID: {}", dto.getId(), dto.getFatherCommentId()))
-                    .filter(commentDTO -> commentDTO.getFatherCommentId()==null || commentDTO.getFatherCommentId().isEmpty())
+                    .filter(commentDTO -> commentDTO.getFatherCommentId()==null || commentDTO.getFatherCommentId().isEmpty() || commentDTO.getFatherCommentId().equals("-1"))
                     .collect(Collectors.toList());
 
             processComments(commentDTOList);
