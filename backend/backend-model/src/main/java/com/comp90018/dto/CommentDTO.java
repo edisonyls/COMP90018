@@ -20,6 +20,16 @@ public class CommentDTO {
     private Integer likeCounts;
     private Date createTime;
     private List<CommentDTO> replies;
+    private String userName;
+
+    private String userProfile;
+    public void addUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void addUserProfile(String profile) {
+        userProfile = profile;
+    }
 
     public void addReply(CommentDTO reply) {
         this.replies.add(reply);

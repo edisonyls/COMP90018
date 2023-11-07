@@ -24,21 +24,19 @@ const ListItem = ({ name, action, imageProfile, isClicked, onPress }) => {
         <Image source={{ uri: imageProfile }} style={styles.profilePic} />
         <View style={styles.textContainer}>
             <Text style={styles.name}>{name}</Text>
-            <Text style={[styles.action, { color: textColor }]}>{action}</Text>
         </View>
       </TouchableOpacity>
     );
 };
 
-const ActivitiesScreen = ({ navigation }) => {
+const FollowersScreen = ({ navigation }) => {
 
   const { user } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [activities, setActivities] = useState([]);
+//   const [activities, setActivities] = useState([]);
 
-  const [activeTab, setActiveTab] = useState('activities');
-  const [clickedItems, setClickedItems] = useState({});
+//   const [clickedItems, setClickedItems] = useState({});
 
   const handleItemClick = (index) => {
     setClickedItems(prevState => ({
@@ -47,56 +45,43 @@ const ActivitiesScreen = ({ navigation }) => {
     }));
   };
 
-  console.log('ActiveTab:', activeTab); 
+//   console.log('ActiveTab:', activeTab); 
 
 
   const fetchActivities = async () => {
     setIsLoading(true);
-    try {
-      const userIdParam = new URLSearchParams();
-      userIdParam.append('userId', user.id);
+    // try {
+    //   const userIdParam = new URLSearchParams();
+    //   userIdParam.append('userId', user.id);
   
-      const response = await axios({
-        method: 'post',
-        url: 'http://192.168.1.111:8080/message/listMessages',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        data: userIdParam.toString(),
-      });
+    //   const response = await axios({
+    //     method: 'post',
+    //     url: 'http://192.168.1.111:8080//post/listFollower',
+    //     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    //     data: userIdParam.toString(),
+    //   });
   
-      console.log(response.data);
-      const messages = response.data.data;
+    //   console.log(response.data);
+    //   const messages = response.data.data;
   
-      if (messages) {
-        // const profilePromises = messages.map(item =>
-        //   axios.get(`http://192.168.1.111:8080/user/queryUserInfo?userId=${encodeURIComponent(item.senderId)}`)
-        // );
+    //   if (messages) {
   
-        // const profileResponses = await Promise.all(profilePromises);
-        // const profiles = profileResponses.map(response => response.data);
-
-        // const postPromises = messages.map(item =>
-        //   axios.get(`http://192.168.1.111:8080/user/queryUserInfo?userId=${encodeURIComponent(item.senderId)}`)
-        // );
+    //     const transformedData = messages.map((item, index) => ({
+    //       name: item.senderNickname,
+    //       //action: item.content.behavior,
+    //       //imageProfile: { uri: profiles[index].profile},
+    //       imageProfile: item.senderProfile,
+    //     }));
   
-        // const postResponses = await Promise.all(postPromises);
-        // const postImgs = postResponses.map(response => response.data);
-  
-        const transformedData = messages.map((item, index) => ({
-          name: item.senderNickname,
-          action: item.content.behavior,
-          //imageProfile: { uri: profiles[index].profile},
-          imageProfile: item.senderProfile,
-        }));
-  
-        setActivities(transformedData);
-      } else {
-        console.log('No data found.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    //     setActivities(transformedData);
+    //   } else {
+    //     console.log('No data found.');
+    //   }
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
   
       
@@ -104,19 +89,12 @@ const ActivitiesScreen = ({ navigation }) => {
   useEffect(() => {
     fetchActivities();
 
-    const interval = setInterval(() => {
-      fetchActivities();
-    }, 7000);
+    // const interval = setInterval(() => {
+    //   fetchActivities();
+    // }, 7000);
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (activeTab.toLowerCase() === 'chat') {
-      navigation.navigate('Message');
-    }
-  }, [activeTab, navigation]);
-
 
   return (
     <SafeAreaView className="flex-1 bg-white relative">
@@ -143,31 +121,7 @@ const ActivitiesScreen = ({ navigation }) => {
                 </View>
             </View>
 
-          <ScrollView 
-            horizontal={true} 
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            showsHorizontalScrollIndicator={false}>
-            <View className="flex-row item-center justify-center px-8 mt-4">
-            <MenuContainer
-                    title="Activities"
-                    type={activeTab.toLowerCase()}
-                    setType={setActiveTab}
-                    setSelectedMenu={setActiveTab}    
-                />
-                <MenuContainer
-                    title="Chat"
-                    type={activeTab.toLowerCase()}
-                    setType={setActiveTab}
-                    setSelectedMenu={setActiveTab}
-                />
-            </View>
-          </ScrollView>
-
-          <ScrollView style={styles.scrollView}>
+          {/* <ScrollView style={styles.scrollView}>
     
             {activeTab === 'activities' && activities.map((activity, index) => (
             <ListItem 
@@ -179,7 +133,7 @@ const ActivitiesScreen = ({ navigation }) => {
                 onPress={() => handleItemClick(index)}
             />
             ))}
-          </ScrollView> 
+          </ScrollView>  */}
         </ScrollView>
       )}
     </SafeAreaView>
@@ -245,4 +199,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ActivitiesScreen;
+export default FollowersScreen;
