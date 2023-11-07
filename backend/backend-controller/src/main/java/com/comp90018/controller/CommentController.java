@@ -43,12 +43,7 @@ public class CommentController extends BaseController{
     @GetMapping("/GetCommentList")
     public JSONResult getCommentList(@RequestParam String postId) {
         List<CommentDTO> commentDTOList = commentService.getCommentsWithHierarchy(postId);
-        if (commentDTOList == null || commentDTOList.isEmpty()) {
-            return JSONResult.errorMsg("No such post.");
-        }
-        else {
-            return JSONResult.ok(commentDTOList);
-        }
+        return JSONResult.ok(commentDTOList);
     }
 
     @GetMapping("/LikeAComment")

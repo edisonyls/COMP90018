@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import MenuContainer from "../components/MenuContainer"; 
 import { useUserContext } from "../context/userContext";
+import axios from 'axios';
 
 const ListItem = ({ name, action, imagePost, imageProfile, isClicked, onPress }) => {
     
@@ -49,19 +50,43 @@ const ActivitiesScreen = () => {
 
   console.log('ActiveTab:', activeTab); 
 
+
+
   const fetchActivities = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://192.168.1.101:8080//message/listMessages?userId=${encodeURIComponent(userId)}`);
-      const data = await response.json();
-      setActivities(data);
+
+      const postData = new URLSearchParams();
+      postData.append('userId', user.id); // Make sure this is the correct key for your POST body
+
+      // Make the POST request using axios
+      const response = await axios({
+        method: 'post', // Use POST because you're sending data in the body
+        url: 'http://192.168.1.111:8080/message/listMessages', // Make sure this is the correct endpoint
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: postData.toString(), // Convert URLSearchParams to a string for the request body
+      });
       
+      console.log(response.data);
+      const data = response.data.data;
+
+      const transformedData = data.map(item => ({
+        name: item.senderNickname,
+        action: item.content.behavior,
+        imageProfile: 'https://www.w3schools.com/images/w3schools_green.jpg',
+        imagePost: 'https://www.w3schools.com/images/w3schools_green.jpg'
+
+      }));
+      setActivities(transformedData);
+        
     } catch (error) {
-      console.error('Failed to fetch activities', error);
+      console.error('Error:', error);
     } finally {
       setIsLoading(false);
     }
+
   };
+      
 
   useEffect(()=> {
     fetchActivities();

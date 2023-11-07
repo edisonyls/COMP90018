@@ -47,6 +47,7 @@ public class CommentServiceImpl implements CommentService {
             return null;
         }
         else {
+            Post post = postList.get(0);
             Comment comment = new Comment();
             String fatherCommentId = commentDTO.getFatherCommentId();
             if (fatherCommentId == null) {
@@ -62,6 +63,8 @@ public class CommentServiceImpl implements CommentService {
             comment.setLikeCounts(0);
             comment.setContent(commentDTO.getContent());
             comment.setFatherCommentId(commentDTO.getFatherCommentId());
+            post.setCommentsCounts(post.getCommentsCounts() + 1);
+            postMapper.updateByPrimaryKeySelective(post);
             commentMapper.insert(comment);
 
             HashMap<String, Object> map = new HashMap<>();
