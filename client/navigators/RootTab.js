@@ -13,6 +13,7 @@ import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import ActivitiesScreen from "../screens/ActivitiesScreen";
 import MessageScreen from "../screens/MessageScreen";
+import FollowerScreen from "../screens/FollowersScreen";
 
 const Tab = createBottomTabNavigator();
 
