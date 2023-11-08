@@ -48,8 +48,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> listAllMessage(String userId) {
-        List<Message> messageList = messageDao.findAllBySenderIdOrReceiverIdOrderByTimeDesc(userId, userId);
+    public List<Message> listAllNotification(String userId) {
+        List<Message> messageList = messageDao.findAllByReceiverIdOrderByTimeDesc(userId);
         return messageList;
     }
 

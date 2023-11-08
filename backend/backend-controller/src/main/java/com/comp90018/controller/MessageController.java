@@ -45,14 +45,14 @@ public class MessageController extends BaseController{
         return JSONResult.errorCustom(ResponseStatusEnum.MESSAGE_SEND_FAIL);
     }
 
-    @PostMapping("/listMessages")
-    @ApiOperation("list all messages of an user")
+    @PostMapping("/listNotifications")
+    @ApiOperation("list all notifications of an user")
     public JSONResult list(@RequestParam String userId, HttpServletRequest httpServletRequest) {
         if (userId == null) {
             return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
         }
 
-        List<Message> messages = messageService.listAllMessage(userId);
+        List<Message> messages = messageService.listAllNotification(userId);
         if (messages == null || messages.size() == 0) {
             return JSONResult.errorCustom(ResponseStatusEnum.NO_MESSAGES);
         }
