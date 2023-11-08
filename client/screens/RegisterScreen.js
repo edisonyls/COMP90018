@@ -152,7 +152,9 @@ const Register = ({ navigation }) => {
                 <MsgBox>{message}</MsgBox>
                 <StyledButton
                   onPress={() => {
-                    if (values.password !== values.confirmPassword) {
+                    if (values.password.length < 6) {
+                      Alert.alert("Password Too Short", "Password must be at least 6 characters long");
+                    } else if (values.password !== values.confirmPassword) {
                       AlertPopUp();
                     } else {
                       handleSubmit();

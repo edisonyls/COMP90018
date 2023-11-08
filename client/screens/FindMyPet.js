@@ -27,6 +27,7 @@ const FindMyPet = () => {
   const[description,setDescription] = useState('');
   const { user } = useUserContext();
   
+  
   //find pet location 
   //const [location, setLocation] = useState({latitude:37.8136,longitude:144.9631});
   const [region, setRegion] = useState({latitude:37.8136,longitude:144.9631});
@@ -109,6 +110,11 @@ const FindMyPet = () => {
             });
             if (!cameraResult.canceled) {
               setImageUri(cameraResult.assets[0].uri);
+              const type = cameralResult.type;
+              const name = imageUri.split('/').pop();
+              let formData = new FormData();
+              formData.append('file',{uri, name, type});
+              
             }
           }
         },
@@ -128,6 +134,10 @@ const FindMyPet = () => {
             });
             if (!libraryResult.canceled) {
               setImageUri(libraryResult.assets[0].uri);
+              const type = cameralResult.type;
+              const name = imageUri.split('/').pop();
+              let formData = new FormData();
+              formData.append('file',{uri, name, type});
             }
           }
         },
@@ -137,27 +147,27 @@ const FindMyPet = () => {
     );
   };
 
-  const convertUriToMultipartFile = async (imageUri) => {
-    try {
-      // Extract file name and type from the URI
-      let uriParts = imageUri.split('/');
-      let fileName = uriParts[uriParts.length - 1];
-      let fileType = fileName.split('.').pop();
+  // const convertUriToMultipartFile = async (imageUri) => {
+  //   try {
+  //     // Extract file name and type from the URI
+  //     let uriParts = imageUri.split('/');
+  //     let fileName = uriParts[uriParts.length - 1];
+  //     let fileType = fileName.split('.').pop();
   
-      // Fetch the blob from the local file system using the FileSystem API
-      const blob = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
-      const fileBlob = new Blob([blob], { type: `image/${fileType}` });
+  //     // Fetch the blob from the local file system using the FileSystem API
+  //     const blob = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+  //     const fileBlob = new Blob([blob], { type: `image/${fileType}` });
   
-      // Create a new FormData object and append the file
-      const formData = new FormData();
-      formData.append('image', { uri: imageUri, name: fileName, type: `image/${fileType}` });
+  //     // Create a new FormData object and append the file
+  //     const formData = new FormData();
+  //     formData.append('image', { uri: imageUri, name: fileName, type: `image/${fileType}` });
   
-      return formData;
-    } catch (error) {
-      console.error('Error converting image URI to multipart file:', error);
-      throw error;
-    }
-  };
+  //     return formData;
+  //   } catch (error) {
+  //     console.error('Error converting image URI to multipart file:', error);
+  //     throw error;
+  //   }
+  // };
   
 
 
@@ -208,9 +218,10 @@ const FindMyPet = () => {
   // Function to handle the form submission
   const handleSubmit = async() => {
 
-    const formData = convertUriToMultipartFile(imageUri);
+    //const formData = convertUriToMultipartFile(imageUri);
+    const isUploadImage = await uploadImage(formData);
 
-    if (validateForm() && uploadImage(formData) ) {
+    if (validateForm() && isUploadImage) {
       try {
         // Fetch the detailed information of the selected location
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
