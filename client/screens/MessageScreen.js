@@ -10,11 +10,14 @@ import {
     TextInput,
     Button,
 } from 'react-native';
- 
+import axios from 'axios';
  
 function MessageList(props) {
-    const items = props.items;
-    const receiver = props.receiver;
+
+    const { items, receiverId } = props;
+
+    //const items = props.items;
+    //const receiver = props.receiver;
     const listItems = items.map((item, index) => {
             return (
                 <View key={index} style={[styles.chatMessage, receiver == item.name ? styles.chatReceiver : null]}>
@@ -28,112 +31,73 @@ function MessageList(props) {
         <>{listItems}</>
     );
 }
+
+const BASE_URL = "192.168.1.111:8080";
  
-const URL_SERVER = 'http://192.168.1.111:8080';
+// const URL_SERVER = 'http://192.168.1.111:8080';
  
-const NotificationScreen = () => {
-    const [items, setItems] = useState([
-        {name: 'boy', message: '今天晚上吃点啥？'},
-        {name: 'girl', message: '我们去吃牛排吧！'},
-        {name: 'boy', message: '好的，我去给小红打气。'},
-        {name: 'boy', message: '你们在门口等我吧。'},
-        {name: 'girl', message: '你人呢？我到门口啦'},
-    ]);
+const MessageScreen = ({ route, navigation}) => {
+
+    const [messages, setMessages] = useState([]);
+    const [receiver, setReceiver] = useState(null);
+
+    const { chatId } = route.params;
+
+    const userId = chatId.sender;
+    const contactId = chatId.receiver;
+
+    // const [items, setItems] = useState([
+    //     {name: 'boy', message: '今天晚上吃点啥？'},
+    //     {name: 'girl', message: '我们去吃牛排吧！'},
+    //     {name: 'boy', message: '好的，我去给小红打气。'},
+    //     {name: 'boy', message: '你们在门口等我吧。'},
+    //     {name: 'girl', message: '你人呢？我到门口啦'},
+    // ]);
 
     // State hook for receiver identifier.
-    const [receiver, setReceiver] = useState('boy');
+    // const [receiver, setReceiver] = useState('boy');
 
     // State hook for managing the current text input.
-    const [value, onChangeText] = React.useState('');
+    // const [value, onChangeText] = React.useState('');
  
     let timer;
     useEffect(() => {
+        const loadMessages = async() => {
+            try {
+                const response = await axios.post(`${BASE_URL}/message/listChat`, userId, contactId);
+                if (response.data.success) {
+                    console.log(response.data.data);
+                    setMessages(response.data.data);
+                } else {
+                console.log('Failed to fetch messages:', response.data.msg);
+                }
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        };
+        loadMessages();
+        const intervalId = setInterval(() => {
+            loadMessages();
+        }, 7000);
+        return () => clearInterval(intervalId);
         //loadMessage();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    /**
-     * 加载聊天信息
-     */
 
-    const defaultMessages = [
-        {name: 'boy', message: '今天晚上吃点啥？'},
-        {name: 'girl', message: '我们去吃牛排吧！'},
-        {name: 'boy', message: '好的，我去给小红打气。'},
-        {name: 'boy', message: '你们在门口等我吧。'},
-        {name: 'girl', message: '你人呢？我到门口啦'},
-    ];
-    
-    
-    const loadMessage = () => {
-        // timer = setInterval(function () {
-        //     //执行代码
-        //     console.log('-----------获取数据------------');
-        //     fetch(URL_SERVER + '/list')
-        //         .then(function (response) {
-        //             return response.json();
-        //         })
-        //         .then(function (result) {
-        //             if (result.code == 0) {
-        //                 setItems(result.data);
-        //             }
-        //         });
-        // }, 1000);
-        setItems(defaultMessages);
-    };
- 
-    const postMessage = () => {
-        // fetch(URL_SERVER+'/send', {
-        //     method: 'POST',
-        //     credentials: 'include',
-        //     headers: {
-        //         'Content-Type': 'application/x-www-form-urlencoded',
-        //     },
-        //     body: 'roomId=1&message=' + value + '&name=' + receiver,
-        // })
-        //     .then(response => {
-        //         if (response.ok) {
-        //             return response.text();
-        //         }
-        //         throw new Error('Network response was not ok.');
-        //     })
-        //     .then(responseText => {
-        //         console.log(responseText);
-        //     })
-        //     .catch(e => {
-        //         console.log(e.toString());
-        //     });
-    };
- 
-    //发送消息
-    const sendMessage = (message) => {
-        // let newItems = JSON.parse(JSON.stringify(items));
-        // newItems.push({name: receiver, message: message});
-        // setItems(newItems);
-        let newItems = [...items, { name: receiver, message: message }];
-        setItems(newItems);
-    };
-    const sendDo = () => {
-        sendMessage(value);
-        //postMessage();
-        onChangeText('');
-    };
- 
     return (
         <>
-            <StatusBar barStyle="dark-content"/>
+            <StatusBar barStyle="dark-content" />
             <SafeAreaView style={styles.mainContent}>
                 <TextInput
-                    style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                    onChangeText={text => setReceiver(text)}
-                    placeholder={'聊天人姓名'}
-                    value={receiver}
-                    onSubmitEditing={sendDo}
-                />
+                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                        onChangeText={text => setReceiver(text)}
+                        placeholder={'聊天人姓名'}
+                        value={receiver}
+                        onSubmitEditing={sendDo}
+                    />
                 <ScrollView style={styles.chatBody}>
-                    <View style={{height: 15}}></View>
-                    <MessageList items={items} receiver={receiver}/>
+                <MessageList items={messages} receiverId={receiver} />
                 </ScrollView>
- 
                 <TextInput
                     style={{height: 40, borderColor: 'gray', borderWidth: 1}}
                     onChangeText={text => onChangeText(text)}
@@ -147,9 +111,105 @@ const NotificationScreen = () => {
                     color="#841584"
                 />
             </SafeAreaView>
-        </>
-    );
-};
+            </>
+        );
+    };
+
+//     // const defaultMessages = [
+//     //     {name: 'boy', message: '今天晚上吃点啥？'},
+//     //     {name: 'girl', message: '我们去吃牛排吧！'},
+//     //     {name: 'boy', message: '好的，我去给小红打气。'},
+//     //     {name: 'boy', message: '你们在门口等我吧。'},
+//     //     {name: 'girl', message: '你人呢？我到门口啦'},
+//     // ];
+    
+    
+//     const loadMessage = () => {
+//         // timer = setInterval(function () {
+//         //     //执行代码
+//         //     console.log('-----------获取数据------------');
+//         //     fetch(URL_SERVER + '/list')
+//         //         .then(function (response) {
+//         //             return response.json();
+//         //         })
+//         //         .then(function (result) {
+//         //             if (result.code == 0) {
+//         //                 setItems(result.data);
+//         //             }
+//         //         });
+//         // }, 1000);
+//         setItems(defaultMessages);
+//     };
+ 
+//     const postMessage = () => {
+//         // fetch(URL_SERVER+'/send', {
+//         //     method: 'POST',
+//         //     credentials: 'include',
+//         //     headers: {
+//         //         'Content-Type': 'application/x-www-form-urlencoded',
+//         //     },
+//         //     body: 'roomId=1&message=' + value + '&name=' + receiver,
+//         // })
+//         //     .then(response => {
+//         //         if (response.ok) {
+//         //             return response.text();
+//         //         }
+//         //         throw new Error('Network response was not ok.');
+//         //     })
+//         //     .then(responseText => {
+//         //         console.log(responseText);
+//         //     })
+//         //     .catch(e => {
+//         //         console.log(e.toString());
+//         //     });
+//     };
+ 
+//     //发送消息
+//     const sendMessage = (message) => {
+//         // let newItems = JSON.parse(JSON.stringify(items));
+//         // newItems.push({name: receiver, message: message});
+//         // setItems(newItems);
+//         let newItems = [...items, { name: receiver, message: message }];
+//         setItems(newItems);
+//     };
+//     const sendDo = () => {
+//         sendMessage(value);
+//         //postMessage();
+//         onChangeText('');
+//     };
+ 
+//     return (
+//         <>
+//             <StatusBar barStyle="dark-content"/>
+//             <SafeAreaView style={styles.mainContent}>
+//                 <TextInput
+//                     style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+//                     onChangeText={text => setReceiver(text)}
+//                     placeholder={'聊天人姓名'}
+//                     value={receiver}
+//                     onSubmitEditing={sendDo}
+//                 />
+//                 <ScrollView style={styles.chatBody}>
+//                     <View style={{height: 15}}></View>
+//                     <MessageList items={items} receiver={receiver}/>
+//                 </ScrollView>
+ 
+//                 <TextInput
+//                     style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+//                     onChangeText={text => onChangeText(text)}
+//                     placeholder={'开始聊天吧'}
+//                     value={value}
+//                     onSubmitEditing={sendDo}
+//                 />
+//                 <Button
+//                     onPress={sendDo}
+//                     title="发送"
+//                     color="#841584"
+//                 />
+//             </SafeAreaView>
+//         </>
+//     );
+// };
  
 const styles = StyleSheet.create({
     mainContent: {
@@ -194,4 +254,4 @@ const styles = StyleSheet.create({
     },
 });
  
-export default NotificationScreen;
+export default MessageScreen;

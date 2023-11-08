@@ -13,9 +13,12 @@ import {
 } from 'react-native';
 import MenuContainer from "../components/MenuContainer"; 
 import { useUserContext } from "../context/userContext";
+import { queryUserInfo } from '../api/auth';
 import axios from 'axios';
 
-const ListItem = ({ name, imageProfile, isClicked, onPress}) => {
+const BASE_URL = "192.168.1.111";
+
+const ListItem = ({ name, imageProfile, isClicked, onPress, senderId}) => {
     
     const textColor = isClicked ? 'black' : '#9747FF';
   
@@ -55,7 +58,7 @@ const FollowersScreen = ({ navigation }) => {
     setIsLoading(true);
     try {
       const userId = user.id;
-      const response = await axios.get('http://192.168.1.111:8080/post/listFollower', {
+      const response = await axios.get(`${BASE_URL}/post/listFollower`, {
         params: { userId },
       });
   
@@ -66,10 +69,11 @@ const FollowersScreen = ({ navigation }) => {
         const transformedData = messages.map((item, index) => ({
           name: item.nickname,
           imageProfile: item.profile,
-          senderId: item.senderId,
+          senderId: item.id,
         }));
   
         setActivities(transformedData);
+        console.log(transformedData);
       } else {
         console.log('No data found.');
       }
@@ -81,6 +85,7 @@ const FollowersScreen = ({ navigation }) => {
   };
 
   const navigateToUserInfo = async (senderId) => {
+    console.log(senderId);
     try {
       const userInfoData = await queryUserInfo(senderId);
       if (userInfoData && userInfoData.success) {
@@ -95,7 +100,6 @@ const FollowersScreen = ({ navigation }) => {
   };
   
       
-
   useEffect(() => {
     fetchActivities();
 
