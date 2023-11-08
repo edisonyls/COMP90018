@@ -40,11 +40,13 @@ const NotificationScreen = () => {
         {name: 'girl', message: '你人呢？我到门口啦'},
     ]);
 
-    // Receiver identifier
+    // State hook for receiver identifier.
     const [receiver, setReceiver] = useState('boy');
+
+    // State hook for managing the current text input.
     const [value, onChangeText] = React.useState('');
  
-    let timer;  //计时器
+    let timer;
     useEffect(() => {
         //loadMessage();
         // eslint-disable-next-line react-hooks/exhaustive-deps
