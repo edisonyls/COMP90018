@@ -18,6 +18,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useUserContext } from "../context/userContext";
 import { getAllPostsPerUser } from "../api/auth";
 import { logoutAction } from "../api/ProfileAPI";
+import LoadingView from "../components/LoadingView";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +26,7 @@ const ProfileScreen = () => {
   const [type, setType] = useState("post");
   const [isLoading, setIsLoading] = useState(false);
   const [mainData, setMainData] = useState([]);
-  const [selectedMenu, setSelectedMenu] = useState("Post"); // 默认选中“post”
+  const [selectedMenu, setSelectedMenu] = useState("Post");
 
   const navigation = useNavigation();
   //const isFocused = useIsFocused();
@@ -73,12 +74,14 @@ const ProfileScreen = () => {
   }, [selectedMenu, user.id]);
 
   const handleLogout = async () => {
-    // Call logoutAction with the user's id
+    setIsLoading(true);
     const result = await logoutAction(user.id);
     if (result) {
       updateUser(null);
+      setIsLoading(false);
       navigation.navigate("SignIn");
     } else {
+      setIsLoading(false);
       Alert.alert("Error", "Failed to logout");
     }
   };
@@ -86,9 +89,7 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-white relative">
       {isLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0B646B" />
-        </View>
+        <LoadingView loading={isLoading} />
       ) : (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.imageContainer}>
