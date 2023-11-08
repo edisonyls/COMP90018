@@ -1,4 +1,4 @@
-import { BASE_URL } from "./utils";
+import { BASE_URL } from "../utils/utils";
 import axios from "axios";
 
 export const uploadHead = async (usrId, formData) => {
