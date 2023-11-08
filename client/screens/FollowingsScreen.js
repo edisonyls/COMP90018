@@ -15,12 +15,12 @@ import MenuContainer from "../components/MenuContainer";
 import { useUserContext } from "../context/userContext";
 import axios from 'axios';
 
-const ListItem = ({ name, imageProfile, isClicked, onPress }) => {
+const ListItem = ({ name, imageProfile, isClicked, onPress, nickname}) => {
     
     const textColor = isClicked ? 'black' : '#9747FF';
   
     return (
-      <TouchableOpacity onPress={onPress} style={styles.listItem}>
+      <TouchableOpacity onPress={() => onPress(nickname)} style={styles.listItem}>
         <Image source={{ uri: imageProfile }} style={styles.profilePic} />
         <View style={styles.textContainer}>
             <Text style={styles.name}>{name}</Text>
@@ -41,6 +41,7 @@ const FollowingsScreen = ({ navigation }) => {
   const [clickedItems, setClickedItems] = useState({});
 
   const handleItemClick = (index) => {
+    console.log(nickname);
     setClickedItems(prevState => ({
       ...prevState,
       [index]: true
@@ -53,7 +54,7 @@ const FollowingsScreen = ({ navigation }) => {
   const fetchActivities = async () => {
     setIsLoading(true);
     try {
-      const userId = '2311080WS9DACK8H'; // This should ideally come from your user context or state
+      const userId = user.id;
       const response = await axios.get('http://192.168.1.111:8080//post/listFollowing', {
         params: { userId },
       });
@@ -164,6 +165,7 @@ const FollowingsScreen = ({ navigation }) => {
                 imageProfile={activity.imageProfile}  
                 isClicked={clickedItems[index]}
                 onPress={() => handleItemClick(index)}
+                nickname={activity.name}
             />
             ))}
           </ScrollView> 
