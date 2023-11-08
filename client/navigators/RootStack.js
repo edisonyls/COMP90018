@@ -41,7 +41,7 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-        initialRouteName="Message"
+        initialRouteName="Landing"
         //initialRouteName="Profile"
       >
         <Stack.Screen name="SignIn" component={SignIn} />

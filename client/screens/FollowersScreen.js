@@ -15,12 +15,12 @@ import MenuContainer from "../components/MenuContainer";
 import { useUserContext } from "../context/userContext";
 import axios from 'axios';
 
-const ListItem = ({ name, imageProfile, isClicked, onPress, nickname }) => {
+const ListItem = ({ name, imageProfile, isClicked, onPress}) => {
     
     const textColor = isClicked ? 'black' : '#9747FF';
   
     return (
-      <TouchableOpacity onPress={() => onPress(nickname)} style={styles.listItem}>
+      <TouchableOpacity onPress={() => onPress(senderId)} style={styles.listItem}>
         <Image source={{ uri: imageProfile }} style={styles.profilePic} />
         <View style={styles.textContainer}>
             <Text style={styles.name}>{name}</Text>
@@ -33,6 +33,7 @@ const ListItem = ({ name, imageProfile, isClicked, onPress, nickname }) => {
 const FollowersScreen = ({ navigation }) => {
 
   const { user } = useUserContext();
+  const [userInfo, setUserInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [activities, setActivities] = useState([]);
@@ -41,7 +42,6 @@ const FollowersScreen = ({ navigation }) => {
   const [clickedItems, setClickedItems] = useState({});
 
   const handleItemClick = (index) => {
-    console.log(nickname);
     setClickedItems(prevState => ({
       ...prevState,
       [index]: true
@@ -66,6 +66,7 @@ const FollowersScreen = ({ navigation }) => {
         const transformedData = messages.map((item, index) => ({
           name: item.nickname,
           imageProfile: item.profile,
+          senderId: item.senderId,
         }));
   
         setActivities(transformedData);
@@ -76,6 +77,20 @@ const FollowersScreen = ({ navigation }) => {
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const navigateToUserInfo = async (senderId) => {
+    try {
+      const userInfoData = await queryUserInfo(senderId);
+      if (userInfoData && userInfoData.success) {
+        // Navigate and pass the data to 'Others' screen
+        navigation.navigate('Others', { otherUser: userInfoData.data });
+      } else {
+        console.error('Failed to fetch user info:', userInfoData.msg);
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
     }
   };
   
@@ -98,6 +113,7 @@ const FollowersScreen = ({ navigation }) => {
         navigation.navigate('Activities');
     }
   }, [activeTab, navigation]);
+
 
 
   return (
@@ -164,8 +180,7 @@ const FollowersScreen = ({ navigation }) => {
                 //action={activity.action} 
                 imageProfile={activity.imageProfile}  
                 isClicked={clickedItems[index]}
-                onPress={(nickname) => handleItemClick(index, nickname)}
-                nickname={activity.name}
+                onPress={() => navigateToUserInfo(activity.senderId)}
             />
             ))}
           </ScrollView> 
