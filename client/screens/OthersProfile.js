@@ -12,7 +12,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useUserContext } from "../context/userContext";
-import { getAllPostsPerUser } from '../api/auth';
+import { getAllPostsPerUser, checkFollowStatus, unfollowUser, followUser } from '../api/auth';
 import ItemCardContainer from "../components/ItemCardContainer";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -45,6 +45,17 @@ const OthersProfile = ({ route, navigation}) => {
     },[navigation]);
 
     useEffect(() => {
+      const fetchFollowStatus = async () => {
+        const result = await checkFollowStatus(user.id, otherUser.id);
+        if (result.success && result.data) {
+          setIsFollowing(result.data === "ALREADY_FOLLOW");
+        }
+      };
+    
+      fetchFollowStatus();
+    }, [otherUser.id, user.id]);
+
+    useEffect(() => {
 
         const fetchData = async () => {
           setIsLoading(true);
@@ -66,9 +77,29 @@ const OthersProfile = ({ route, navigation}) => {
       }, [otherUser.id]);
 
     // Function to handle follow button press
-    const handleFollowPress = () => {
-      setIsFollowing(!isFollowing);
-      // Add functionality to follow the user
+    const handleFollowPress = async () => {
+      setIsLoading(true); // 开始加载状态
+      try {
+        let response;
+        if (isFollowing) {
+          // 如果当前已经关注，调用取消关注的接口
+          response = await unfollowUser(user.id, otherUser.id);
+        } else {
+          // 如果当前没有关注，调用添加关注的接口
+          response = await followUser(user.id, otherUser.id);
+        }
+        // 根据响应更新关注状态
+        if (response.success) {
+          setIsFollowing(!isFollowing);
+        } else {
+          // 处理错误，例如显示提示消息
+          console.error('Failed to update follow status: ', response.message);
+        }
+      } catch (error) {
+        console.error('Error updating follow status: ', error);
+      } finally {
+        setIsLoading(false); // 结束加载状态
+      }
     };
 
     // Function to handle message button press
