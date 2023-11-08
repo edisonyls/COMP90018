@@ -7,17 +7,21 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
+  Alert,
 } from "react-native";
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import MapView, { Marker } from "react-native-maps";
-import markersData from "../assets/MarkersData";
 import * as Location from "expo-location";
 import { Animated, Easing } from "react-native";
+import { useUserContext } from "../context/userContext";
+import { getAllPosts, queryUserInfo } from '../api/auth';
+
 const RadarAnimation = React.memo(() => {
   const scaleValue = new Animated.Value(0); // 初始值为0
   const [selectedMenu, setSelectedMenu] = useState("All");
+
 
   const animateRadar = () => {
     scaleValue.setValue(0); // 在动画开始时重置值
@@ -32,6 +36,7 @@ const RadarAnimation = React.memo(() => {
   useEffect(() => {
     animateRadar(); // 开始动画
     return () => scaleValue.stopAnimation(); // 当组件卸载时停止动画
+
   }, []);
 
   const scale = scaleValue.interpolate({
@@ -67,6 +72,10 @@ const MapScreen = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const navigation = useNavigation();
+  const { user,setUser } = useUserContext();
+  const [posts, setPosts] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+
   const userLocation = location
     ? {
         latitude: location.coords.latitude,
@@ -74,6 +83,21 @@ const MapScreen = () => {
       }
     : null;
 
+    const handleMarkerPress = async (post) => {
+      try {
+       
+          navigation.navigate('Post', { post: post });
+        
+          // 如果请求不成功，设置userInfo为空并可选择显示错误信息
+        
+      } catch (error) {
+        // 如果发生了其他类型的错误，如网络错误等，也设置userInfo为空并显示错误
+        setUserInfo(null);
+        console.error('Error fetching user info:', error);
+        // 同样可以显示一个错误弹窗
+        Alert.alert("Error", "An error occurred while trying to fetch user information.");
+      }
+    };
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -81,6 +105,7 @@ const MapScreen = () => {
   }, [navigation]);
   useEffect(() => {
     (async () => {
+      setIsLoading(true); // 开始加载数据
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
@@ -89,8 +114,19 @@ const MapScreen = () => {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+
+      // 在获取位置信息之后调用
+      const fetchPosts = async () => {
+        const postsData = await getAllPosts(selectedMenu);
+        if (postsData && postsData.success) {
+          setPosts(postsData.data);
+        }
+        setIsLoading(false); // 加载完成后隐藏加载指示器
+      };
+
+      fetchPosts();
     })();
-  }, []);
+  }, [selectedMenu]);
   const region = location
     ? {
         latitude: location.coords.latitude,
@@ -119,7 +155,7 @@ const MapScreen = () => {
               <Text className="text-[40px] text-[#0B646B] font-bold">
                 {"Map"}
               </Text>
-              <Text className="text-[20px] text-[#527283]">userName</Text>
+              <Text className="text-[20px] text-[#527283]">{user.nickname}</Text>
             </View>
             <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
               <Image
@@ -128,12 +164,12 @@ const MapScreen = () => {
               />
             </View>
           </View>
-
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <View className="flex-row item-center justify-center px-8 mt-4">
             <MenuContainer
               key={"all"}
               title="All"
-              imageSrc={require("../assets/dog.png")}
+             
               type={type}
               setType={setType}
               setSelectedMenu={setSelectedMenu}
@@ -141,7 +177,6 @@ const MapScreen = () => {
             <MenuContainer
               key={"missing"}
               title="Missing"
-              imageSrc={require("../assets/dog.png")}
               type={type}
               setType={setType}
               setSelectedMenu={setSelectedMenu}
@@ -149,12 +184,20 @@ const MapScreen = () => {
             <MenuContainer
               key={"found"}
               title="Found"
-              imageSrc={require("../assets/dog.png")}
+           
               type={type}
               setType={setType}
               setSelectedMenu={setSelectedMenu}
             />
+            <MenuContainer
+                key={"general"}
+                title="General"
+                type={type}
+                setType={setType}
+                setSelectedMenu={setSelectedMenu}
+              />
           </View>
+          </ScrollView>
           <MapView
             style={styles.map}
             provider={MapView.PROVIDER_GOOGLE}
@@ -169,21 +212,29 @@ const MapScreen = () => {
                 </View>
               </Marker>
             )}
-            {markersData.map((marker) => (
+            {posts.map((post) => (
               <Marker
-                key={marker.id}
+              key={post.id}
                 coordinate={{
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
+                  latitude: post.latitude,
+                  longitude: post.longitude,
                 }}
+                onPress={() => handleMarkerPress(post)}// 添加点击事件
               >
                 <Image
-                  source={marker.image} // 更改为你的图像路径
-                  style={{ width: 50, height: 50 }} // 你可以根据需要设置大小
-                />
+                  source={{ uri: post.picture }} 
+                   style={styles.headshown}
+                 />
+                
+               
               </Marker>
             ))}
           </MapView>
+          <View style={styles.userInfoContainer}>
+            {userInfo && (
+              <Text style={styles.nicknameText}>{userInfo.nickname}</Text>
+            )}
+          </View>
         </ScrollView>
       )}
     </SafeAreaView>
@@ -194,6 +245,13 @@ const styles = StyleSheet.create({
     height: 500, // 为地图设置一个高度，这样它就能正确显示了
   },
   // 其他可能的样式
+  headshown:{
+    borderWidth: 2, 
+    borderColor: 'red', 
+    borderRadius: 25, 
+    width: 50, 
+    height: 50, 
+  },
 });
 
 export default MapScreen;

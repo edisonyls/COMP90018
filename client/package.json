@@ -12,7 +12,7 @@
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.15",
-    "axios": "^1.5.1",
+    "axios": "^1.6.0",
     "expo": "~49.0.13",
     "expo-checkbox": "~2.4.0",
     "expo-constants": "^14.4.2",

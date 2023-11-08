@@ -4,7 +4,8 @@ import React from "react";
 const MenuContainer = ({ title, type, setType, setSelectedMenu }) => {
   const handlePress = () => {
     setType(title.toLowerCase());
-    setSelectedMenu(title.toLowerCase());
+    setSelectedMenu(title);
+    
   };
 
   return (
