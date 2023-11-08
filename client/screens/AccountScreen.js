@@ -125,7 +125,7 @@ const pickImage = async (isBackground) => {
           }
 
           await updateUserProfile(); // 使用新昵称和手机号更新用户资料
-          navigation.goBack();
+          navigation.navigate("Profile");
         } catch (e) {
           console.error("Failed to save profile information", e);
         }

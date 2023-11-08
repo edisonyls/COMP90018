@@ -134,7 +134,7 @@ const PostScreen = ({ route, navigation }) => {
     style={{flex: 1}}
   >
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView>
+      
       <ScrollView>
       <View className="flex-1 bg-white">
         <View className="flex-row justify-between items-center p-2.5 mr-2">
@@ -166,18 +166,14 @@ const PostScreen = ({ route, navigation }) => {
               )}
             </TouchableOpacity>
           </View>
-          {/* <TouchableOpacity className="p-2 bg-[#007bff] rounded-lg">
-          {/* <TouchableOpacity className="p-2 bg-[#007bff] rounded-lg">
-            <Text className="text-white">Follow</Text>
-          </TouchableOpacity> */}
-          </TouchableOpacity> */}
+    
         </View>
 
         <TouchableOpacity>
           <View className="mt-2 items-center">
             <Image
               source={{ uri: post.picture }} // Replace with your actual image source
-              source={{ uri: post.picture }} // Replace with your actual image source
+             
               style={{
                 width: screenWidth - 20,
                 height: screenWidth - 20,
