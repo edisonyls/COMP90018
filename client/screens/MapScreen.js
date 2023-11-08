@@ -17,6 +17,7 @@ import * as Location from "expo-location";
 import { Animated, Easing } from "react-native";
 import { useUserContext } from "../context/userContext";
 import { getAllPosts, queryUserInfo } from '../api/auth';
+import { EvilIcons } from '@expo/vector-icons';
 
 const RadarAnimation = React.memo(() => {
   const scaleValue = new Animated.Value(0); // 初始值为0
@@ -246,6 +247,7 @@ const MapScreen = () => {
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
                   <RadarAnimation />
+                  <EvilIcons name="location" size={40} color="#9747ff" />
                 </View>
               </Marker>
             )}
