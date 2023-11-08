@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   TextInput,
+  KeyboardAvoidingView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -140,6 +141,10 @@ const AccountScreen = () => {
   };
 
   return (
+    <KeyboardAvoidingView 
+    behavior={Platform.OS === "ios" ? "padding" : "height"} 
+    style={{flex: 1}}
+  >
     <SafeAreaView className="flex-1 bg-white relative">
       {console.log(user)}
       {isLoading ? (
@@ -201,80 +206,96 @@ const AccountScreen = () => {
         </>
       )}
     </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({
   headerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F3F3', // 添加底部边界线以区分头部
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333', // 使用深色字体提高可读性
   },
   imageContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    marginBottom: 20, // 增加底部边距以避免挤压
   },
   backgroundImage: {
-    width: "100%", // 宽度为100%，以填满容器
-    height: 198, // 这可以根据您的背景图像进行调整
+    width: '100%',
+    height: 200, // 修改高度以适应不同设备
+    resizeMode: 'cover', // 确保图片完全覆盖容器
   },
   editIcon: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    backgroundColor: "rgba(255, 255, 255, 0.5)", // 半透明的白色
-    padding: 8, // 添加一些内边距，使图标更易于点击
-    borderRadius: 20, // 圆形背景
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: '#FFF', // 明亮的背景色确保图标可见
+    borderRadius: 30,
+    padding: 10,
+    elevation: 4, // 在安卓上添加阴影
+    shadowColor: '#000', // iOS阴影
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-
   profileContainer: {
-    position: "relative", // 同上
-    alignItems: "center",
-    paddingTop: 50,
-    paddingBottom: 10,
+    position: 'absolute', // 更改为绝对定位
+    top: 150, // 调整位置以重叠背景图片
+    alignItems: 'center',
   },
   headImage: {
-    width: 83,
-    height: 83,
-    position: "absolute", // 设置为绝对定位
-    bottom: 40, // 这意味着图片的底部将位于容器边界以下的位置，实现重叠效果
-    borderRadius: 83 / 2,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 4,
+    borderColor: '#FFF', // 添加边框突出头像
+    overflow: 'hidden', // 确保图片不会溢出边界
   },
-
   saveButton: {
-    backgroundColor: "#9747FF", // 按钮背景色
-    padding: 15,
-    borderRadius: 30,
-    alignItems: "center",
-    marginHorizontal: 40, // 水平边距
-    marginBottom: 20, // 底部边距
-    position: "absolute", // 添加绝对定位
-    bottom: 20, // 按钮距离底部的距离
-    left: 0, // 按钮距离左边的距离
-    right: 0, // 按钮距离右边的距离
+    backgroundColor: '#9747FF',
+    paddingVertical: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginHorizontal: 50,
+    marginTop: 20, // 为按钮添加上边距
+    shadowColor: '#9747FF', // iOS阴影
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4, // 在安卓上添加阴影
   },
   saveButtonText: {
-    color: "white",
+    color: '#FFF',
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   nameContainer: {
     margin: 20,
     marginBottom: 10,
+    borderBottomColor: '#DDD', // 添加底部边界线以区分输入框
+    paddingBottom: 10, // 增加底部内边距    
+    
   },
   nameLabel: {
     fontSize: 18,
     fontWeight: "bold",
+    color: '#555', // 暗色标签更易读
+    marginBottom: 5, // 增加标签与输入框的距离
+    
   },
   nameInput: {
     fontSize: 16,
-    width: 300, // 设置正方形的宽度
+    width: "100%", // 设置正方形的宽度
     height: 50, // 设置正方形的高度
     borderRadius: 15, // 设置圆角的大小
     borderWidth: 1, // 设置边框宽度
