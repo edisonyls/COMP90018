@@ -20,7 +20,9 @@ import ActivitiesScreen from "../screens/ActivitiesScreen";
 import PostScreen from "..//screens/PostScreen";
 import FollowersScreen from "../screens/FollowersScreen";
 import FollowingsScreen from "../screens/FollowingsScreen";
+
 import OthersProflie from "../screens/OthersProfile";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -56,7 +58,7 @@ const RootStack = () => {
 
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Account" component={AccountScreen} /> 
-        
+        <Stack.Screen name="Others" component={OthersProfile}/>
 
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Security" component={SecurityScreen} />
