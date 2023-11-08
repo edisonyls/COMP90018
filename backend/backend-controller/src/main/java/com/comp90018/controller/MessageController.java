@@ -4,11 +4,9 @@ package com.comp90018.controller;
 import com.comp90018.dto.Message;
 import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.enums.MessageTypeEnum;
-import com.comp90018.enums.RedisEnum;
 import com.comp90018.enums.ResponseStatusEnum;
 import com.comp90018.jsonResult.JSONResult;
 import com.comp90018.service.MessageService;
-import com.comp90018.utils.IPUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +29,7 @@ public class MessageController extends BaseController{
     private MessageService messageService;
     @PostMapping("/sendMessage")
     @ApiOperation("sender sends a message to receiver")
-    public JSONResult send(@RequestParam String senderId, @RequestParam String receiverId, @RequestParam String content, HttpServletRequest httpServletRequest) {
+    public JSONResult list(@RequestParam String senderId, @RequestParam String receiverId, @RequestParam String content, HttpServletRequest httpServletRequest) {
         if(senderId == null || receiverId == null || senderId.equals(receiverId)) {
             return JSONResult.errorCustom(ResponseStatusEnum.MESSAGE_SEND_FAIL);
         }
@@ -49,12 +47,27 @@ public class MessageController extends BaseController{
 
     @PostMapping("/listMessages")
     @ApiOperation("list all messages of an user")
-    public JSONResult send(@RequestParam String userId, HttpServletRequest httpServletRequest) {
+    public JSONResult list(@RequestParam String userId, HttpServletRequest httpServletRequest) {
         if (userId == null) {
             return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
         }
 
         List<Message> messages = messageService.listAllMessage(userId);
+        if (messages == null || messages.size() == 0) {
+            return JSONResult.errorCustom(ResponseStatusEnum.NO_MESSAGES);
+        }
+
+        return JSONResult.ok(messages);
+    }
+
+    @PostMapping("/listChat")
+    @ApiOperation("list messages with an user")
+    public JSONResult listChat(@RequestParam String userId, @RequestParam String contactId, HttpServletRequest httpServletRequest) {
+        if (userId == null || contactId == null) {
+            return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
+        }
+
+        List<Message> messages = messageService.listMessagesWithOne(userId, contactId);
         if (messages == null || messages.size() == 0) {
             return JSONResult.errorCustom(ResponseStatusEnum.NO_MESSAGES);
         }
