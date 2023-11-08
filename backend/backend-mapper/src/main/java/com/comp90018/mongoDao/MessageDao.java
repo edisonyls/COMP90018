@@ -10,5 +10,5 @@ import java.util.List;
 public interface MessageDao extends MongoRepository<Message, String> {
     List<Message> findAllBySenderIdOrReceiverIdOrderByTimeDesc(String senderId, String receiverId);
 
-    List<Message> findAllBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimeDesc(String senderId1, String receiverId1, String senderId2, String receiverId2);
+    List<Message> findAllBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimeAsc(String senderId1, String receiverId1, String senderId2, String receiverId2);
 }
