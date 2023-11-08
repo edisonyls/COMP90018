@@ -50,7 +50,13 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> listAllNotification(String userId) {
         List<Message> messageList = messageDao.findAllByReceiverIdOrderByTimeDesc(userId);
-        return messageList;
+        List<Message> newList = new ArrayList<>();
+        for (Message message : messageList) {
+            if (message.getType() == MessageTypeEnum.SYSTEM_MESSAGE.getType()) {
+                newList.add(message);
+            }
+        }
+        return newList;
     }
 
     @Override
