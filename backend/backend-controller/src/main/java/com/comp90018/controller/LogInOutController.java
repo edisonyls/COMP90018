@@ -6,6 +6,7 @@ import com.comp90018.jsonResult.JSONResult;
 import com.comp90018.enums.ResponseStatusEnum;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.MailService;
+
 import com.comp90018.utils.IPUtil;
 import com.comp90018.vo.UserVO;
 import io.swagger.annotations.Api;
@@ -35,6 +36,12 @@ public class LogInOutController extends BaseController{
         if(email == null || email.length() == 0) {
             return JSONResult.errorCustom(ResponseStatusEnum.FAILED);
         }
+
+        Users users = userService.queryUsersIsExistByEmail(email);
+        if(users != null) {
+            return JSONResult.errorCustom(ResponseStatusEnum.EMAIL_ALREADY_EXIST);
+        }
+
         String ip = IPUtil.getRequestIp(httpServletRequest);
         log.info(RedisEnum.REDIS_IP + ip);
         redis.set(RedisEnum.REDIS_IP + ip, ip, 30);
@@ -50,6 +57,11 @@ public class LogInOutController extends BaseController{
         String email = signUpBO.getEmail();
         String username = signUpBO.getUsername();
         String password = signUpBO.getPassword();
+
+        Users users = userService.queryUsersIsExistByNickname(username);
+        if(users != null) {
+            return JSONResult.errorCustom(ResponseStatusEnum.NICKNAME_ALREADY_EXIST);
+        }
 
         String redisCode = redis.get(RedisEnum.REDIS_CODE + email);
         if(redisCode == null || redisCode.length() == 0 || !redisCode.equals(code)) {

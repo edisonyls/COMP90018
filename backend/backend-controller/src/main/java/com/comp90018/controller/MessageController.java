@@ -1,6 +1,7 @@
 package com.comp90018.controller;
 
 
+import com.comp90018.bo.ChatBO;
 import com.comp90018.dto.Message;
 import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.enums.MessageTypeEnum;
@@ -11,10 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -45,14 +43,14 @@ public class MessageController extends BaseController{
         return JSONResult.errorCustom(ResponseStatusEnum.MESSAGE_SEND_FAIL);
     }
 
-    @PostMapping("/listMessages")
-    @ApiOperation("list all messages of an user")
+    @PostMapping("/listNotifications")
+    @ApiOperation("list all notifications of an user")
     public JSONResult list(@RequestParam String userId, HttpServletRequest httpServletRequest) {
         if (userId == null) {
             return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
         }
 
-        List<Message> messages = messageService.listAllMessage(userId);
+        List<Message> messages = messageService.listAllNotification(userId);
         if (messages == null || messages.size() == 0) {
             return JSONResult.errorCustom(ResponseStatusEnum.NO_MESSAGES);
         }
@@ -62,7 +60,9 @@ public class MessageController extends BaseController{
 
     @PostMapping("/listChat")
     @ApiOperation("list messages with an user")
-    public JSONResult listChat(@RequestParam String userId, @RequestParam String contactId, HttpServletRequest httpServletRequest) {
+    public JSONResult listChat(@RequestBody ChatBO chatBO) {
+        String userId = chatBO.getUserId();
+        String contactId = chatBO.getContactId();
         if (userId == null || contactId == null) {
             return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
         }
