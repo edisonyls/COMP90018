@@ -7,33 +7,28 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
-  Dimensions,
   TextInput,
-  Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import MenuContainer from "../components/MenuContainer";
-import ItemCardContainer from "../components/ItemCardContainer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useProfile } from "../navigators/ProfileContext";
 import * as ImagePicker from "expo-image-picker";
 import { useUserContext } from "../context/userContext";
-import { uploadBackground, uploadHead, changeUserInfo } from "../api/auth";
-import axios from "axios";
+import {
+  uploadHead,
+  uploadBackground,
+  changeUserInfo,
+} from "../api/ProfileAPI";
 
 const AccountScreen = () => {
-  const { user } = useUserContext();
+  const { user, setUser } = useUserContext();
   const [isLoading, setIsLoading] = useState(true);
   const [backgroundUri, setBackgroundUri] = useState(null);
   const [headUri, setHeadUri] = useState(null);
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [confirmEmail, setConfirmEmail] = useState("");
   const navigation = useNavigation();
-  console.log(user);
 
   useEffect(() => {
     const loadProfileData = async () => {
@@ -43,10 +38,10 @@ const AccountScreen = () => {
       const storedPhoneNumber = user?.mobile ? user.mobile : "Null";
       const storedEmail = user?.email1 ? user.email1 : "Null"; // 添加邮箱
 
-      const storedBackgroundUri = user?.bgImg
-        ? { uri: user.bgImg }
-        : require("../assets/BcakGround.jpg");
-
+      const storedBackgroundUri =
+        user?.bgImg !== null
+          ? { uri: user.bgImg }
+          : require("../assets/BcakGround.jpg");
       const storedHeadUri =
         user?.profile !== "default"
           ? { uri: user.profile }
@@ -55,7 +50,6 @@ const AccountScreen = () => {
       setName(storedName);
       setPhoneNumber(storedPhoneNumber);
       setEmail(storedEmail); // 设置邮箱
-      setConfirmEmail(storedEmail);
       setBackgroundUri(storedBackgroundUri);
       setHeadUri(storedHeadUri);
       setIsLoading(false);
@@ -66,15 +60,44 @@ const AccountScreen = () => {
 
   const updateUserProfile = async () => {
     try {
-      const updatedUserInfo = {
-        // ... 其他用户信息 ...
-        id: user.id,
-        mobile: phoneNumber, // 更新的手机号码
-        nickname: name, // 更新的昵称
+      const newUserInfo = {
+        bgImg: backgroundUri.uri,
+        birthday: user.birthday,
+        country: user.country,
+        createdTime: user.createdTime,
+        description: user.description,
         email1: email, // 更新的邮箱
+        id: user.id,
+        mobile: phoneNumber, // 更新的手机号码,
+        myCommentLikes: user.myCommentLikes,
+        myFans: user.myFans,
+        myFollows: user.myFollows,
+        myVlogLikes: user.myVlogLikes,
+        nickname: name, // 更新的昵称
+        password: user.password,
+        postcode: user.postcode,
+        profile: headUri.uri,
+        sex: user.sex,
+        state: user.state,
+        updatedTime: user.updatedTime,
+        userToken: user.userToken,
+
         // ... 其他用户信息 ...
       };
 
+      const updatedUserInfo = {
+        birthday: user.birthday,
+        country: user.country,
+        description: user.description,
+        id: user.id,
+        mobile: phoneNumber,
+        nickname: name,
+        password: user.password,
+        postcode: user.postcode,
+        sex: user.sex,
+        state: user.state,
+      };
+      setUser(newUserInfo);
       const response = await changeUserInfo(updatedUserInfo);
       // 处理响应，更新上下文等
     } catch (e) {
@@ -82,13 +105,6 @@ const AccountScreen = () => {
     }
   };
 
-  const getImageSource = (image) => {
-    if (typeof image === "string") {
-      return { uri: image };
-    } else {
-      return image;
-    }
-  };
   const pickImage = async (isBackground) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -115,23 +131,20 @@ const AccountScreen = () => {
 
   const saveAndGoBack = async () => {
     try {
-      if (email !== confirmEmail) {
-        // 如果不同，显示错误提示
-        alert("Email addresses do not match. Please try again.");
-        return; // 不要继续执行函数
-      }
-
       if (typeof backgroundUri === "object" && backgroundUri.uri) {
+        console.log("background uploading...");
         await uploadBackground(user.id, backgroundUri.formData);
       }
 
       // 上传头像图片（如果有更改）
       if (typeof headUri === "object" && headUri.uri) {
+        console.log("head uploading...");
         await uploadHead(user.id, headUri.formData);
       }
 
       await updateUserProfile(); // 使用新昵称和手机号更新用户资料
-      navigation.navigate("Profile");
+
+      navigation.navigate("Home");
     } catch (e) {
       console.error("Failed to save profile information", e);
     }
@@ -198,15 +211,6 @@ const AccountScreen = () => {
                 value={email}
                 onChangeText={(text) => setEmail(text)}
                 placeholder="Enter your email"
-              />
-            </View>
-            <View style={styles.nameContainer}>
-              <Text style={styles.nameLabel}>Confirm Email</Text>
-              <TextInput
-                style={styles.nameInput}
-                value={confirmEmail}
-                onChangeText={(text) => setConfirmEmail(text)}
-                placeholder="Confirm your email"
               />
             </View>
           </ScrollView>

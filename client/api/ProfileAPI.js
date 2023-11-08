@@ -1,0 +1,48 @@
+import { BASE_URL } from "./utils";
+import axios from "axios";
+
+export const uploadHead = async (usrId, formData) => {
+  try {
+    const res = await axios.post(
+      `http://${BASE_URL}:8080/user/uploadProfile?usrId=${usrId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.log("while uploadHead request -> \n" + err);
+  }
+};
+
+export const uploadBackground = async (usrId, formData) => {
+  try {
+    const res = await axios.post(
+      `http://${BASE_URL}:8080/user/uploadBgImg?usrId=${usrId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.log("while uploadBackground request -> \n" + err);
+  }
+};
+
+export const changeUserInfo = async (userInfo) => {
+  try {
+    const response = await axios.post(
+      "http://" + BASE_URL + ":8080/user/changeUserInfo",
+      userInfo
+    );
+    return response.data;
+  } catch (error) {
+    console.error("在changeUserInfo请求时出错", error);
+  }
+};

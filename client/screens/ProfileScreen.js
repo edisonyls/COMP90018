@@ -29,13 +29,14 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   //const isFocused = useIsFocused();
   const { user } = useUserContext();
+  console.log(user);
 
   const backgroundImgSource =
-    user && user.bgImg
+    user && user.bgImg !== null
       ? { uri: user.bgImg }
       : require("../assets/BcakGround.jpg");
   const profileHeadImgSource =
-    user && user.profile
+    user && user.profile !== "default"
       ? { uri: user.profile }
       : require("../assets/ProfileHead.jpg");
 
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     color: "black",
-    marginTop: 20,
+    marginTop: 10,
     textAlign: "left", // 靠左对齐
     marginBottom: 10, // 和图片之间的距离
     marginLeft: 10,
