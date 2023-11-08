@@ -21,9 +21,6 @@ import PostScreen from "..//screens/PostScreen";
 import FollowersScreen from "../screens/FollowersScreen";
 import FollowingsScreen from "../screens/FollowingsScreen";
 
-import OthersProflie from "../screens/OthersProfile";
-
-
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
@@ -43,7 +40,7 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-        initialRouteName="Message"
+        initialRouteName="Landing"
         //initialRouteName="Profile"
       >
         <Stack.Screen name="SignIn" component={SignIn} />
@@ -53,24 +50,20 @@ const RootStack = () => {
         <Stack.Screen name="PostOption" component={PostOption} />
         <Stack.Screen name="FindMyPet" component={FindMyPet} />
         <Stack.Screen name="Map" component={MapScreen} />
-        
+
         <Stack.Screen name="Verify" component={VerifyScreen} />
 
         <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="Account" component={AccountScreen} /> 
-        <Stack.Screen name="Others" component={OthersProfile}/>
+        <Stack.Screen name="Account" component={AccountScreen} />
 
-        <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Security" component={SecurityScreen} />
         <Stack.Screen name="ContactUs" component={ContactUsScreen} />
 
         <Stack.Screen name="Post" component={PostScreen} />
         <Stack.Screen name="Message" component={MessageScreen} />
-        <Stack.Screen name="Activities" component={ActivitiesScreen}/>
-        <Stack.Screen name="Followers" component={FollowersScreen}/>
-        <Stack.Screen name="Followings" component={FollowingsScreen}/>
-        <Stack.Screen name="Others" component={OthersProflie}/>
-       
+        <Stack.Screen name="Activities" component={ActivitiesScreen} />
+        <Stack.Screen name="Followers" component={FollowersScreen} />
+        <Stack.Screen name="Followings" component={FollowingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
