@@ -1,8 +1,6 @@
 import axios from "axios";
 
-
-const BASE_URL = "192.168.1.107";
-
+const BASE_URL = "10.13.126.40";
 
 export const verifyEmail = async (code, email, password, username) => {
   try {
@@ -59,7 +57,6 @@ export const loginRequest = async (email, password) => {
   }
 };
 
-
 export const uploadBackground = async (usrId, formData) => {
   try {
     const res = await axios.post(
@@ -67,8 +64,8 @@ export const uploadBackground = async (usrId, formData) => {
       formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          "Content-Type": "multipart/form-data",
+        },
       }
     );
     return res.data;
@@ -84,8 +81,8 @@ export const uploadHead = async (usrId, formData) => {
       formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          "Content-Type": "multipart/form-data",
+        },
       }
     );
     return res.data;
@@ -111,7 +108,7 @@ export const getAllPosts = async (postType) => {
     const response = await axios.get(
       `http://${BASE_URL}:8080/post/getAllPosts`,
       {
-        params: { postType }
+        params: { postType },
       }
     );
     return response.data;
@@ -121,14 +118,16 @@ export const getAllPosts = async (postType) => {
   }
 };
 
-
 export const getAllPostsPerUser = async (userId) => {
   try {
-    const response = await axios.get(`http://${BASE_URL}:8080/post/getAllPostsPerUser`, {
-      params: {
-        userId: userId,
-      },
-    });
+    const response = await axios.get(
+      `http://${BASE_URL}:8080/post/getAllPostsPerUser`,
+      {
+        params: {
+          userId: userId,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching posts per user", error);
@@ -138,11 +137,14 @@ export const getAllPostsPerUser = async (userId) => {
 
 export const queryUserInfo = async (userId) => {
   try {
-    const response = await axios.get(`http://${BASE_URL}:8080/user/queryUserInfo`, {
-      params: {
-        userId: userId,
-      },
-    });
+    const response = await axios.get(
+      `http://${BASE_URL}:8080/user/queryUserInfo`,
+      {
+        params: {
+          userId: userId,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching user info", error);
@@ -153,7 +155,7 @@ export const queryUserInfo = async (userId) => {
 export const getCommentList = async (postId) => {
   try {
     const response = await axios.get(
-      `http://${BASE_URL}:8080/comment/GetCommentList`, 
+      `http://${BASE_URL}:8080/comment/GetCommentList`,
       {
         params: {
           postId: postId,
