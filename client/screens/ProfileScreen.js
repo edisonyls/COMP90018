@@ -18,6 +18,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useUserContext } from "../context/userContext";
 import { getAllPostsPerUser } from '../api/auth';
 
+
 const Tab = createBottomTabNavigator();
 
 const ProfileScreen = () => {
@@ -75,7 +76,7 @@ const ProfileScreen = () => {
           <View style={styles.imageContainer}>
             <Image
               // key={backgroundUri} 
-              style={styles.backgroundImage}
+              style={styles.backgroundImage|| '../assets/Background.jpg'}
               source={{ uri: user.bgImg}}
               
             />
@@ -85,7 +86,7 @@ const ProfileScreen = () => {
             <View style={styles.profileContainer}>
               <Image
                 // key={headUri}
-                style={styles.headImage}
+                style={styles.headImage|| '../assets/ProfileHead.jpg'}
                 source={{ uri: user.profile }}
                 
               />
@@ -175,11 +176,7 @@ const ProfileScreen = () => {
                 </TouchableOpacity>
               </View>
             ) : null}   
-            
-           
-            
 
-            
           </ScrollView>
         )}
       </SafeAreaView>

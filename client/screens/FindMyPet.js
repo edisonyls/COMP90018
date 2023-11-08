@@ -253,7 +253,9 @@ const FindMyPet = () => {
           
             console.log(serverResponse.data);
           
-            if (serverResponse.success) {
+            if (serverResponse.data.success) {
+
+
                 console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
                 // ... (clear your form fields and navigate away)
             } else {
