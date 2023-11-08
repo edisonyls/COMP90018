@@ -19,12 +19,11 @@ import {BASE_URL} from "../api/auth";
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
-const FindLostPet = () => {
+const GeneralPost = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
-  const [petCategory, setPetCategory] = useState(null);
-  const [petBreed, setPetBreed] = useState('');
-  const [contactNumber, setContactNumber] = useState('');
+  const [postTag, setPostTag] = useState('');
+  
   const [description, setDescription] = useState ('');
   const { user } = useUserContext();
 
@@ -33,7 +32,6 @@ const FindLostPet = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isShowingResults, setIsShowingResults] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
-  //The post id need to be feteched via the back end post database
   const [postId, setPostId] = useState(null);
 
   const searchLocation = async (text) => {
@@ -132,6 +130,7 @@ const FindLostPet = () => {
     );
   };
 
+
   const convertUriToMultipartFile = async (imageUri) => {
     // Step 1: Convert the image URI to a Blob or File object
     const response = await fetch(imageUri);
@@ -147,6 +146,7 @@ const FindLostPet = () => {
     // Now formData contains the image in MultipartFile format
     return formData;
   };
+
 
   const uploadImage = async (formData) => {
 
@@ -174,12 +174,8 @@ const FindLostPet = () => {
     }
   };
 
-
-
-
-
   const validateForm = () => {
-    if (!imageUri || !petCategory || !petBreed || !contactNumber || !selectedPlaceId || !description) {
+    if (!imageUri || !postTag || !selectedPlaceId || !description) {
       Alert.alert('Missing Information', 'Please fill in all fields before submitting.');
       return false;
     }
@@ -190,7 +186,6 @@ const FindLostPet = () => {
     // Function to handle the form submission
     const handleSubmit = async() => {
         const formData = convertUriToMultipartFile(imageUri);
-
         if (validateForm() && uploadImage(formData)) {
           try {
             // Fetch the detailed information of the selected location
@@ -205,28 +200,20 @@ const FindLostPet = () => {
               console.log('Form submitted with the following data:');
               console.log('Selected location coordinates:', location);
               console.log(`Image URI: ${imageUri}`);
-              console.log(`Pet Category: ${petCategory}`);
-              console.log(`Pet Breed: ${petBreed}`);
-              console.log(`Contact Number: ${contactNumber}`);
               console.log(`Description: ${description}`);
-              console.log(`PostId: ${postId}`);
 
-              const foundData = {
-                pet_category: petCategory,
-                pet_breed: petBreed,
-                contact_number: contactNumber,
+              const generalPostData = {
                 image_uri: imageUri,
                 description: description,
                 location_lat: location.lat,
                 location_lng: location.lng,
                 userId: user.id,
-                postType: "Found",
-                postId: postId
+                postType: "General"
 
               };
 
               try {
-                const serverResponse = await axios.post('http://'+ BASE_URL+':8080/post/uploadPost', foundData);
+                const serverResponse = await axios.post('http://'+ BASE_URL +':8080/post/uploadPost', generalPostData);
                 console.log(serverResponse);
                 if (serverResponse.status === 'success') {
                     console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
@@ -260,13 +247,11 @@ const FindLostPet = () => {
 
               // After successful submission, clear the form fields
 
-              setPetCategory('');
-              setPetBreed('');
+              
               setSelectedPlaceId(null);
-              setContactNumber('');
               setDescription('');
               setImageUri('');
-              setPostId(null);
+              setPostTag('');
 
               // or however you clear your location field
               // Clear other form fields as necessary
@@ -327,40 +312,6 @@ const FindLostPet = () => {
       </TouchableOpacity>
 
 
-      {/* Pet Category Dropdown */}
-      <View style={styles.dropdownContainer}>
-        <Text style={styles.inputLabel}>* Pet Category</Text>
-        <RNPickerSelect
-          onValueChange={(value) => setPetCategory(value)}
-          items={[
-            { label: 'Cat', value: 'cat' },
-            { label: 'Dog', value: 'dog' },
-            // ... other pet categories
-          ]}
-          style={pickerSelectStyles}
-          placeholder={{ label: "Select a pet category...", value: null }}
-          value={petCategory}
-          useNativeAndroidPickerStyle={false}
-          Icon={() => {
-            return (
-              <View style={styles.iconContainer}>
-                <AntDesign name="down" size={30} color="gray" />
-              </View>
-            );
-          }}
-        />
-      </View>
-
-      {/* Pet Breed Input */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>* Pet's Breed</Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={setPetBreed}
-          value={petBreed}
-          placeholder="Enter pet's breed"
-        />
-      </View>
 
       {/* Description Input */}
       <View style={styles.inputContainer}>
@@ -373,17 +324,38 @@ const FindLostPet = () => {
         />
       </View>
 
-
-      {/* Contact Number Input */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>* Contact Number</Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={setContactNumber}
-          value={contactNumber}
-          placeholder="Enter your contact number"
+      {/* Tag selection */}
+      <View style={styles.dropdownContainer}>
+        <Text style={styles.inputLabel}> Select tag</Text>
+        <RNPickerSelect
+          onValueChange={(value) => setPostTag(value)}
+          items={[
+            { label: 'food', value: 'food' },
+            { label: 'park', value: 'park' },
+            { label: 'illness', value: 'illness' },
+            { label: 'custome', value: 'custome' },
+            { label: 'shop', value: 'shop' },
+            { label: 'newbie', value: 'newbie' },
+            { label: 'other', value: 'other' }
+            
+            
+            // ... other pet categories
+          ]}
+          style={pickerSelectStyles}
+          placeholder={{ label: "Select a tag...", value: null }}
+          value={postTag}
+          useNativeAndroidPickerStyle={false}
+          Icon={() => {
+            return (
+              <View style={styles.iconContainer}>
+                <AntDesign name="down" size={30} color="gray" />
+              </View>
+            );
+          }}
         />
       </View>
+
+
 
       {/* Submit Button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
@@ -539,4 +511,4 @@ const styles = StyleSheet.create({
 
 
 
-export default FindLostPet;
+export default GeneralPost;

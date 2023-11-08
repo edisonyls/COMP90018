@@ -75,7 +75,7 @@ public class UserController extends BaseController{
     public JSONResult queryUserInfo(@RequestParam String userId) {
         Users user = userService.queryUser(userId);
         UserVO usersVO = new UserVO();
-        BeanUtils.copyProperties(usersVO, usersVO);
+        BeanUtils.copyProperties(user, usersVO);
 
         int myFollows = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FOLLOW_NUM + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FOLLOW_NUM + userId));
         int myFans = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FAN_NUM + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FAN_NUM + userId));

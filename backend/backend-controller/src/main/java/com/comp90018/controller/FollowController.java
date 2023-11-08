@@ -1,5 +1,6 @@
 package com.comp90018.controller;
 
+import com.comp90018.enums.FollowResEnum;
 import com.comp90018.enums.ResponseStatusEnum;
 import com.comp90018.jsonResult.JSONResult;
 import com.comp90018.pojo.Users;
@@ -47,7 +48,14 @@ public class FollowController extends BaseController{
             return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
         }
 
-        followerService.doFollow(followerId, followingId);
+        String s = followerService.doFollow(followerId, followingId);
+        if (FollowResEnum.USER_CANNOT_NULL.getRes().equals(s)) {
+            return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
+        } else if (FollowResEnum.ALREADY_FOLLOW.getRes().equals(s)) {
+            return JSONResult.errorCustom(ResponseStatusEnum.ALREADY_FOLLOW);
+        } else if (FollowResEnum.FOLLOW_SUCCESS.getRes().equals(s)) {
+            return JSONResult.ok(s);
+        }
 
         return JSONResult.ok();
     }
@@ -56,8 +64,14 @@ public class FollowController extends BaseController{
     @ApiOperation("a follower unfollows a following ")
     public JSONResult unfollow(@RequestParam String followerId, @RequestParam String followingId) {
 
-        followerService.unFollow(followerId, followingId);
-
+        String s = followerService.unFollow(followerId, followingId);
+        if (FollowResEnum.USER_CANNOT_NULL.getRes().equals(s)) {
+            return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
+        } else if (FollowResEnum.ALREADY_UNFOLLOW.getRes().equals(s)) {
+            return JSONResult.errorCustom(ResponseStatusEnum.HAS_NOT_FOLLOW);
+        } else if (FollowResEnum.UNFOLLOW_SUCCESS.getRes().equals(s)) {
+            return JSONResult.ok(s);
+        }
         return JSONResult.ok();
     }
 

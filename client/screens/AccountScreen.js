@@ -17,7 +17,6 @@ import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import { useProfile } from '../navigators/ProfileContext';
 import * as ImagePicker from 'expo-image-picker';
 import { useUserContext } from "../context/userContext";
@@ -34,7 +33,7 @@ const AccountScreen = () => {
     const [email, setEmail] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
     const navigation = useNavigation();
-    const { user,setUser } = useUserContext();
+    const { user } = useUserContext();
     
     useEffect(() => {
       const loadProfileData = async () => {
@@ -126,7 +125,7 @@ const pickImage = async (isBackground) => {
           }
 
           await updateUserProfile(); // 使用新昵称和手机号更新用户资料
-          navigation.goBack();
+          navigation.navigate("Profile");
         } catch (e) {
           console.error("Failed to save profile information", e);
         }

@@ -1,9 +1,6 @@
 package com.comp90018.impl;
 
-import com.comp90018.enums.FriendEnum;
-import com.comp90018.enums.MessageTypeEnum;
-import com.comp90018.enums.RedisEnum;
-import com.comp90018.enums.MessageContentEnum;
+import com.comp90018.enums.*;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.FollowersMapper;
 import com.comp90018.mapper.ListFollowerMapper;
@@ -49,7 +46,16 @@ public class FollowerServiceImpl implements FollowerService {
 
     @Transactional
     @Override
-    public void doFollow(String followerId, String followingId) {
+    public String doFollow(String followerId, String followingId) {
+        if (followerId == null || followingId == null) {
+            return FollowResEnum.USER_CANNOT_NULL.getRes();
+        }
+
+        boolean b = checkFollow(followerId, followingId);
+        if(b) {
+            return FollowResEnum.ALREADY_FOLLOW.getRes();
+        }
+
         Followers follower = new Followers();
         String id = sid.nextShort();
 
@@ -79,14 +85,19 @@ public class FollowerServiceImpl implements FollowerService {
         HashMap<String, Object> map = new HashMap<>();
         map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.FOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
         messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+        return FollowResEnum.FOLLOW_SUCCESS.getRes();
     }
 
     @Transactional
     @Override
-    public void unFollow(String followerId, String followingId) {
+    public String unFollow(String followerId, String followingId) {
+        if (followerId == null || followingId == null) {
+            return FollowResEnum.USER_CANNOT_NULL.getRes();
+        }
+
         Followers following = queryIsFollower(followerId, followingId);
         if(following == null) { // the follower doesn't follow the following
-            return;
+            return FollowResEnum.ALREADY_UNFOLLOW.getRes();
         }
 
         if(following.getIsFollowerFriendOfMine() == FriendEnum.NO.getFriendRelation()) {
@@ -108,6 +119,7 @@ public class FollowerServiceImpl implements FollowerService {
         HashMap<String, Object> map = new HashMap<>();
         map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.UNFOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
         messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+        return FollowResEnum.UNFOLLOW_SUCCESS.getRes();
     }
 
     @Override
