@@ -1,257 +1,204 @@
-/* eslint-disable prettier/prettier */
-import React, {useState, useEffect} from 'react';
-import {
-    SafeAreaView,
-    StyleSheet,
-    ScrollView,
-    View,
-    Text,
-    StatusBar,
-    TextInput,
-    Button,
-} from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { SafeAreaView, ScrollView, Text, StyleSheet, View, TextInput, Button } from 'react-native';
+import { useUserContext } from "../context/userContext";
 import axios from 'axios';
- 
-function MessageList(props) {
 
-    const { items, receiverId } = props;
+const MessageScreen = ({ route, natigation }) => {
+  const [messages, setMessages] = useState([]);
+  const [contactName, setContactName] = useState('Contact Name');
+  const [inputText, setInputText] = useState('');
+  const [isAtBottom, setIsAtBottom] = useState(true);
 
-    //const items = props.items;
-    //const receiver = props.receiver;
-    const listItems = items.map((item, index) => {
-            return (
-                <View key={index} style={[styles.chatMessage, receiver == item.name ? styles.chatReceiver : null]}>
-                    <Text style={styles.chatNameReceiver}>{item.name}</Text>
-                    <Text style={styles.messageText}>{item.message}</Text>
-                </View>
-            );
-        },
-    );
-    return (
-        <>{listItems}</>
-    );
-}
+  const { messageInfoData } = route.params
 
-const BASE_URL = "192.168.1.111:8080";
- 
-// const URL_SERVER = 'http://192.168.1.111:8080';
- 
-const MessageScreen = ({ route, navigation}) => {
+  console.log(messageInfoData);
 
-    const [messages, setMessages] = useState([]);
-    const [receiver, setReceiver] = useState(null);
 
-    const { chatId } = route.params;
+   const contactId = '2311080WS9DACK8H';
+   const userId = '231106BK61PX28ZC';
 
-    const userId = chatId.sender;
-    const contactId = chatId.receiver;
-
-    // const [items, setItems] = useState([
-    //     {name: 'boy', message: '今天晚上吃点啥？'},
-    //     {name: 'girl', message: '我们去吃牛排吧！'},
-    //     {name: 'boy', message: '好的，我去给小红打气。'},
-    //     {name: 'boy', message: '你们在门口等我吧。'},
-    //     {name: 'girl', message: '你人呢？我到门口啦'},
-    // ]);
-
-    // State hook for receiver identifier.
-    // const [receiver, setReceiver] = useState('boy');
-
-    // State hook for managing the current text input.
-    // const [value, onChangeText] = React.useState('');
- 
-    let timer;
-    useEffect(() => {
-        const loadMessages = async() => {
-            try {
-                const response = await axios.post(`${BASE_URL}/message/listChat`, userId, contactId);
-                if (response.data.success) {
-                    console.log(response.data.data);
-                    setMessages(response.data.data);
-                } else {
-                console.log('Failed to fetch messages:', response.data.msg);
-                }
-            } catch (error) {
-                console.error('Error fetching messages:', error);
-            }
+   const contactData = {
+            contactId: contactId,
+            userId: userId,
         };
-        loadMessages();
-        const intervalId = setInterval(() => {
-            loadMessages();
-        }, 7000);
-        return () => clearInterval(intervalId);
-        //loadMessage();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
-    return (
-        <>
-            <StatusBar barStyle="dark-content" />
-            <SafeAreaView style={styles.mainContent}>
-                <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                        onChangeText={text => setReceiver(text)}
-                        placeholder={'聊天人姓名'}
-                        value={receiver}
-                        onSubmitEditing={sendDo}
-                    />
-                <ScrollView style={styles.chatBody}>
-                <MessageList items={messages} receiverId={receiver} />
-                </ScrollView>
-                <TextInput
-                    style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                    onChangeText={text => onChangeText(text)}
-                    placeholder={'开始聊天吧'}
-                    value={value}
-                    onSubmitEditing={sendDo}
-                />
-                <Button
-                    onPress={sendDo}
-                    title="发送"
-                    color="#841584"
-                />
-            </SafeAreaView>
-            </>
-        );
+    const messageData = {
+        senderId: userId,
+        receiverId: contactId,
+        content: inputText,
     };
 
-//     // const defaultMessages = [
-//     //     {name: 'boy', message: '今天晚上吃点啥？'},
-//     //     {name: 'girl', message: '我们去吃牛排吧！'},
-//     //     {name: 'boy', message: '好的，我去给小红打气。'},
-//     //     {name: 'boy', message: '你们在门口等我吧。'},
-//     //     {name: 'girl', message: '你人呢？我到门口啦'},
-//     // ];
+  //const { user } = useUserContext();
+  //const userIdParam = user.id;
+  const userIdParam = '231106BK61PX28ZC';
+  const userName = 'a';
+
+  const handleScroll = (event) => { 
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 20; // 20是一个阈值，可以根据需要调整
+    setIsAtBottom(isCloseToBottom);
+  };
+
+  const sendMessage = async () => {
+    try {
+        const response = await axios.post('http://192.168.1.111:8080/message/sendMessage', messageData);
+        if (response.data.success) {
+            setInputText('');
+        } else {
+            console.error('Failed to send message: ', response.data.msg);
+        }
+    } catch (error) {
+        console.error('Error sending message: ', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post('http://192.168.1.111:8080/message/listChat', contactData);
+        if (response.data.success) {
+          const name = response.data.data.find(item => item.senderNickname !== userName)?.senderNickname;
+          console.log(name);
+          setContactName(name);
+          const messageData = response.data.data.map(item => {
+            
+            return {
+                senderName: item.senderNickname,
+                message: item.content.Detail,
+                isCurrentUser: item.senderId === userIdParam
+            }
+          });
+
+          setMessages(messageData);
+        } else {
+          console.error('Failed to fetch messages: ', response.data.msg);
+        }
+      } catch (error) {
+        console.error('Error fetching messages: ', error);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+  
+    const scrollViewRef = useRef();
     
+    useEffect(() => {
+        if (isAtBottom) {
+            scrollViewRef.current?.scrollToEnd({ animated: true });
+        }
+    }, [messages, isAtBottom]);
+
+
+
+
+
+  return (
     
-//     const loadMessage = () => {
-//         // timer = setInterval(function () {
-//         //     //执行代码
-//         //     console.log('-----------获取数据------------');
-//         //     fetch(URL_SERVER + '/list')
-//         //         .then(function (response) {
-//         //             return response.json();
-//         //         })
-//         //         .then(function (result) {
-//         //             if (result.code == 0) {
-//         //                 setItems(result.data);
-//         //             }
-//         //         });
-//         // }, 1000);
-//         setItems(defaultMessages);
-//     };
- 
-//     const postMessage = () => {
-//         // fetch(URL_SERVER+'/send', {
-//         //     method: 'POST',
-//         //     credentials: 'include',
-//         //     headers: {
-//         //         'Content-Type': 'application/x-www-form-urlencoded',
-//         //     },
-//         //     body: 'roomId=1&message=' + value + '&name=' + receiver,
-//         // })
-//         //     .then(response => {
-//         //         if (response.ok) {
-//         //             return response.text();
-//         //         }
-//         //         throw new Error('Network response was not ok.');
-//         //     })
-//         //     .then(responseText => {
-//         //         console.log(responseText);
-//         //     })
-//         //     .catch(e => {
-//         //         console.log(e.toString());
-//         //     });
-//     };
- 
-//     //发送消息
-//     const sendMessage = (message) => {
-//         // let newItems = JSON.parse(JSON.stringify(items));
-//         // newItems.push({name: receiver, message: message});
-//         // setItems(newItems);
-//         let newItems = [...items, { name: receiver, message: message }];
-//         setItems(newItems);
-//     };
-//     const sendDo = () => {
-//         sendMessage(value);
-//         //postMessage();
-//         onChangeText('');
-//     };
- 
-//     return (
-//         <>
-//             <StatusBar barStyle="dark-content"/>
-//             <SafeAreaView style={styles.mainContent}>
-//                 <TextInput
-//                     style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-//                     onChangeText={text => setReceiver(text)}
-//                     placeholder={'聊天人姓名'}
-//                     value={receiver}
-//                     onSubmitEditing={sendDo}
-//                 />
-//                 <ScrollView style={styles.chatBody}>
-//                     <View style={{height: 15}}></View>
-//                     <MessageList items={items} receiver={receiver}/>
-//                 </ScrollView>
- 
-//                 <TextInput
-//                     style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-//                     onChangeText={text => onChangeText(text)}
-//                     placeholder={'开始聊天吧'}
-//                     value={value}
-//                     onSubmitEditing={sendDo}
-//                 />
-//                 <Button
-//                     onPress={sendDo}
-//                     title="发送"
-//                     color="#841584"
-//                 />
-//             </SafeAreaView>
-//         </>
-//     );
-// };
- 
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerContainer}>
+      <Text style={styles.headerText}>{ contactName }</Text>
+      </View>
+      <ScrollView 
+        onScroll={handleScroll}
+        scrollEventThrottle={400}
+        style={styles.scrollView}
+        ref={scrollViewRef}>
+        {messages.map((message, index) => (
+          <View key={index} style={[
+            styles.messageBox,
+            message.isCurrentUser ? styles.rightAlign : styles.leftAlign
+          ]}>
+            {/* <Text style={styles.sender}>{message.senderName || 'Unknown'}</Text> */}
+            <Text style={styles.message}>{message.message}</Text>
+          </View>
+        ))}
+      </ScrollView>
+      <TextInput
+        style={styles.input}
+        onChangeText={setInputText}
+        value={inputText}
+        placeholder="Type a message..."
+      />
+      <Button
+        title="Send"
+        onPress={sendMessage}
+      />
+    </SafeAreaView>
+  );
+};
+
 const styles = StyleSheet.create({
-    mainContent: {
-        flex: 1,
-        backgroundColor: '#ededed',
+    container: {
+      flex: 1,
+      backgroundColor: '#F5F5F5',
     },
-    chatBody: {
-        flex: 1,
-        padding: 10,
+    scrollView: {
+      margin: 0,
     },
-    chatMessage: {
-        position: 'relative',
-        backgroundColor: '#ffffff',
-        padding: 10,
-        borderRadius: 10,
-        alignSelf: 'flex-start',
-        marginBottom: 25,
+    messageBox: {
+      borderRadius: 5,
+      padding: 10,
+      marginVertical: 5,
+      marginHorizontal: 10,
+      backgroundColor: '#FFFFFF',
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+      shadowOffset: { width: 0, height: 1 },
+      elevation: 2,
     },
-    chatReceiver: {
-        marginLeft: 'auto',
-        backgroundColor: '#95ec69',
+    message: {
+      color: '#333333',
+      fontSize: 16,
     },
-    messageText: {
-        fontSize: 16,
+    leftAlign: {
+      alignSelf: 'flex-start',
+      marginRight: '25%',
     },
-    chatName: {
-        fontSize: 12,
-        position: 'absolute',
-        top: -15,
-        fontWeight: 'bold',
+    rightAlign: {
+      alignSelf: 'flex-end',
+      marginLeft: '25%',
+      backgroundColor: '#CCB2fd',
     },
-    chatNameReceiver: {
-        fontSize: 12,
-        position: 'absolute',
-        top: -18,
-        fontWeight: 'bold',
-        marginLeft: 'auto',
+    headerContainer: {
+      padding: 10,
+      backgroundColor: '#FFFFFF',
+      borderBottomWidth: 1,
+      borderBottomColor: '#E0E0E0',
+      alignItems: 'flex-start',
     },
-    chatTimeStamp: {
-        marginLeft: 10,
-        fontSize: 12,
+    headerText: {
+      fontWeight: 'bold',
+      fontSize: 24,
+      color: '#333333',
     },
-});
- 
+    
+    sendButton: {
+      padding: 10, // 适当的按钮填充
+      margin: 10, // 与其他元素的间隔
+      backgroundColor: '#9E9E9E', // 按钮使用中性色
+      borderRadius: 20, // 圆角边框
+    },
+    sendButtonText: {
+      color: '#FFFFFF', // 文字使用亮色以便于阅读
+    }, 
+    input: {
+        marginHorizontal: 20, // 水平边距
+        marginTop: 10, // 上边距
+        marginBottom: 20, // 下边距
+        paddingHorizontal: 15, // 左右内边距
+        paddingVertical: 10, // 上下内边距
+        height: 50, // 高度
+        fontSize: 18, // 字体大小
+        borderColor: 'gray', // 边框颜色
+        borderWidth: 1, // 边框宽度
+        borderRadius: 10, // 边框圆角
+        backgroundColor: 'white', // 背景颜色
+      },
+  });
+  
+
 export default MessageScreen;

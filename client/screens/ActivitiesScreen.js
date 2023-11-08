@@ -15,8 +15,6 @@ import MenuContainer from "../components/MenuContainer";
 import { useUserContext } from "../context/userContext";
 import axios from 'axios';
 
-const BASE_URL = "192.168.1.111";
-
 const ListItem = ({ name, action, imageProfile, isClicked, onPress }) => {
     
     const textColor = isClicked ? 'black' : '#9747FF';
@@ -57,10 +55,10 @@ const ActivitiesScreen = ({ navigation }) => {
     try {
       const userIdParam = new URLSearchParams();
       userIdParam.append('userId', user.id);
-
+  
       const response = await axios({
         method: 'post',
-        url: `${BASE_URL}/message/listMessages`,
+        url: 'http://192.168.1.111:8080/message/listNotifications',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         data: userIdParam.toString(),
       });

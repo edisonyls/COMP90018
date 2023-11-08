@@ -14,8 +14,7 @@ import {
 import MenuContainer from "../components/MenuContainer"; 
 import { useUserContext } from "../context/userContext";
 import axios from 'axios';
-
-const BASE_URL = "192.168.1.111";
+import { queryUserInfo } from '../api/auth';
 
 const ListItem = ({ name, imageProfile, isClicked, onPress, senderId}) => {
     
@@ -43,6 +42,7 @@ const FollowingsScreen = ({ navigation }) => {
   const [clickedItems, setClickedItems] = useState({});
 
   const handleItemClick = (index) => {
+    console.log(nickname);
     setClickedItems(prevState => ({
       ...prevState,
       [index]: true
@@ -56,7 +56,7 @@ const FollowingsScreen = ({ navigation }) => {
     setIsLoading(true);
     try {
       const userId = user.id;
-      const response = await axios.get(`${BASE_URL}/post/listFollowing`, {
+      const response = await axios.get('http://192.168.1.111:8080//post/listFollowing', {
         params: { userId },
       });
   
@@ -69,7 +69,7 @@ const FollowingsScreen = ({ navigation }) => {
           imageProfile: item.profile,
           senderId: item.id,
         }));
-  
+        
         setActivities(transformedData);
       } else {
         console.log('No data found.');
@@ -82,9 +82,10 @@ const FollowingsScreen = ({ navigation }) => {
   };
 
   const navigateToUserInfo = async (senderId) => {
-    console.log(senderId);
     try {
       const userInfoData = await queryUserInfo(senderId);
+      // console.log(senderId);
+      // console.log(userInfoData.data);
       if (userInfoData && userInfoData.success) {
         // Navigate and pass the data to 'Others' screen
         navigation.navigate('Others', { otherUser: userInfoData.data });
@@ -182,6 +183,7 @@ const FollowingsScreen = ({ navigation }) => {
                 imageProfile={activity.imageProfile}  
                 isClicked={clickedItems[index]}
                 onPress={() => navigateToUserInfo(activity.senderId)}
+                nickname={activity.name}
             />
             ))}
           </ScrollView> 

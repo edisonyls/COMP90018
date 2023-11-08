@@ -2,6 +2,7 @@ package com.comp90018.controller;
 
 
 import com.comp90018.bo.ChatBO;
+import com.comp90018.bo.SendMsgBO;
 import com.comp90018.dto.Message;
 import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.enums.MessageTypeEnum;
@@ -27,7 +28,10 @@ public class MessageController extends BaseController{
     private MessageService messageService;
     @PostMapping("/sendMessage")
     @ApiOperation("sender sends a message to receiver")
-    public JSONResult list(@RequestParam String senderId, @RequestParam String receiverId, @RequestParam String content, HttpServletRequest httpServletRequest) {
+    public JSONResult list(@RequestBody SendMsgBO sendMsgBO) {
+        String senderId = sendMsgBO.getSenderId();
+        String receiverId = sendMsgBO.getReceiverId();
+        String content = sendMsgBO.getContent();
         if(senderId == null || receiverId == null || senderId.equals(receiverId)) {
             return JSONResult.errorCustom(ResponseStatusEnum.MESSAGE_SEND_FAIL);
         }

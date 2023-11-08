@@ -9,7 +9,7 @@ import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
 //import { BASE_URL } from '../api/auth';
-const BASE_URL = "192.168.1.107";
+const BASE_URL = "192.168.1.111";
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 

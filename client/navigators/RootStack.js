@@ -58,7 +58,6 @@ const RootStack = () => {
 
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Account" component={AccountScreen} /> 
-        <Stack.Screen name="Others" component={OthersProfile}/>
 
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Security" component={SecurityScreen} />
