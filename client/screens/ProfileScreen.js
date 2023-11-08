@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
-  Dimensions,
+  Alert,
 } from "react-native";
 
 import React, { useLayoutEffect, useState, useEffect } from "react";
@@ -17,6 +17,7 @@ import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useUserContext } from "../context/userContext";
 import { getAllPostsPerUser } from "../api/auth";
+import { logoutAction } from "../api/ProfileAPI";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +29,7 @@ const ProfileScreen = () => {
 
   const navigation = useNavigation();
   //const isFocused = useIsFocused();
-  const { user } = useUserContext();
+  const { user, updateUser } = useUserContext();
   const backgroundImgSource =
     user && user.bgImg !== null
       ? { uri: user.bgImg }
@@ -70,6 +71,17 @@ const ProfileScreen = () => {
       fetchPosts();
     }
   }, [selectedMenu, user.id]);
+
+  const handleLogout = async () => {
+    // Call logoutAction with the user's id
+    const result = await logoutAction(user.id);
+    if (result) {
+      updateUser(null);
+      navigation.navigate("SignIn");
+    } else {
+      Alert.alert("Error", "Failed to logout");
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white relative">
@@ -178,6 +190,13 @@ const ProfileScreen = () => {
                   style={styles.sectionImage}
                 />
               </TouchableOpacity>
+              <Text style={styles.sectionTitle}>Log Out</Text>
+              <TouchableOpacity onPress={handleLogout}>
+                <Image
+                  source={require("../assets/ProfileLogout.jpg")} // replace with your image's path
+                  style={styles.sectionImage}
+                />
+              </TouchableOpacity>
             </View>
           ) : null}
         </ScrollView>
@@ -231,7 +250,7 @@ const styles = StyleSheet.create({
     color: "black",
     marginTop: 10,
     textAlign: "left", // 靠左对齐
-    marginBottom: 10, // 和图片之间的距离
+    marginBottom: 20, // 和图片之间的距离
     marginLeft: 10,
   },
   sectionImage: {

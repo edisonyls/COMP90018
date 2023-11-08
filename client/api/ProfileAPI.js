@@ -46,3 +46,20 @@ export const changeUserInfo = async (userInfo) => {
     console.error("在changeUserInfo请求时出错", error);
   }
 };
+
+export const logoutAction = async (usrId) => {
+  try {
+    const response = await axios.post(
+      "http://" + BASE_URL + ":8080/login/logout",
+      {},
+      {
+        params: { usrId },
+      }
+    );
+    const res = response.data;
+    console.log(res);
+    return res.success;
+  } catch (error) {
+    console.log("Logout error with " + error);
+  }
+};
