@@ -17,6 +17,7 @@ import * as Location from "expo-location";
 import { Animated, Easing } from "react-native";
 import { useUserContext } from "../context/userContext";
 import { getAllPosts, queryUserInfo } from '../api/auth';
+import { EvilIcons } from '@expo/vector-icons';
 
 const RadarAnimation = React.memo(() => {
   const scaleValue = new Animated.Value(0); // 初始值为0
@@ -75,6 +76,7 @@ const MapScreen = () => {
   const { user,setUser } = useUserContext();
   const [posts, setPosts] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
+  const [allPosts, setAllPosts] = useState([]); // 存储从后端获取的所有帖子
 
   const userLocation = location
     ? {
@@ -115,18 +117,55 @@ const MapScreen = () => {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
 
-      // 在获取位置信息之后调用
-      const fetchPosts = async () => {
-        const postsData = await getAllPosts(selectedMenu);
-        if (postsData && postsData.success) {
-          setPosts(postsData.data);
-        }
-        setIsLoading(false); // 加载完成后隐藏加载指示器
-      };
 
-      fetchPosts();
-    })();
-  }, [selectedMenu]);
+    
+    const fetchAllPosts = async () => {
+      setIsLoading(true);
+      try {
+        const postsData = await getAllPosts("All");
+        if (postsData && postsData.success) {
+          setAllPosts(postsData.data); // 保存所有帖子
+          setPosts(postsData.data); // 默认显示所有帖子
+        }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+      setIsLoading(false);
+    };
+
+    fetchAllPosts();
+  })();
+  }, []);
+
+  
+
+  const filterPosts = (menuSelection) => {
+    let postType;
+    switch (menuSelection) {
+      case "all":
+        setPosts(allPosts);
+        return;
+      case "missing":
+        postType = 0; // 注意这里是数字，不是字符串
+        break;
+      case "found":
+        postType = 1; // 同上
+        break;
+      case "general":
+        postType = 2; // 同上
+        break;
+      default:
+        setPosts(allPosts);
+        return;
+    }
+    const filtered = allPosts.filter(post => post.postType === postType); // 确保这里不要转换成字符串
+    setPosts(filtered);
+  };
+
+  useEffect(() => {
+    filterPosts(selectedMenu);
+  }, [selectedMenu, allPosts]);
+
   const region = location
     ? {
         latitude: location.coords.latitude,
@@ -169,7 +208,6 @@ const MapScreen = () => {
             <MenuContainer
               key={"all"}
               title="All"
-             
               type={type}
               setType={setType}
               setSelectedMenu={setSelectedMenu}
@@ -179,7 +217,7 @@ const MapScreen = () => {
               title="Missing"
               type={type}
               setType={setType}
-              setSelectedMenu={setSelectedMenu}
+               setSelectedMenu={() => setSelectedMenu("missing")}
             />
             <MenuContainer
               key={"found"}
@@ -187,14 +225,14 @@ const MapScreen = () => {
            
               type={type}
               setType={setType}
-              setSelectedMenu={setSelectedMenu}
+              setSelectedMenu={() => setSelectedMenu("found")}
             />
             <MenuContainer
                 key={"general"}
                 title="General"
                 type={type}
                 setType={setType}
-                setSelectedMenu={setSelectedMenu}
+                setSelectedMenu={() => setSelectedMenu("general")}
               />
           </View>
           </ScrollView>
@@ -209,6 +247,7 @@ const MapScreen = () => {
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
                   <RadarAnimation />
+                  <EvilIcons name="location" size={40} color="#9747ff" />
                 </View>
               </Marker>
             )}
