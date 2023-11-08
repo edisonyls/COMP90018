@@ -20,7 +20,9 @@ import ActivitiesScreen from "../screens/ActivitiesScreen";
 import PostScreen from "..//screens/PostScreen";
 import FollowersScreen from "../screens/FollowersScreen";
 import FollowingsScreen from "../screens/FollowingsScreen";
-//import OthersProflie from "../screens/OthersProfile";
+
+import OthersProflie from "../screens/OthersProfile";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -41,7 +43,7 @@ const RootStack = () => {
             paddingLeft: 20,
           },
         }}
-        initialRouteName="Landing"
+        initialRouteName="Message"
         //initialRouteName="Profile"
       >
         <Stack.Screen name="SignIn" component={SignIn} />
@@ -56,7 +58,7 @@ const RootStack = () => {
 
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Account" component={AccountScreen} /> 
-        
+        <Stack.Screen name="Others" component={OthersProfile}/>
 
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Security" component={SecurityScreen} />
@@ -67,6 +69,7 @@ const RootStack = () => {
         <Stack.Screen name="Activities" component={ActivitiesScreen}/>
         <Stack.Screen name="Followers" component={FollowersScreen}/>
         <Stack.Screen name="Followings" component={FollowingsScreen}/>
+        <Stack.Screen name="Others" component={OthersProflie}/>
        
       </Stack.Navigator>
     </NavigationContainer>

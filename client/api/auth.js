@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import { BASE_URL } from "../utils/utils";
 
 export const verifyEmail = async (code, email, password, username) => {

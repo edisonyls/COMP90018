@@ -1,6 +1,7 @@
 package com.comp90018.impl;
 
 import com.comp90018.dto.Message;
+import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.enums.RedisEnum;
 import com.comp90018.mongoDao.MessageDao;
 import com.comp90018.pojo.Users;
@@ -10,6 +11,7 @@ import com.comp90018.utils.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +48,27 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> listAllMessage(String userId) {
-        List<Message> messageList = messageDao.findAllBySenderIdOrReceiverIdOrderByTimeDesc(userId, userId);
-        return messageList;
+    public List<Message> listAllNotification(String userId) {
+        List<Message> messageList = messageDao.findAllByReceiverIdOrderByTimeDesc(userId);
+        List<Message> newList = new ArrayList<>();
+        for (Message message : messageList) {
+            if (message.getType() == MessageTypeEnum.SYSTEM_MESSAGE.getType()) {
+                newList.add(message);
+            }
+        }
+        return newList;
+    }
+
+    @Override
+    public List<Message> listMessagesWithOne(String userId, String contactId) {
+        List<Message> list = messageDao.findAllBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimeAsc(userId, contactId, contactId, userId);
+        List<Message> newList = new ArrayList<>();
+        for (Message message : list) {
+            if (message.getType() == MessageTypeEnum.USER_MESSAGE.getType()) {
+                newList.add(message);
+            }
+        }
+        return newList;
     }
 
 

@@ -8,13 +8,15 @@ import { AntDesign } from '@expo/vector-icons'; // Importing AntDesign for the d
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
-import { BASE_URL } from '../api/auth';
+//import { BASE_URL } from '../api/auth';
+const BASE_URL = "192.168.1.107";
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
 const FindMyPet = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
+  const [formData, setFormData] = useState(null);
   //const [petCategory, setPetCategory] = useState(null);
   const [isPickerOpen, setIsPickerOpen] = useState(false); // New state variable to track picker status
   const [petCategory, setPetCategory] = useState(null); // State variable for the selected pet category
@@ -26,6 +28,7 @@ const FindMyPet = () => {
   const[reward,setReward] = useState('');
   const[description,setDescription] = useState('');
   const { user } = useUserContext();
+  
   
   //find pet location 
   //const [location, setLocation] = useState({latitude:37.8136,longitude:144.9631});
@@ -108,7 +111,15 @@ const FindMyPet = () => {
               quality: 1,
             });
             if (!cameraResult.canceled) {
-              setImageUri(cameraResult.assets[0].uri);
+              const newImageUri = cameraResult.assets[0].uri;
+              setImageUri(newImageUri);
+              console.log(newImageUri);
+              const type = cameraResult.assets[0].type;
+              const name = newImageUri.split('/').pop();
+              let formData = new FormData();
+              formData.append('file', { uri: newImageUri, name: 'imagefilename.jpg', type: 'image/jpeg' });
+              setFormData(formData);
+            
             }
           }
         },
@@ -127,7 +138,13 @@ const FindMyPet = () => {
               quality: 1,
             });
             if (!libraryResult.canceled) {
-              setImageUri(libraryResult.assets[0].uri);
+              const newImageUri = libraryResult.assets[0].uri;
+              setImageUri(newImageUri);
+              const type = libraryResult.assets[0].type;
+              const name = newImageUri.split('/').pop();
+              let formData = new FormData();
+              formData.append('file', { uri: newImageUri, name: 'imagefilename.jpg', type: 'image/jpeg' });
+              setFormData(formData);
             }
           }
         },
@@ -137,27 +154,27 @@ const FindMyPet = () => {
     );
   };
 
-  const convertUriToMultipartFile = async (imageUri) => {
-    try {
-      // Extract file name and type from the URI
-      let uriParts = imageUri.split('/');
-      let fileName = uriParts[uriParts.length - 1];
-      let fileType = fileName.split('.').pop();
+  // const convertUriToMultipartFile = async (imageUri) => {
+  //   try {
+  //     // Extract file name and type from the URI
+  //     let uriParts = imageUri.split('/');
+  //     let fileName = uriParts[uriParts.length - 1];
+  //     let fileType = fileName.split('.').pop();
   
-      // Fetch the blob from the local file system using the FileSystem API
-      const blob = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
-      const fileBlob = new Blob([blob], { type: `image/${fileType}` });
+  //     // Fetch the blob from the local file system using the FileSystem API
+  //     const blob = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+  //     const fileBlob = new Blob([blob], { type: `image/${fileType}` });
   
-      // Create a new FormData object and append the file
-      const formData = new FormData();
-      formData.append('image', { uri: imageUri, name: fileName, type: `image/${fileType}` });
+  //     // Create a new FormData object and append the file
+  //     const formData = new FormData();
+  //     formData.append('image', { uri: imageUri, name: fileName, type: `image/${fileType}` });
   
-      return formData;
-    } catch (error) {
-      console.error('Error converting image URI to multipart file:', error);
-      throw error;
-    }
-  };
+  //     return formData;
+  //   } catch (error) {
+  //     console.error('Error converting image URI to multipart file:', error);
+  //     throw error;
+  //   }
+  // };
   
 
 
@@ -165,24 +182,49 @@ const FindMyPet = () => {
 
     // Step 3: Send the FormData object using Axios with the appropriate headers
     try {
-      const response = await axios.post('http://'+ BASE_URL +':8080/post/uploadPostImg', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      // Handle the response from the server
-      if (response.success === 'true') {
+      const response = await axios.post(`http://${BASE_URL}:8080/post/uploadPostImg`, formData);
+
+      if (response.status === 200) {
+        // Image uploaded successfully
         console.log('Image uploaded successfully. ID:', response.data.postId);
         setPostId(response.data.postId);
         return true;
-
       } else {
+        // Handle any other HTTP status codes
         console.log('Server responded with an unexpected status.');
         return false;
       }
+      
+
+      // const response = await axios.post('http://'+ BASE_URL +':8080/post/uploadPostImg', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
+  
+      // // Handle the response from the server
+      // if (response.success === 'true') {
+      //   console.log('Image uploaded successfully. ID:', response.data.postId);
+      //   setPostId(response.data.postId);
+      //   return true;
+
+      // } else {
+      //   console.log('Server responded with an unexpected status.');
+      //   return false;
+      // }
     } catch (error) {
-      console.error('An error occurred while uploading the image:', error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Error data:', error.response.data);
+        console.error('Error status:', error.response.status);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('Error request:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error message:', error.message);
+      }
       return false;
     }
   };
@@ -208,9 +250,10 @@ const FindMyPet = () => {
   // Function to handle the form submission
   const handleSubmit = async() => {
 
-    const formData = convertUriToMultipartFile(imageUri);
+    //const formData = convertUriToMultipartFile(imageUri);
+    const isUploadImage = await uploadImage(formData);
 
-    if (validateForm() && uploadImage(formData) ) {
+    if (validateForm() && isUploadImage) {
       try {
         // Fetch the detailed information of the selected location
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);

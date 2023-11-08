@@ -3,6 +3,8 @@ package com.comp90018.enums;
 public enum ResponseStatusEnum {
 
     SUCCESS(true, "success!"),
+    EMAIL_ALREADY_EXIST(false, "email already exist"),
+    NICKNAME_ALREADY_EXIST(false, "nickname already exist"),
     ALREADY_FOLLOW(false, "already follow!"),
     HAS_NOT_FOLLOW(false, "has not follow!"),
     NO_FOLLOWERS(false, "no followers"),
