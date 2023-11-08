@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity,useLayoutEffect, onCardPress } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -10,6 +10,7 @@ const ItemCardContainer = ({
   petKind,
   title,
   location,
+  onCardPress, // 这里添加一个新的属性来接收点击事件的处理函数
 }) => {
   const [like, setLike] = useState(false);
 
@@ -17,8 +18,12 @@ const ItemCardContainer = ({
     setLike(!like);
   };
 
+
+
   return (
-    <TouchableOpacity className="relative rounded-md border border-gray-300 space-y-2 px-3 py-2 shadow-md bg-white w-[160px] h-[280px] my-2">
+    <TouchableOpacity 
+    onPress={onCardPress}
+    className="relative rounded-md border border-gray-300 space-y-2 px-3 py-2 shadow-md bg-white w-[160px] h-[280px] my-2">
       <View>
         <View className="flex-row items-start space-x-1 mb-1">
           <FontAwesome name="map-marker" size={14} color="#8597A2" />
