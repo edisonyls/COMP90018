@@ -29,8 +29,6 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   //const isFocused = useIsFocused();
   const { user } = useUserContext();
-  console.log(user);
-
   const backgroundImgSource =
     user && user.bgImg !== null
       ? { uri: user.bgImg }

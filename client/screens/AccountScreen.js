@@ -21,13 +21,14 @@ import {
 } from "../api/ProfileAPI";
 
 const AccountScreen = () => {
-  const { user, setUser } = useUserContext();
+  const { user, updateUser } = useUserContext();
   const [isLoading, setIsLoading] = useState(true);
   const [backgroundUri, setBackgroundUri] = useState(null);
   const [headUri, setHeadUri] = useState(null);
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
+  const [uploadProfilePic, setUploadProfilePic] = useState(false);
+  const [uploadBackgroundPic, setUploadBackgroundPic] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -36,7 +37,6 @@ const AccountScreen = () => {
       // 这里假设你会从 user 或 profileData 中加载数据
       const storedName = user?.nickname ? user.nickname : "Null";
       const storedPhoneNumber = user?.mobile ? user.mobile : "Null";
-      const storedEmail = user?.email1 ? user.email1 : "Null"; // 添加邮箱
 
       const storedBackgroundUri =
         user?.bgImg !== null
@@ -49,7 +49,6 @@ const AccountScreen = () => {
 
       setName(storedName);
       setPhoneNumber(storedPhoneNumber);
-      setEmail(storedEmail); // 设置邮箱
       setBackgroundUri(storedBackgroundUri);
       setHeadUri(storedHeadUri);
       setIsLoading(false);
@@ -60,29 +59,11 @@ const AccountScreen = () => {
 
   const updateUserProfile = async () => {
     try {
-      const newUserInfo = {
+      const updatedAttributes = {
         bgImg: backgroundUri.uri,
-        birthday: user.birthday,
-        country: user.country,
-        createdTime: user.createdTime,
-        description: user.description,
-        email1: email, // 更新的邮箱
-        id: user.id,
-        mobile: phoneNumber, // 更新的手机号码,
-        myCommentLikes: user.myCommentLikes,
-        myFans: user.myFans,
-        myFollows: user.myFollows,
-        myVlogLikes: user.myVlogLikes,
-        nickname: name, // 更新的昵称
-        password: user.password,
-        postcode: user.postcode,
+        mobile: phoneNumber,
+        nickname: name,
         profile: headUri.uri,
-        sex: user.sex,
-        state: user.state,
-        updatedTime: user.updatedTime,
-        userToken: user.userToken,
-
-        // ... 其他用户信息 ...
       };
 
       const updatedUserInfo = {
@@ -97,7 +78,7 @@ const AccountScreen = () => {
         sex: user.sex,
         state: user.state,
       };
-      setUser(newUserInfo);
+      updateUser(updatedAttributes);
       const response = await changeUserInfo(updatedUserInfo);
       // 处理响应，更新上下文等
     } catch (e) {
@@ -123,23 +104,31 @@ const AccountScreen = () => {
 
       if (isBackground) {
         setBackgroundUri({ uri, formData });
+        setUploadBackgroundPic(true);
       } else {
         setHeadUri({ uri, formData });
+        setUploadProfilePic(true);
       }
     }
   };
 
   const saveAndGoBack = async () => {
     try {
-      if (typeof backgroundUri === "object" && backgroundUri.uri) {
+      if (
+        typeof backgroundUri === "object" &&
+        backgroundUri.uri &&
+        uploadBackgroundPic
+      ) {
         console.log("background uploading...");
         await uploadBackground(user.id, backgroundUri.formData);
+        setUploadBackgroundPic(false);
       }
 
       // 上传头像图片（如果有更改）
-      if (typeof headUri === "object" && headUri.uri) {
+      if (typeof headUri === "object" && headUri.uri && uploadProfilePic) {
         console.log("head uploading...");
         await uploadHead(user.id, headUri.formData);
+        setUploadProfilePic(false);
       }
 
       await updateUserProfile(); // 使用新昵称和手机号更新用户资料
@@ -152,6 +141,7 @@ const AccountScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white relative">
+      {console.log(user)}
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#0B646B" />
@@ -202,15 +192,6 @@ const AccountScreen = () => {
                 value={phoneNumber}
                 onChangeText={(text) => setPhoneNumber(text)}
                 placeholder="Enter your phone number"
-              />
-            </View>
-            <View style={styles.nameContainer}>
-              <Text style={styles.nameLabel}>Email</Text>
-              <TextInput
-                style={styles.nameInput}
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                placeholder="Enter your email"
               />
             </View>
           </ScrollView>
