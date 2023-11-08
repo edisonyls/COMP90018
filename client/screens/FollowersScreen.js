@@ -15,7 +15,7 @@ import MenuContainer from "../components/MenuContainer";
 import { useUserContext } from "../context/userContext";
 import axios from 'axios';
 
-const ListItem = ({ name, action, imageProfile, isClicked, onPress }) => {
+const ListItem = ({ name, imageProfile, isClicked, onPress }) => {
     
     const textColor = isClicked ? 'black' : '#9747FF';
   
@@ -24,20 +24,20 @@ const ListItem = ({ name, action, imageProfile, isClicked, onPress }) => {
         <Image source={{ uri: imageProfile }} style={styles.profilePic} />
         <View style={styles.textContainer}>
             <Text style={styles.name}>{name}</Text>
-            <Text style={[styles.action, { color: textColor }]}>{action}</Text>
+            {/* <Text style={[styles.action, { color: textColor }]}>{action}</Text> */}
         </View>
       </TouchableOpacity>
     );
 };
 
-const ActivitiesScreen = ({ navigation }) => {
+const FollowersScreen = ({ navigation }) => {
 
   const { user } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
 
   const [activities, setActivities] = useState([]);
 
-  const [activeTab, setActiveTab] = useState('activities');
+  const [activeTab, setActiveTab] = useState('follower');
   const [clickedItems, setClickedItems] = useState({});
 
   const handleItemClick = (index) => {
@@ -53,14 +53,9 @@ const ActivitiesScreen = ({ navigation }) => {
   const fetchActivities = async () => {
     setIsLoading(true);
     try {
-      const userIdParam = new URLSearchParams();
-      userIdParam.append('userId', user.id);
-  
-      const response = await axios({
-        method: 'post',
-        url: 'http://192.168.1.111:8080/message/listMessages',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        data: userIdParam.toString(),
+      const userId = '2311080WS9DACK8H'; // This should ideally come from your user context or state
+      const response = await axios.get('http://192.168.1.111:8080/post/listFollower', {
+        params: { userId },
       });
   
       console.log(response.data);
@@ -68,9 +63,8 @@ const ActivitiesScreen = ({ navigation }) => {
   
       if (messages) {
         const transformedData = messages.map((item, index) => ({
-          name: item.senderNickname,
-          action: item.content.behavior,
-          imageProfile: item.senderProfile,
+          name: item.nickname,
+          imageProfile: item.profile,
         }));
   
         setActivities(transformedData);
@@ -97,10 +91,10 @@ const ActivitiesScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (activeTab.toLowerCase() === 'follower') {
-      navigation.navigate('Followers');
-    } else if (activeTab.toLowerCase() === 'following') {
+    if (activeTab.toLowerCase() === 'following') {
       navigation.navigate('Followings');
+    } else if (activeTab.toLowerCase() === 'activities') {
+        navigation.navigate('Activities');
     }
   }, [activeTab, navigation]);
 
@@ -162,11 +156,11 @@ const ActivitiesScreen = ({ navigation }) => {
 
           <ScrollView style={styles.scrollView}>
     
-            {activeTab === 'activities' && activities.map((activity, index) => (
+            {activeTab === 'follower' && activities.map((activity, index) => (
             <ListItem 
                 key={index} 
                 name={activity.name} 
-                action={activity.action} 
+                //action={activity.action} 
                 imageProfile={activity.imageProfile}  
                 isClicked={clickedItems[index]}
                 onPress={() => handleItemClick(index)}
@@ -223,19 +217,16 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     justifyContent: 'center',
+    alignItems: 'flex-end',
     flex: 1,
   },
   name: {
     fontWeight: 'bold',
     marginBottom: 10,
-    fontSize: 18,
-    marginLeft: 60,
-  },
-  action: {
-    color: '#A0C4C7',
-    marginLeft: 60,
-    fontSize: 16,
+    fontSize: 20,
+    marginRight: 20,
+    textAlign: 'right',
   },
 });
 
-export default ActivitiesScreen;
+export default FollowersScreen;

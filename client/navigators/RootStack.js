@@ -18,6 +18,9 @@ import ContactUsScreen from "../screens/ContactUsScreen";
 
 import MessageScreen from "../screens/MessageScreen";
 import ActivitiesScreen from "../screens/ActivitiesScreen";
+import PostScreen from "..//screens/PostScreen";
+import FollowersScreen from "../screens/FollowersScreen";
+import FollowingsScreen from "../screens/FollowingsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,17 +54,15 @@ const RootStack = () => {
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Account" component={AccountScreen} /> 
         <Stack.Screen name="Verify" component={VerifyScreen} />
-<<<<<<< HEAD
-
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Security" component={SecurityScreen} />
         <Stack.Screen name="ContactUs" component={ContactUsScreen} />
 
-=======
         <Stack.Screen name="Post" component={PostScreen} />
         <Stack.Screen name="Message" component={MessageScreen} />
         <Stack.Screen name="Activities" component={ActivitiesScreen}/>
->>>>>>> FoundPet
+        <Stack.Screen name="Followers" component={FollowersScreen}/>
+        <Stack.Screen name="Followings" component={FollowingsScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

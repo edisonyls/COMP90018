@@ -59,6 +59,9 @@ public class PostLikeServiceImpl implements PostLikeService {
                 post.setLikesCounts(likeCount);
                 postMapper.updateByPrimaryKeySelective(post);
                 myLikedPostMapper.delete(myLikedPost);
+                HashMap<String, Object> map = new HashMap<>();
+                map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.POST_UNLIKE_NOTIFY.getSystemMessage()); // (behavior, like)
+                messageService.createMessage(userId, post.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
                 return true;
             }
         } else {
@@ -87,4 +90,5 @@ public class PostLikeServiceImpl implements PostLikeService {
         }
 
     }
+
 }
