@@ -55,8 +55,8 @@ minio:
   bucketName: comp90018
   accessKey: root
   secretKey: 12345678
-  imgSize: 1024
-  fileSize: 1024
+  imgSize: 1024 * 1024
+  fileSize: 1024 * 1024
 
 mybatis:
   type-aliases-package: com.comp90018.pojo

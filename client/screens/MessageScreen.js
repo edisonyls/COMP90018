@@ -29,7 +29,7 @@ function MessageList(props) {
     );
 }
  
-// const URL_SERVER = 'http://192.168.199.133:8080';
+const URL_SERVER = 'http://192.168.1.111:8080';
  
 const NotificationScreen = () => {
     const [items, setItems] = useState([
@@ -39,10 +39,14 @@ const NotificationScreen = () => {
         {name: 'boy', message: '你们在门口等我吧。'},
         {name: 'girl', message: '你人呢？我到门口啦'},
     ]);
-    const [receiver, setReceiver] = useState('girl');
+
+    // State hook for receiver identifier.
+    const [receiver, setReceiver] = useState('boy');
+
+    // State hook for managing the current text input.
     const [value, onChangeText] = React.useState('');
  
-    let timer;  //计时器
+    let timer;
     useEffect(() => {
         //loadMessage();
         // eslint-disable-next-line react-hooks/exhaustive-deps
