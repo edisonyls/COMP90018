@@ -3,10 +3,10 @@ package com.comp90018.enums;
 public enum ResponseStatusEnum {
 
     SUCCESS(true, "success!"),
-    ALREADY_FOLLOW(true, "already follow!"),
-    HAS_NOT_FOLLOW(true, "has not follow!"),
-    NO_FOLLOWERS(true, "no followers"),
-    NO_FOLLOWINGS(true, "no followings"),
+    ALREADY_FOLLOW(false, "already follow!"),
+    HAS_NOT_FOLLOW(false, "has not follow!"),
+    NO_FOLLOWERS(false, "no followers"),
+    NO_FOLLOWINGS(false, "no followings"),
     FAILED(false, "failure!"),
     WRONG_CODE(false, "verify code is wrong or outdated"),
     USER_NOT_EXIST(false, "user does not exist!"),
