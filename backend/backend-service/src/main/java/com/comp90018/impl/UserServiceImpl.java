@@ -28,6 +28,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Sid sid;
 
+
+    @Override
+    public Users queryUsersIsExistByEmail(String email) {
+        Example example = new Example(Users.class);
+        example.createCriteria().andEqualTo("email1", email);
+        Users user = usersMapper.selectOneByExample(example);
+        return user;
+    }
+
+    @Override
+    public Users queryUsersIsExistByNickname(String nickname) {
+        Example example = new Example(Users.class);
+        example.createCriteria().andEqualTo("nickname", nickname);
+        Users user = usersMapper.selectOneByExample(example);
+        return user;
+    }
+
     /**
      * Verify the account through email and password.
      * @param email
