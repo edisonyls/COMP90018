@@ -12,7 +12,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useUserContext } from "../context/userContext";
-import { getAllPostsPerUser } from '../api/auth';
+import { getAllPostsPerUser, checkFollowStatus, unfollowUser, followUser,queryUserInfo } from '../api/auth';
 import ItemCardContainer from "../components/ItemCardContainer";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -37,12 +37,64 @@ const OthersProfile = ({ route, navigation}) => {
       1: "Found",
       2: "General",
     };
-
+    const handleMessagePress = async () => {
+      setIsLoading(true);
+      try {
+        // 获取当前用户信息
+        const currentUserInfo = await queryUserInfo(user.id);
+        // 获取其他用户信息
+        const otherUserInfo = await queryUserInfo(otherUser.id);
+    
+        if (currentUserInfo.success && otherUserInfo.success) {
+          // 如果成功获取了信息，导航到消息页面并传递这些信息
+          navigation.navigate('Message', {
+            currentUser: currentUserInfo.data,
+            otherUser: otherUserInfo.data,
+          });
+        } else {
+          // 如果获取信息失败，可以在这里处理错误情况
+          console.error('Failed to fetch user information');
+          Alert.alert("Error", "Failed to fetch user information.");
+        }
+      } catch (error) {
+        // 处理异常错误
+        console.error('Error fetching user info:', error);
+        Alert.alert("Error", "An error occurred while trying to fetch user information.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    const handleMarkerPress = async (post) => {
+      try {
+       
+          navigation.navigate('Post', { post: post });
+        
+          // 如果请求不成功，设置userInfo为空并可选择显示错误信息
+        
+      } catch (error) {
+        // 如果发生了其他类型的错误，如网络错误等，也设置userInfo为空并显示错误
+        setUserInfo(null);
+        console.error('Error fetching user info:', error);
+        // 同样可以显示一个错误弹窗
+        Alert.alert("Error", "An error occurred while trying to fetch user information.");
+      }
+    };
     useLayoutEffect(() => {
       navigation.setOptions({
         headerShown: false,
       });
     },[navigation]);
+
+    useEffect(() => {
+      const fetchFollowStatus = async () => {
+        const result = await checkFollowStatus(user.id, otherUser.id);
+        if (result.success && result.data) {
+          setIsFollowing(result.data === "ALREADY_FOLLOW");
+        }
+      };
+    
+      fetchFollowStatus();
+    }, [otherUser.id, user.id]);
 
     useEffect(() => {
 
@@ -66,15 +118,33 @@ const OthersProfile = ({ route, navigation}) => {
       }, [otherUser.id]);
 
     // Function to handle follow button press
-    const handleFollowPress = () => {
-      setIsFollowing(!isFollowing);
-      // Add functionality to follow the user
+    const handleFollowPress = async () => {
+      setIsLoading(true); // 开始加载状态
+      try {
+        let response;
+        if (isFollowing) {
+          // 如果当前已经关注，调用取消关注的接口
+          response = await unfollowUser(user.id, otherUser.id);
+        } else {
+          // 如果当前没有关注，调用添加关注的接口
+          response = await followUser(user.id, otherUser.id);
+        }
+        // 根据响应更新关注状态
+        if (response.success) {
+          setIsFollowing(!isFollowing);
+        } else {
+          // 处理错误，例如显示提示消息
+          console.error('Failed to update follow status: ', response.message);
+        }
+      } catch (error) {
+        console.error('Error updating follow status: ', error);
+      } finally {
+        setIsLoading(false); // 结束加载状态
+      }
     };
 
     // Function to handle message button press
-    const handleMessagePress = () => {
-      // Add functionality to send a message to the user
-    };
+    
 
 
     
@@ -149,15 +219,18 @@ const OthersProfile = ({ route, navigation}) => {
             <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">
                 {mainData?.length > 0 ? (
                    mainData.map((post) => (
-                    <ItemCardContainer
-                      key={post.id}
-                      imageSrc={{ uri: post.picture }} // 使用网络图片地址
-                      badge={postTypeToBadge[post.postType] || "Unknown"} // 使用对象映射来确定badge文本
-                      petName={post.petName}
-                      petKind={post.petCategory}
-                      location={post.location}
-                      title={post.title}
-                    />
+                    <TouchableOpacity key={post.id} onPress={() => handleMarkerPress(post)}>
+                      <ItemCardContainer
+                        key={post.id}
+                        imageSrc={{ uri: post.picture }} // 使用网络图片地址
+                        badge={postTypeToBadge[post.postType] || "Unknown"} // 使用对象映射来确定badge文本
+                        petName={post.petName}
+                        petKind={post.petCategory}
+                        location={post.location}
+                        title={post.title}
+                        onCardPress={() => handleMarkerPress(post)}
+                      />
+                    </TouchableOpacity>
                   ))
                   ) : (
                     <>
