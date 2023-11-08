@@ -16,8 +16,7 @@ import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useUserContext } from "../context/userContext";
-import { getAllPostsPerUser } from "../api/auth";
-import { logoutAction } from "../api/ProfileAPI";
+import { logoutAction, getAllPostsPerUser } from "../api/ProfileAPI";
 import LoadingView from "../components/LoadingView";
 
 const Tab = createBottomTabNavigator();
