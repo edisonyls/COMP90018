@@ -44,6 +44,11 @@ const Register = ({ navigation }) => {
       { text: "OK", onPress: () => console.log("OK Pressed") },
     ]);
   };
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+  
 
   const handleFormSubmission = async (values) => {
     setIsLoading(true);
@@ -152,6 +157,16 @@ const Register = ({ navigation }) => {
                 <MsgBox>{message}</MsgBox>
                 <StyledButton
                   onPress={() => {
+                    if (!validateEmail(values.email)) {
+                      Alert.alert("Invalid Email", "Please enter a valid email address");
+                    } else if (values.password.length < 6) {
+                      Alert.alert("Password Too Short", "Password must be at least 6 characters long");
+                    } else if (values.password !== values.confirmPassword) {
+                      AlertPopUp();
+                    } else {
+                      handleSubmit();
+                    }
+                    
                     if (values.password.length < 6) {
                       Alert.alert("Password Too Short", "Password must be at least 6 characters long");
                     } else if (values.password !== values.confirmPassword) {
@@ -159,6 +174,7 @@ const Register = ({ navigation }) => {
                     } else {
                       handleSubmit();
                     }
+                    
                   }}
                 >
                   <ButtonText>Sign Up</ButtonText>
