@@ -1,6 +1,5 @@
 package com.comp90018.controller;
 
-
 import com.comp90018.bo.ChangePasswordBO;
 import com.comp90018.bo.ChangeUserImgBO;
 import com.comp90018.bo.ChangeUserInfoBO;
@@ -19,6 +18,12 @@ import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+/**
+ * user controller
+ * change user info, password, bgImg, profile
+ * query user info, login statue
+ */
 
 @RestController
 @Slf4j

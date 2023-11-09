@@ -21,6 +21,10 @@ import javax.validation.Valid;
 import java.util.UUID;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+/**
+ * login and logout controller
+ * send verify email, register, login, logout
+ */
 
 @RestController
 @Slf4j
