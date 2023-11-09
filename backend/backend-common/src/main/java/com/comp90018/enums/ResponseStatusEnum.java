@@ -3,6 +3,7 @@ package com.comp90018.enums;
 public enum ResponseStatusEnum {
 
     SUCCESS(true, "success!"),
+    CODE_CANNOT_SEND(false,"The verification code can only be sent once within 30 seconds."),
     EMAIL_ALREADY_EXIST(false, "email already exist"),
     NICKNAME_ALREADY_EXIST(false, "nickname already exist"),
     ALREADY_FOLLOW(false, "already follow!"),

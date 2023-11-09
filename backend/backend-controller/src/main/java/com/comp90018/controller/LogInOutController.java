@@ -38,14 +38,18 @@ public class LogInOutController extends BaseController{
             return JSONResult.errorCustom(ResponseStatusEnum.FAILED);
         }
 
+        String ip = IPUtil.getRequestIp(httpServletRequest);
+        String ipKey = RedisEnum.REDIS_IP + ip;
+        if(redis.keyIsExist(ipKey)) {
+            return JSONResult.errorCustom(ResponseStatusEnum.CODE_CANNOT_SEND);
+        }
+        redis.set(ipKey, ip, 30);
+
+
         Users users = userService.queryUsersIsExistByEmail(email);
         if(users != null) {
             return JSONResult.errorCustom(ResponseStatusEnum.EMAIL_ALREADY_EXIST);
         }
-
-        String ip = IPUtil.getRequestIp(httpServletRequest);
-        log.info(RedisEnum.REDIS_IP + ip);
-        redis.set(RedisEnum.REDIS_IP + ip, ip, 30);
 
         mailService.sendMailMessage(email);
         return JSONResult.ok(email);
