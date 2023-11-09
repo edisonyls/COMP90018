@@ -83,8 +83,7 @@ const HomeScreen = () => {
                 {"Welcome :)"}
               </Text>
               <Text className="text-[20px] text-[#527283]">
-                {/* {user.nickname} */}
-                {"1"}
+                {user.nickname}
               </Text>
             </View>
             <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
@@ -110,9 +109,7 @@ const HomeScreen = () => {
             <View className="flex-row item-center justify-center px-8 mt-4">
               <MenuContainer
                 key={"all"}
-
                 title="All"
-
                 type={type}
                 setType={setType}
                 setSelectedMenu={setSelectedMenu}
