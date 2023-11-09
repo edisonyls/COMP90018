@@ -103,3 +103,20 @@ TODO: Need a multer for handling file uploads
     - sendFriendRequests: [UserId]
 
 - PostSchema: TO BE UPDATED
+  
+### TechStack
+Our project is constructed using a contemporary Java technology stack, aimed at delivering an efficient and secure web application platform. It is grounded in the Spring Boot framework, utilizing Spring MVC's design patterns for processing user requests, and MyBatis for the data access layer, ensuring developmental efficiency and flexibility. Moreover, the project ingeniously employs Redis for data caching to optimize performance for frequent queries, particularly enhancing response times for social features such as follower interactions and likes.
+
+- Key features include:
+
+    - Email Verification Code: Harnessing Spring Boot's mail service, the project generates and dispatches verification codes to users' emails, adding a layer of security for user authentication.
+
+    - Security Encryption: Integration with Spring Security safeguards password integrity during storage and transmission, employing advanced encryption algorithms to prevent unauthorized access.
+
+    - Data Caching Optimization: Redis is utilized for efficient recording and storage of social interaction data, significantly speeding up data retrieval and enhancing user experience.
+
+    - Cloud Storage Integration: With MinIO, the project offers a reliable cloud-based image storage solution, ensuring secure and convenient upload, storage, and retrieval of user image data.
+
+    - Data Storage and Management: MySQL database is used to store essential user and post information, ensuring transactional reliability. Concurrently, MongoDB manages message data, securing flexibility, scalability, and optimized storage efficiency for unstructured data.
+
+Overall, this backend project amalgamates several best practices and modern technologies. It ensures not just the performance and security of the application but also guarantees scalability and maintainability, providing a robust foundation for building large-scale applications.
