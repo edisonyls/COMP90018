@@ -4,9 +4,6 @@ server:
     uri-encoding: UTF-8
     max-swallow-size: -1
 spring:
-#  jpa:
-#    hibernate:
-#      ddl-auto: create
   servlet:
     multipart:
       max-file-size: 100MB
@@ -14,7 +11,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/mobile?mobile?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+#    url: jdbc:mysql://47.74.87.207:3306/mobile?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     url: jdbc:mysql://localhost:3306/mobile?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: root
     password: root
@@ -54,7 +51,6 @@ spring:
     username: admin
     password: admin
     virtual-host: mobile
-
 
 minio:
   endpoint: http://47.74.87.207:9000
