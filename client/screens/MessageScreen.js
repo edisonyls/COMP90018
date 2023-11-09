@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { SafeAreaView, ScrollView, Text, StyleSheet, View, TextInput, Button, TouchableOpacity, Image} from 'react-native';
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { BASE_URL } from '../utils/utils';
+import { queryUserInfo } from '../api/auth';
 import axios from 'axios';
 
 const MessageScreen = ({ route, navigation }) => {
@@ -44,7 +46,8 @@ const MessageScreen = ({ route, navigation }) => {
 
   const sendMessage = async () => {
     try {
-        const response = await axios.post('http://192.168.1.111:8080/message/sendMessage', messageData);
+        const response = await axios.post(`http://${BASE_URL}:8080/message/sendMessage`, messageData);
+        // const response = await axios.post('http://192.168.1.111:8080/message/sendMessage', messageData);
         if (response.data.success) {
             setInputText('');
         } else {
@@ -55,10 +58,24 @@ const MessageScreen = ({ route, navigation }) => {
     }
   };
 
+  const navigateToUserInfo = async (senderId) => {
+    try {
+      const userInfoData = await queryUserInfo(senderId);
+      if (userInfoData.success) {
+        navigation.navigate('Others', { otherUser: userInfoData.data });
+      } else {
+        console.error('Failed to fetch user info:', userInfoData.msg);
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('http://192.168.1.111:8080/message/listChat', contactData);
+        const response = await axios.post(`http://${BASE_URL}:8080/message/listChat`, contactData);
+        // const response = await axios.post('http://192.168.1.111:8080/message/listChat', contactData);
         if (response.data.success) {
           if (response.data !== null) {
           
@@ -72,12 +89,11 @@ const MessageScreen = ({ route, navigation }) => {
                   senderProfile: item.profile
               }
             });
-
             setMessages(messageData);
         } else {
-
+          setMessages([]);
         }} else {
-          console.error('Failed to fetch messages: ', response.data.msg);
+          setMessages([]);
         }
       } catch (error) {
         console.error('Error fetching messages: ', error);
@@ -112,11 +128,14 @@ const MessageScreen = ({ route, navigation }) => {
             >
               <AntDesign name="left" size={24} color="black" />
       </TouchableOpacity>
-      <Image
+      <TouchableOpacity onPress={() => navigateToUserInfo(contactId)}>
+        <Image
           source={{ uri: contactProfile }}
           style={styles.contactProfileImage}
-      />
-      <Text style={styles.headerText}>{ contactName }</Text>
+        />
+      </TouchableOpacity>
+
+      <Text style={styles.headerText}>{ contactUserName }</Text>
       </View>
       <ScrollView 
         onScroll={handleScroll}
@@ -223,19 +242,19 @@ const styles = StyleSheet.create({
     },
     input: {
       flex: 1,
-      merginRight: 10,
+      marginRight: 10, // Corrected typo here from 'merginRight' to 'marginRight'
       marginHorizontal: 20,
       marginTop: 10,
       marginBottom: 20,
       paddingHorizontal: 15,
       paddingVertical: 10,
       height: 50,
-      fontSize: 18, // 字体大小
-      borderColor: 'gray', // 边框颜色
-      borderWidth: 1, // 边框宽度
-      borderRadius: 10, // 边框圆角
-      backgroundColor: 'white', // 背景颜色
-    },
+      fontSize: 18,
+      borderColor: 'gray',
+      borderWidth: 1,
+      borderRadius: 10,
+      backgroundColor: 'white',
+    },    
     footerContainer: {
       flexDirection: 'row', // Align children in a row
       paddingHorizontal: 10, // Horizontal padding

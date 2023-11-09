@@ -122,6 +122,11 @@ public class FollowerServiceImpl implements FollowerService {
         return FollowResEnum.UNFOLLOW_SUCCESS.getRes();
     }
 
+    /**
+     * list all followers of an user
+     * @param userId
+     * @return
+     */
     @Override
     public List<ListFollowerVO> listFollower(String userId) {
         Map<String, Object> map = new HashMap<>();
@@ -131,6 +136,11 @@ public class FollowerServiceImpl implements FollowerService {
         return indentifyFriends(userId, listFollowerVOs, MyFollower);
     }
 
+    /**
+     * list all followings of an user
+     * @param userId
+     * @return
+     */
     @Override
     public List<ListFollowerVO> listFollowing(String userId) {
         Map<String, Object> map = new HashMap<>();

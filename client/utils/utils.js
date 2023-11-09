@@ -5,5 +5,4 @@ export const isValidEmail = (email) => {
 };
 
 export const BASE_URL = "192.168.1.109";
-
 export const API_KEY = "AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng";

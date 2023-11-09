@@ -13,5 +13,6 @@ public interface MessageService {
     //list all messages of an user
     List<Message> listAllNotification(String userId);
 
+    //list messages between two
     List<Message> listMessagesWithOne(String userId, String contactId);
 }
