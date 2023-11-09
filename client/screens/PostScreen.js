@@ -136,7 +136,13 @@ const PostScreen = ({ route, navigation }) => {
               onPress={() => {
                 // 确保有用户信息可供传递
                 if (userInfo) {
-                  navigation.navigate('Others', { otherUser: userInfo });
+                  if (userInfo.id === user.id) {
+                    // 如果相同，则导航到 "Profile" 界面
+                    navigation.navigate('Profile');
+                  } else {
+                    // 如果不同，则导航到 "Others" 界面，并传递用户信息
+                    navigation.navigate('Others', { otherUser: userInfo });
+                  }
                 }
               }}
               className="flex-row items-center"

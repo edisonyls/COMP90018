@@ -21,11 +21,27 @@ import PostScreen from "..//screens/PostScreen";
 import FollowersScreen from "../screens/FollowersScreen";
 import FollowingsScreen from "../screens/FollowingsScreen";
 import OthersProflie from "../screens/OthersProfile";
+import { useEffect } from 'react';
+import { BackHandler } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
   const tertiary = "#1F2937";
+  
+  useEffect(() => {
+    const backAction = () => {
+      // 禁止返回到 SignIn 或 Landing 页面，你可以在这里不做任何操作
+      return true; // 返回 true 表示已经处理了返回按钮事件
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator
