@@ -14,6 +14,7 @@ import MenuContainer from "../components/MenuContainer";
 import { useUserContext } from "../context/userContext";
 import { queryUserInfo } from '../api/auth';
 import axios from 'axios';
+import { BASE_URL } from '../utils/utils';
 
 const ListItem = ({ name, imageProfile, onPress, senderId, behavior, time, type, extraInfo }) => {
   // Format the time string as needed, for example:
@@ -56,9 +57,9 @@ const FollowersScreen = ({ navigation }) => {
     setIsLoading(true);
     setFollowers([]);
     const endpoints = {
-      activities: `${BASE_URL}/message/listNotifications`,
-      follower: `${BASE_URL}/post/listFollower`,
-      following: `${BASE_URL}/post/listFollowing`,
+      activities: `http://${BASE_URL}:8080/message/listNotifications`,
+      follower: `http://${BASE_URL}:8080/post/listFollower`,
+      following: `http://${BASE_URL}:8080/post/listFollowing`,
     };
 
     const currentEndpoint = endpoints[type];
