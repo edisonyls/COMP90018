@@ -165,7 +165,7 @@ const ProfileScreen = () => {
                 <View style={styles.iconContainer}>
                   <AntDesign name="lock1" size={24} color="black" />
                 </View>
-                <Text style={styles.menuText}>Profile</Text>
+                <Text style={styles.menuText}>Security</Text>
               
               </TouchableOpacity>
 

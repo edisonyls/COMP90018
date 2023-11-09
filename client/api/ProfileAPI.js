@@ -75,3 +75,25 @@ export const getAllPostsPerUser = async (userId) => {
     console.error("An error occurred while fetching the posts", error);
   }
 };
+
+export const changeUserPassword = async (userId, originalPassword, newPassword) => {
+  try {
+    const response = await axios.post(
+      `http://${BASE_URL}:8080/user/changePassword`, // 使用新的后端接口地址
+      {
+        userId: userId,
+        originalPassword: originalPassword,
+        newPassword: newPassword
+      },
+      {
+        headers: {
+          "Content-Type": "application/json", // 确保请求的内容类型为 application/json
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error while changing password", error);
+    throw error; // 抛出错误以便可以捕获并处理
+  }
+};
