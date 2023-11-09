@@ -185,8 +185,6 @@ const MapScreen = () => {
         <LoadingView loading={isLocationLoading} msg={"Loading location..."} />
       ) : isLoading ? (
         <LoadingView loading={isLoading} msg={"Map Loading..."} />
-      ) : isPostLoading ? (
-        <LoadingView loading={isPostLoading} msg={"Fetching Posts..."} />
       ) : (
         <ScrollView>
           <View className="flex-row items-between justify-between px-8">
