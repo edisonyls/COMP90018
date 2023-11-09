@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * sex enum
+ */
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

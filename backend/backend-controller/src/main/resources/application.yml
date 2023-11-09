@@ -48,6 +48,13 @@ spring:
     mongodb:
       uri: mongodb://root:root@47.74.87.207:27017
       database: comp90018
+  rabbitmq:
+    host: 47.74.87.207
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: mobile
+
 
 minio:
   endpoint: http://47.74.87.207:9000

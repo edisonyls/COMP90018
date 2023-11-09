@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * @author Xingju Nie
- * @version 1.0
+ * follow status and follow result enum
  */
 @Getter
 @AllArgsConstructor
@@ -17,7 +16,6 @@ public enum FollowResEnum {
     USER_CANNOT_NULL("user cannot null"),
     FOLLOW_SUCCESS("follow success"),
     UNFOLLOW_SUCCESS("unfollow success")
-
     ;
     private String res;
 }

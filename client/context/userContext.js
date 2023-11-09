@@ -10,9 +10,19 @@ export const useUserContext = () => useContext(UserContext);
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
+  const updateUser = (newAttributes) => {
+    setUser((currentUser) => {
+      return { ...currentUser, ...newAttributes };
+    });
+  };
+
+  const contextValue = {
+    user,
+    setUser,
+    updateUser, // expose updateUser function
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );
 };

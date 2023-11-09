@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * pet category enum
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
