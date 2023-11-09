@@ -1,6 +1,5 @@
 package com.comp90018.controller;
 
-
 import com.comp90018.bo.ChatBO;
 import com.comp90018.bo.SendMsgBO;
 import com.comp90018.dto.Message;
@@ -19,6 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * message controller
+ * send, list messages
+ */
+
 @RestController
 @Slf4j
 @Api(tags = "message controller")
@@ -28,7 +32,7 @@ public class MessageController extends BaseController{
     private MessageService messageService;
     @PostMapping("/sendMessage")
     @ApiOperation("sender sends a message to receiver")
-    public JSONResult list(@RequestBody SendMsgBO sendMsgBO) {
+    public JSONResult send(@RequestBody SendMsgBO sendMsgBO) {
         String senderId = sendMsgBO.getSenderId();
         String receiverId = sendMsgBO.getReceiverId();
         String content = sendMsgBO.getContent();
@@ -37,6 +41,7 @@ public class MessageController extends BaseController{
         }
 
         HashMap<String, String> contentMap = new HashMap<>();
+        contentMap.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), "send you a message");
         contentMap.put(MessageContentEnum.DETAIL.getSystemMessage(), content);
         Message message = messageService.createMessage(senderId, receiverId, MessageTypeEnum.USER_MESSAGE.getType(), contentMap);
 

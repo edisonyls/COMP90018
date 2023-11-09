@@ -22,7 +22,7 @@ const PostOption = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Option 2: Help Pets Go Home */}
-      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+      <TouchableOpacity onPress={() => navigation.navigate("FindLostPet")}>
         <Image 
           source={require('../assets/postOption2.jpg')} // replace with your image's path
           style={{ width: 350, height: 110, marginBottom: 30 }} // adjust dimensions and spacing as needed
@@ -30,7 +30,7 @@ const PostOption = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Option 3: Share Experience */}
-      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+      <TouchableOpacity onPress={() => navigation.navigate("GeneralPost")}>
         <Image 
           source={require('../assets/postOption3.jpg')} // replace with your image's path
           style={{ width: 350, height: 110, marginBottom: 100 }} // adjust dimensions and spacing as needed

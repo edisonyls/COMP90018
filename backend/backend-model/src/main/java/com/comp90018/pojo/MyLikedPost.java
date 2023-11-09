@@ -37,7 +37,7 @@ public class MyLikedPost {
     }
 
     /**
-     * 获取user id
+     * user id
      *
      * @return user_id - user id
      */
@@ -46,7 +46,7 @@ public class MyLikedPost {
     }
 
     /**
-     * 设置user id
+     * user id
      *
      * @param userId user id
      */
@@ -55,7 +55,7 @@ public class MyLikedPost {
     }
 
     /**
-     * 获取id of the post liked
+     * id of the post liked
      *
      * @return post_id - id of the post liked
      */
@@ -64,7 +64,7 @@ public class MyLikedPost {
     }
 
     /**
-     * 设置id of the post liked
+     * id of the post liked
      *
      * @param postId id of the post liked
      */

@@ -31,7 +31,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Sid sid;
 
-
+    /**
+     * query by email
+     * @param email
+     * @return
+     */
     @Override
     public Users queryUsersIsExistByEmail(String email) {
         Example example = new Example(Users.class);
@@ -40,6 +44,11 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    /**
+     * query by nickname
+     * @param nickname
+     * @return
+     */
     @Override
     public Users queryUsersIsExistByNickname(String nickname) {
         Example example = new Example(Users.class);
@@ -82,6 +91,7 @@ public class UserServiceImpl implements UserService {
 
         user.setId(userId);
 
+        //set default profile and background
         user.setProfile("http://47.74.87.207:9000/comp90018/profile.jpg");
         user.setBgImg("http://47.74.87.207:9000/comp90018/bg.jpg");
         user.setSex(SexEnum.OTHER.getSex());
@@ -136,6 +146,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * change password
+     * @param changePasswordBO
+     * @return
+     */
     @Override
     public String changePassword(ChangePasswordBO changePasswordBO) {
         String newPassword = changePasswordBO.getNewPassword();

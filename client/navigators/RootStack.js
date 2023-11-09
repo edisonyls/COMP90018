@@ -6,23 +6,27 @@ import Register from "../screens/RegisterScreen";
 import Landing from "../screens/Landing";
 import RootTab from "./RootTab";
 import PostOption from "../screens/PostOption";
+
 import FindMyPet from "../screens/FindMyPet";
+import FindLostPet from "../screens/FindLostPet";
+import GeneralPost from "../screens/GeneralPost";
+
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import AccountScreen from "../screens/AccountScreen";
 import VerifyScreen from "../screens/VerifyScreen";
-//import FindLostPet from "../screens/FindLostPet";
+
+
 import NotificationScreen from "../screens/NotificationScreen";
 import SecurityScreen from "../screens/SecurityScreen";
 import ContactUsScreen from "../screens/ContactUsScreen";
 import MessageScreen from "../screens/MessageScreen";
-import ActivitiesScreen from "../screens/ActivitiesScreen";
 import PostScreen from "..//screens/PostScreen";
 import FollowersScreen from "../screens/FollowersScreen";
-import FollowingsScreen from "../screens/FollowingsScreen";
 import OthersProflie from "../screens/OthersProfile";
 import { useEffect } from 'react';
 import { BackHandler } from 'react-native';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -65,7 +69,11 @@ const RootStack = () => {
         <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Home" component={RootTab} />
         <Stack.Screen name="PostOption" component={PostOption} />
+
         <Stack.Screen name="FindMyPet" component={FindMyPet} />
+        <Stack.Screen name="FindLostPet" component={FindLostPet} />
+        <Stack.Screen name="GeneralPost" component={GeneralPost} />
+
         <Stack.Screen name="Map" component={MapScreen} />
         <Stack.Screen name="Verify" component={VerifyScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
@@ -75,10 +83,9 @@ const RootStack = () => {
         <Stack.Screen name="ContactUs" component={ContactUsScreen} />
         <Stack.Screen name="Post" component={PostScreen} />
         <Stack.Screen name="Message" component={MessageScreen} />
-        <Stack.Screen name="Activities" component={ActivitiesScreen} />
-        <Stack.Screen name="Followers" component={FollowersScreen} />
-        <Stack.Screen name="Followings" component={FollowingsScreen} />
-        <Stack.Screen name="Others" component={OthersProflie} />
+        <Stack.Screen name="Followers" component={FollowersScreen}/>
+        <Stack.Screen name="Others" component={OthersProflie}/>
+      
       </Stack.Navigator>
     </NavigationContainer>
   );

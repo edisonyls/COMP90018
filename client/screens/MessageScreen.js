@@ -1,21 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SafeAreaView, ScrollView, Text, StyleSheet, View, TextInput, Button } from 'react-native';
-import { useUserContext } from "../context/userContext";
+import { SafeAreaView, ScrollView, Text, StyleSheet, View, TextInput, Button, TouchableOpacity, Image} from 'react-native';
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { BASE_URL } from '../utils/utils';
+import { queryUserInfo } from '../api/auth';
 import axios from 'axios';
 
-const MessageScreen = ({ route, natigation }) => {
+const MessageScreen = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [contactName, setContactName] = useState('Contact Name');
   const [inputText, setInputText] = useState('');
   const [isAtBottom, setIsAtBottom] = useState(true);
 
-  const { messageInfoData } = route.params
-
-  console.log(messageInfoData);
+  const { currentUser, otherUser } = route.params;
 
 
-   const contactId = '2311080WS9DACK8H';
-   const userId = '231106BK61PX28ZC';
+   const contactId = otherUser.id;
+   const userId = currentUser.id;
+   const contactUserName = otherUser.nickname;
+   const currentUserName = currentUser.nickname;
+   const contactProfile = otherUser.profile;
 
    const contactData = {
             contactId: contactId,
@@ -30,8 +34,9 @@ const MessageScreen = ({ route, natigation }) => {
 
   //const { user } = useUserContext();
   //const userIdParam = user.id;
-  const userIdParam = '231106BK61PX28ZC';
-  const userName = 'a';
+  const userIdParam = userId;
+  const userName = currentUserName;
+
 
   const handleScroll = (event) => { 
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -41,7 +46,8 @@ const MessageScreen = ({ route, natigation }) => {
 
   const sendMessage = async () => {
     try {
-        const response = await axios.post('http://192.168.1.111:8080/message/sendMessage', messageData);
+        const response = await axios.post(`http://${BASE_URL}:8080/message/sendMessage`, messageData);
+        // const response = await axios.post('http://192.168.1.111:8080/message/sendMessage', messageData);
         if (response.data.success) {
             setInputText('');
         } else {
@@ -52,26 +58,42 @@ const MessageScreen = ({ route, natigation }) => {
     }
   };
 
+  const navigateToUserInfo = async (senderId) => {
+    try {
+      const userInfoData = await queryUserInfo(senderId);
+      if (userInfoData.success) {
+        navigation.navigate('Others', { otherUser: userInfoData.data });
+      } else {
+        console.error('Failed to fetch user info:', userInfoData.msg);
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('http://192.168.1.111:8080/message/listChat', contactData);
+        const response = await axios.post(`http://${BASE_URL}:8080/message/listChat`, contactData);
+        // const response = await axios.post('http://192.168.1.111:8080/message/listChat', contactData);
         if (response.data.success) {
-          const name = response.data.data.find(item => item.senderNickname !== userName)?.senderNickname;
-          console.log(name);
-          setContactName(name);
-          const messageData = response.data.data.map(item => {
-            
-            return {
-                senderName: item.senderNickname,
-                message: item.content.Detail,
-                isCurrentUser: item.senderId === userIdParam
-            }
-          });
-
-          setMessages(messageData);
+          if (response.data !== null) {
+          
+            setContactName(contactUserName);
+            const messageData = response.data.data.map(item => {
+              
+              return {
+                  senderName: item.senderNickname,
+                  message: item.content.Detail,
+                  isCurrentUser: item.senderId === userIdParam,
+                  senderProfile: item.profile
+              }
+            });
+            setMessages(messageData);
         } else {
-          console.error('Failed to fetch messages: ', response.data.msg);
+          setMessages([]);
+        }} else {
+          setMessages([]);
         }
       } catch (error) {
         console.error('Error fetching messages: ', error);
@@ -94,13 +116,26 @@ const MessageScreen = ({ route, natigation }) => {
 
 
 
-
-
   return (
     
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-      <Text style={styles.headerText}>{ contactName }</Text>
+      <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              
+              className="mr-4"
+              style={{ marginLeft: 20, marginBottom:20, marginTop:30 }}
+            >
+              <AntDesign name="left" size={24} color="black" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigateToUserInfo(contactId)}>
+        <Image
+          source={{ uri: contactProfile }}
+          style={styles.contactProfileImage}
+        />
+      </TouchableOpacity>
+
+      <Text style={styles.headerText}>{ contactUserName }</Text>
       </View>
       <ScrollView 
         onScroll={handleScroll}
@@ -112,21 +147,21 @@ const MessageScreen = ({ route, natigation }) => {
             styles.messageBox,
             message.isCurrentUser ? styles.rightAlign : styles.leftAlign
           ]}>
-            {/* <Text style={styles.sender}>{message.senderName || 'Unknown'}</Text> */}
             <Text style={styles.message}>{message.message}</Text>
           </View>
         ))}
       </ScrollView>
-      <TextInput
-        style={styles.input}
-        onChangeText={setInputText}
-        value={inputText}
-        placeholder="Type a message..."
-      />
-      <Button
-        title="Send"
-        onPress={sendMessage}
-      />
+      <View style={styles.footerContainer}>
+        <TextInput
+          style={styles.input}
+          onChangeText={setInputText}
+          value={inputText}
+          placeholder="Type a message..."
+        />
+        <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+          <Ionicons name="send" size={24} color="white" />
+        </TouchableOpacity>
+    </View>
     </SafeAreaView>
   );
 };
@@ -163,7 +198,16 @@ const styles = StyleSheet.create({
       marginLeft: '25%',
       backgroundColor: '#CCB2fd',
     },
+    contactProfileImage: {
+      width: 50,
+      height: 50, 
+      borderRadius: 30,
+      marginRight: 15,
+      marginTop: 20,
+    },
     headerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
       padding: 10,
       backgroundColor: '#FFFFFF',
       borderBottomWidth: 1,
@@ -174,30 +218,50 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       fontSize: 24,
       color: '#333333',
+      marginTop: 25,
     },
-    
+    backButton: {
+      
+    },
     sendButton: {
       padding: 10, // 适当的按钮填充
       margin: 10, // 与其他元素的间隔
-      backgroundColor: '#9E9E9E', // 按钮使用中性色
+      backgroundColor: '#CCB2fd', // 按钮使用中性色
       borderRadius: 20, // 圆角边框
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     sendButtonText: {
       color: '#FFFFFF', // 文字使用亮色以便于阅读
     }, 
+    profileImage: {
+      width: 40, // Set the width of the image
+      height: 40, // Set the height of the image
+      borderRadius: 20, // Make it round
+      marginRight: 10, // Add a right margin
+    },
     input: {
-        marginHorizontal: 20, // 水平边距
-        marginTop: 10, // 上边距
-        marginBottom: 20, // 下边距
-        paddingHorizontal: 15, // 左右内边距
-        paddingVertical: 10, // 上下内边距
-        height: 50, // 高度
-        fontSize: 18, // 字体大小
-        borderColor: 'gray', // 边框颜色
-        borderWidth: 1, // 边框宽度
-        borderRadius: 10, // 边框圆角
-        backgroundColor: 'white', // 背景颜色
-      },
+      flex: 1,
+      marginRight: 10, // Corrected typo here from 'merginRight' to 'marginRight'
+      marginHorizontal: 20,
+      marginTop: 10,
+      marginBottom: 20,
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      height: 50,
+      fontSize: 18,
+      borderColor: 'gray',
+      borderWidth: 1,
+      borderRadius: 10,
+      backgroundColor: 'white',
+    },    
+    footerContainer: {
+      flexDirection: 'row', // Align children in a row
+      paddingHorizontal: 10, // Horizontal padding
+      paddingVertical: 5, // Vertical padding
+      alignItems: 'center', // Align items in the center verticallys
+      backgroundColor: 'white',
+    },
   });
   
 

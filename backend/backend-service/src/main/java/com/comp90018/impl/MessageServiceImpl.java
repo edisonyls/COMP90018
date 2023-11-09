@@ -51,14 +51,21 @@ public class MessageServiceImpl implements MessageService {
     public List<Message> listAllNotification(String userId) {
         List<Message> messageList = messageDao.findAllByReceiverIdOrderByTimeDesc(userId);
         List<Message> newList = new ArrayList<>();
-        for (Message message : messageList) {
-            if (message.getType() == MessageTypeEnum.SYSTEM_MESSAGE.getType()) {
-                newList.add(message);
-            }
-        }
-        return newList;
+//        for (Message message : messageList) {
+//            if (message.getType() == MessageTypeEnum.SYSTEM_MESSAGE.getType()) {
+//                newList.add(message);
+//            }
+//        }
+//        return newList;
+        return messageList;
     }
 
+    /**
+     * list chat information between two users
+     * @param userId
+     * @param contactId
+     * @return
+     */
     @Override
     public List<Message> listMessagesWithOne(String userId, String contactId) {
         List<Message> list = messageDao.findAllBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimeAsc(userId, contactId, contactId, userId);
