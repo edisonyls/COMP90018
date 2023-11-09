@@ -1,10 +1,12 @@
 package com.comp90018.enums;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * change user password controller result enum class
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

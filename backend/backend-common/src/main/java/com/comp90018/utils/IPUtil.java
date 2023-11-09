@@ -2,6 +2,9 @@ package com.comp90018.utils;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * ip util class
+ */
 public class IPUtil {
 
     public static String getRequestIp(HttpServletRequest request) {
