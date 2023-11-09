@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import { View, Alert } from "react-native";
+import { isValidEmail, isPasswordValid } from "../utils/utils";
 import {
   StyledContainer,
   InnerContainer,
@@ -40,6 +41,13 @@ const SignIn = ({ navigation }) => {
   const handleFormSubmission = async (values) => {
     if (values.email === "" || values.password === "") {
       Alert.alert("Oops!", "Please fill in your credentials!");
+    }
+    if (!isValidEmail(values.email)) {
+      Alert.alert(
+        "Invalid Email",
+        "The email address you entered is not valid."
+      );
+      return;
     } else {
       setLoading(true);
       const res = await loginRequest(values.email, values.password);
@@ -54,7 +62,11 @@ const SignIn = ({ navigation }) => {
       } else {
         setUser(res.data);
         setLoading(false);
-        navigation.navigate("Home");
+
+        navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }], // 确保这里的 'Home' 是你的 Tab 导航器的路由名称
+      });
       }
       setLoading(false);
     }

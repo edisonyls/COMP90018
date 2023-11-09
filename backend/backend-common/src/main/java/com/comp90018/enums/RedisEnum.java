@@ -9,7 +9,9 @@ public enum RedisEnum {
     REDIS_FOLLOWER_FOLLOWING_RELATION("redis_follower_following_relation:"),
     REDIS_FOLLOW_NUM("redis_follow_num:"),
     REDIS_FAN_NUM("redis_fan_num:"),
+    REDIS_HASH("redis_hash:"),
     REDIS_POST_ID("redis_id");
+
 
 
     private String redisKey;

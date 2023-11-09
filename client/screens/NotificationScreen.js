@@ -1,60 +1,69 @@
 import {
-    View,
-    Text,
-    SafeAreaView,
-    Image,
-    ScrollView,
-    TouchableOpacity,
-    ActivityIndicator,
-    StyleSheet,
-    Dimensions, 
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import MenuContainer from "../components/MenuContainer";
-import ItemCardContainer from "../components/ItemCardContainer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import profileData from '../assets/profileData.json';
-import { useProfile } from '../navigators/ProfileContext';
-
+import { Switch } from "react-native";
 
 const NotificationScreen = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const navigation = useNavigation();
-    return(
-        <SafeAreaView className="flex-1 bg-white relative">
-        {isLoading ? (
-          <View className="flex-1 items-center justify-center">
-            <ActivityIndicator size="large" color="#0B646B" />
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLikePostEnabled, setIsLikePostEnabled] = useState(false);
+  const [isNewMessageEnabled, setIsNewMessageEnabled] = useState(false);
+  const navigation = useNavigation();
+
+  const toggleLikePostSwitch = () =>
+    setIsLikePostEnabled((previousState) => !previousState);
+  const toggleNewMessageSwitch = () =>
+    setIsNewMessageEnabled((previousState) => !previousState);
+
+  return (
+    <SafeAreaView className="flex-1 bg-white relative">
+      {isLoading ? (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#0B646B" />
+        </View>
+      ) : (
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <AntDesign name="leftcircleo" size={24} color="black" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Notification</Text>
+            <View />
           </View>
-        ) : (   
-            
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                 <View style={styles.headerContainer}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <AntDesign name="leftcircleo" size={24} color="black" />
-                    </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Account</Text>
-                    <View /> 
-                </View>
-                <View style={styles.imageContainer}>
-                    <Image
-                    style={styles.backgroundImage}
-                    source={getImageSource(backgroundUri)}
-                    //source={getImageFromPath(profileData.profile.backgroundImage)}
-                    />
-                    <TouchableOpacity 
-                    style={styles.editIcon} 
-                    onPress={() => pickImage(true)}>
-                    <AntDesign name="edit" size={24} color="black" />
-                    </TouchableOpacity>
-                    
-                </View>
-            </ScrollView>
-        )}
-        </SafeAreaView>
-    );
+
+          <View style={styles.switchContainer}>
+            <Text style={styles.switchLabel}>Like Post</Text>
+            <Switch
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={isLikePostEnabled ? "#f5dd4b" : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleLikePostSwitch}
+              value={isLikePostEnabled}
+            />
+          </View>
+
+          <View style={styles.switchContainer}>
+            <Text style={styles.switchLabel}>New Message</Text>
+            <Switch
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={isNewMessageEnabled ? "#f5dd4b" : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleNewMessageSwitch}
+              value={isNewMessageEnabled}
+            />
+          </View>
+        </ScrollView>
+      )}
+    </SafeAreaView>
+  );
 };
 const styles = StyleSheet.create({
   headerContainer: {
@@ -68,22 +77,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  imageContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    
+  switchContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginTop: 30,
   },
-  backgroundImage: {
-    width: '100%', // 宽度为100%，以填满容器
-    height: 198, // 这可以根据您的背景图像进行调整
-  },
-  editIcon: {
-    position: 'absolute', // 使用绝对定位
-    top: 10, // 距离容器顶部10单位
-    right: 10, // 距离容器右侧10单位
+  switchLabel: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
 export default NotificationScreen;
-

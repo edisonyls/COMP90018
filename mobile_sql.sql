@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` varchar(24) NOT NULL,
   `email1` varchar(64) NOT NULL COMMENT 'email address',
-  `password` varchar(32) NOT NULL COMMENT 'password',
+  `password` varchar(128) NOT NULL COMMENT 'password',
   `mobile` varchar(32) COMMENT 'mobile phone number',
   `nickname` varchar(16) NOT NULL COMMENT 'nickname',
   `profile` varchar(128) NOT NULL COMMENT 'profile picture',

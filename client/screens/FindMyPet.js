@@ -8,13 +8,16 @@ import { AntDesign } from '@expo/vector-icons'; // Importing AntDesign for the d
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
-import { BASE_URL } from '../api/auth';
+//import { BASE_URL } from '../api/auth';
+import { BASE_URL } from '../utils/utils';
+
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
 const FindMyPet = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
+  const [formData, setFormData] = useState(null);
   //const [petCategory, setPetCategory] = useState(null);
   const [isPickerOpen, setIsPickerOpen] = useState(false); // New state variable to track picker status
   const [petCategory, setPetCategory] = useState(null); // State variable for the selected pet category
@@ -26,6 +29,8 @@ const FindMyPet = () => {
   const[reward,setReward] = useState('');
   const[description,setDescription] = useState('');
   const { user } = useUserContext();
+  const[title, setTitle] = useState('');
+  
   
   //find pet location 
   //const [location, setLocation] = useState({latitude:37.8136,longitude:144.9631});
@@ -35,6 +40,7 @@ const FindMyPet = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isShowingResults, setIsShowingResults] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
+  
   
 
   const searchLocation = async (text) => {
@@ -74,10 +80,6 @@ const FindMyPet = () => {
     //Keyboard.dismiss();
   };
 
-
-
-
-
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -110,8 +112,26 @@ const FindMyPet = () => {
               aspect: [4, 3],
               quality: 1,
             });
-            if (!cameraResult.canceled) {
-              setImageUri(cameraResult.assets[0].uri);
+            // if (!cameraResult.canceled && cameraResult.assets) {
+            //   const newImageUri = cameraResult.assets[0].uri;
+            //   setImageUri(newImageUri);
+            //   const type = cameraResult.assets[0].type;
+            //   const name = newImageUri.split('/').pop();
+            //   let formData = new FormData();
+            //   formData.append('multipartFile', { uri: newImageUri, name: 'imagefilename.jpg', type: 'image/jpeg' });
+            //   setFormData(formData);
+            
+            // }
+            if (!cameraResult.canceled && cameraResult.assets) {
+              const asset = cameraResult.assets[0];
+              const uri = asset.uri;
+              setImageUri(uri);
+              const type = asset.type;
+              const name = uri.split('/').pop();
+              let formData = new FormData();
+              formData.append('multipartFile', { uri, name, type });
+              setFormData(formData);
+            
             }
           }
         },
@@ -129,8 +149,16 @@ const FindMyPet = () => {
               aspect: [4, 3],
               quality: 1,
             });
-            if (!libraryResult.canceled) {
-              setImageUri(libraryResult.assets[0].uri);
+
+            if (!libraryResult.canceled && libraryResult.assets) {
+              const asset = libraryResult.assets[0];
+              const uri = asset.uri;
+              setImageUri(uri);
+              const type = asset.type;
+              const name = uri.split('/').pop();
+              let formData = new FormData();
+              formData.append('multipartFile', { uri, name, type });
+              setFormData(formData);
             }
           }
         },
@@ -140,48 +168,35 @@ const FindMyPet = () => {
     );
   };
 
-  const convertUriToMultipartFile = async (imageUri) => {
-    // Step 1: Convert the image URI to a Blob or File object
-    const response = await fetch(imageUri);
-    const blob = await response.blob();
-    
-    // Create a new file object (if necessary, depending on your backend requirements)
-    const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
   
-    // Step 2: Create a FormData object and append the image file to it
-    const formData = new FormData();
-    formData.append('image', file);
-  
-    // Now formData contains the image in MultipartFile format
-    return formData;
-  };
-
-
   const uploadImage = async (formData) => {
-  
+    console.log("Sending data for uploading img...");
     // Step 3: Send the FormData object using Axios with the appropriate headers
     try {
-      const response = await axios.post('http://'+ BASE_URL +':8080/post/uploadPostImg', formData, {
+
+      const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      });
-  
-      // Handle the response from the server
-      if (response.success === 'true') {
-        console.log('Image uploaded successfully. ID:', response.data.id);
-        return true;
+      };
+      const res = await axios.post(`http://${BASE_URL}:8080/post/uploadImg`, formData, config);
+      const response = res.data;
+      if (response.success === true) { // check if response is in valid format
+        // Image uploaded successfully
+        console.log('Image uploaded successfully. ID:', response.data.postId);
+        return response.data.postId;
+
       } else {
+        // Handle any other HTTP status codes
         console.log('Server responded with an unexpected status.');
         return false;
       }
+      
     } catch (error) {
-      console.error('An error occurred while uploading the image:', error);
+      console.log(error);
       return false;
     }
   };
-
-
 
   const handlePickerFocus = () => {
     setIsPickerOpen(previousState => !previousState); // Toggle the current state of the picker's open/close status
@@ -189,7 +204,7 @@ const FindMyPet = () => {
 
   // Function to validate the form fields
   const validateForm = () => {
-    if (!imageUri || !petCategory || !petBreed || !petName || !contactNumber ||!selectedPlaceId) {
+    if (!imageUri || !petCategory || !petBreed || !petName || !contactNumber ||!selectedPlaceId|| !title) {
       // One or more fields are empty
       Alert.alert('Missing Information', 'Please fill in all fields before submitting.');
       return false;
@@ -202,19 +217,18 @@ const FindMyPet = () => {
   // Function to handle the form submission
   const handleSubmit = async() => {
 
-    const formData = convertUriToMultipartFile(imageUri);
+    const isUploadImage = await uploadImage(formData);
+    console.log("postId is "+ isUploadImage);
 
-    if (validateForm() && uploadImage(formData) ) {
+    if (validateForm() && isUploadImage) {
       try {
         // Fetch the detailed information of the selected location
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
-    
         if (response.data.result) {
           // Extract the coordinates
           const location = response.data.result.geometry.location;
     
-          // Log the coordinates
-          
+          // Log the coordinates & other properties for checking
           console.log('Form submitted with the following data:');
           console.log('Selected location coordinates:', location);
           console.log(`Image URI: ${imageUri}`);
@@ -223,21 +237,22 @@ const FindMyPet = () => {
           console.log(`Pet Name: ${petName}`);
           console.log(`Contact Number: ${contactNumber}`);
           console.log(`Reward: ${reward}`);
-
+          console.log(`Post Id: ${isUploadImage}`);
           
-
+          
           const petData = {
             petName: petName,
             petCategory: petCategory,
             petBreed: petBreed,
             contactNumber: contactNumber,
             rewards: reward,
-            postImg: formData,
             latitude: location.lat,
             longitude: location.lng,
             userId: user.id,
             postType: 'Missing',
             description: description,
+            postId: isUploadImage,
+            title: title
           };
 
           try {
@@ -246,27 +261,16 @@ const FindMyPet = () => {
           
             console.log(serverResponse.data);
           
-            if (serverResponse.success) {
+            if (serverResponse.data.success) {
+
+
                 console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
                 // ... (clear your form fields and navigate away)
             } else {
                 console.log('Server responded with an unexpected status.');
             }
           } catch (error) {
-              //console.error('An error occurred while submitting the form:', error);
-              if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-              } else {
-                // Something happened in setting up the request and triggered an Error
-                console.log('Error', error.message);
-              }
+             console.log(error);
               
           }
 
@@ -339,12 +343,29 @@ const FindMyPet = () => {
             </View>
           </View>
 
+
+
             
-      <View
-      styles = {{flex: 0}}
-      >
+        <ScrollView
+          keyboardShouldPersistTaps='handled'
+          styles = {{flex: 1}} 
+        >
 
           <ScrollView style={styles.formContainer} keyboardShouldPersistTaps='handled' onScrollBeginDrag={Keyboard.dismiss}>
+
+              {/* Post title */}
+              <View style={styles.inputContainer}>
+                    <Text style={styles.inputLabel}> * Title</Text>
+                      <TextInput
+                          style={styles.textInput}
+                          onChangeText={setTitle}
+                          value={title}
+                          placeholder="Enter post's title"
+                          autoCapitalize="words"
+                      />
+              </View>
+
+
             {/* Image Selector Field */}
             <TouchableOpacity onPress={handleSelectImage} style={styles.imageSelector}>
             {imageUri ? (
@@ -362,7 +383,6 @@ const FindMyPet = () => {
                       onChangeText={setPetName}
                       value={petName}
                       placeholder="Enter pet's name"
-                      // Here you can set if you want the first letter to be auto-capitalized, etc.
                       autoCapitalize="words"
                   />
             </View>
@@ -407,7 +427,6 @@ const FindMyPet = () => {
                 onChangeText={setPetBreed}
                 value={petBreed}
                 placeholder="Enter pet's breed"
-                // Here you can set if you want the first letter to be auto-capitalized, etc.
                 autoCapitalize="words"
             />
             </View>
@@ -420,8 +439,7 @@ const FindMyPet = () => {
                 onChangeText={setDescription}
                 value={description}
                 placeholder="Enter description"
-                // Here you can set if you want the first letter to be auto-capitalized, etc.
-                autoCapitalize="words"
+                
             />
             </View>
 
@@ -461,7 +479,7 @@ const FindMyPet = () => {
         </ScrollView>
       {/* </ScrollView> */}
       {/* <View style = {marginBottom:50, flex: 1}> </View> */}
-     </View>
+     </ScrollView >
     </View>
   );
 }
@@ -476,6 +494,9 @@ const styles = StyleSheet.create({
     paddingTop: 100,
     paddingHorizontal: 35,
     zIndex:1,
+    marginTop: 40,
+    marginBottom:-65,
+
   },
 
   formContainer: {
@@ -492,8 +513,9 @@ const styles = StyleSheet.create({
     height: 100,
     alignItems: 'center',
     justifyContent: 'center',
+
     marginBottom: 20, // reduced space for the next form field
-    marginTop: -80,
+    marginTop: 20,
   },
   imagePreview: {
     width: 300,
@@ -510,6 +532,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 20, // Space for the next form field
     // You can add more styling for the container if you need
+    marginTop: 0,
   },
   inputLabel: {
     fontSize: 13, // or another appropriate size

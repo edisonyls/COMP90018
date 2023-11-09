@@ -12,10 +12,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChangeUserInfoBO {
-    // can not change id
+    // change info without pictures
     private String id;
-
-    private String password;
 
     private String mobile;
 

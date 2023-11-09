@@ -6,8 +6,10 @@ import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.CommentMapper;
 import com.comp90018.mapper.PostMapper;
+import com.comp90018.mapper.UsersMapper;
 import com.comp90018.pojo.Comment;
 import com.comp90018.pojo.Post;
+import com.comp90018.pojo.Users;
 import com.comp90018.service.CommentService;
 import com.comp90018.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,9 @@ public class CommentServiceImpl implements CommentService {
     private PostMapper postMapper;
 
     @Autowired
+    private UsersMapper usersMapper;
+
+    @Autowired
     private Sid sid;
 
 
@@ -47,10 +52,14 @@ public class CommentServiceImpl implements CommentService {
             return null;
         }
         else {
+            Post post = postList.get(0);
             Comment comment = new Comment();
             String fatherCommentId = commentDTO.getFatherCommentId();
+            System.out.println(fatherCommentId);
             if (fatherCommentId == null) {
                 comment.setFatherCommentId("-1");
+            } else {
+                comment.setFatherCommentId(commentDTO.getFatherCommentId());
             }
             comment.setCommentUserId(commentDTO.getCommentUserId());
             String commentId = sid.nextShort();
@@ -61,7 +70,8 @@ public class CommentServiceImpl implements CommentService {
             comment.setPostId(postId);
             comment.setLikeCounts(0);
             comment.setContent(commentDTO.getContent());
-            comment.setFatherCommentId(commentDTO.getFatherCommentId());
+            post.setCommentsCounts(post.getCommentsCounts() + 1);
+            postMapper.updateByPrimaryKeySelective(post);
             commentMapper.insert(comment);
 
             HashMap<String, Object> map = new HashMap<>();
@@ -97,13 +107,11 @@ public class CommentServiceImpl implements CommentService {
         } else {
             Comment comment = commentList.get(0);
             comment.setLikeCounts(comment.getLikeCounts() + 1);
-            if (commentMapper.updateByPrimaryKeySelective(comment) == 0) {
-                return null;
-            }
 
             HashMap<String, Object> map = new HashMap<>();
             map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.COMMENT_LIKE_NOTIFY.getSystemMessage()); // (behavior, like)
             messageService.createMessage(comment.getCommentUserId(), comment.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+
             return comment;
         }
     }
@@ -115,32 +123,58 @@ public class CommentServiceImpl implements CommentService {
         example.createCriteria().andEqualTo("postId", postId);
         List<Comment> commentList = commentMapper.selectByExample(example);
 
-        if (commentList.isEmpty()) {
+        if (commentList.isEmpty() || commentList == null) {
             return null;
-        }
+        } else {
+            Map<String, CommentDTO> commentDTOMap = new HashMap<>();
+            for (Comment comment : commentList) {
+                CommentDTO commentDTO = convertToDTO(comment);
+                commentDTOMap.put(commentDTO.getId(), commentDTO);
+            }
 
-        Map<String, CommentDTO> commentDTOMap = new HashMap<>();
-        for (Comment comment : commentList) {
-            CommentDTO commentDTO = convertToDTO(comment);
-            commentDTOMap.put(commentDTO.getId(), commentDTO);
-        }
-
-        for(CommentDTO commentDTO : commentDTOMap.values()) {
-            if (commentDTO.getFatherCommentId() != null) {
-                CommentDTO parentCommentDTO = commentDTOMap.get(commentDTO.getFatherCommentId());
-                if (parentCommentDTO != null) {
-                    parentCommentDTO.addReply(commentDTO);
+            for(CommentDTO commentDTO : commentDTOMap.values()) {
+                if (commentDTO.getFatherCommentId() != null) {
+                    CommentDTO parentCommentDTO = commentDTOMap.get(commentDTO.getFatherCommentId());
+                    if (parentCommentDTO != null) {
+                        parentCommentDTO.addReply(commentDTO);
+                    }
                 }
             }
+
+            List<CommentDTO> commentDTOList = commentDTOMap.values().stream()
+                    .peek(dto -> log.info("Processing DTO with ID: {} and fatherID: {}", dto.getId(), dto.getFatherCommentId()))
+                    .filter(commentDTO -> commentDTO.getFatherCommentId()==null || commentDTO.getFatherCommentId().isEmpty() || commentDTO.getFatherCommentId().equals("-1"))
+                    .collect(Collectors.toList());
+
+            processComments(commentDTOList);
+
+            log.info(String.valueOf(commentDTOList));
+            return commentDTOList;
         }
 
-        List<CommentDTO> commentDTOList = commentDTOMap.values().stream()
-                .peek(dto -> log.info("Processing DTO with ID: {} and fatherID: {}", dto.getId(), dto.getFatherCommentId()))
-                .filter(commentDTO -> commentDTO.getFatherCommentId().equals("-1"))
-                .collect(Collectors.toList());
-        System.out.println(commentDTOList);
-        return commentDTOList;
     }
+
+    public void addUserDetailsToComment(CommentDTO commentDTO) {
+        Example example = new Example(Users.class);
+        example.createCriteria().andEqualTo("id", commentDTO.getCommentUserId());
+        List<Users> usersList = usersMapper.selectByExample(example);
+        if (!usersList.isEmpty()) {
+            Users user = usersList.get(0);
+            commentDTO.addUserName(user.getNickname());
+            commentDTO.addUserProfile(user.getProfile());
+        }
+    }
+
+    public void processComments(List<CommentDTO> comments) {
+        for (CommentDTO commentDTO : comments) {
+            addUserDetailsToComment(commentDTO);
+            if (commentDTO.getReplies() != null) {
+                processComments(commentDTO.getReplies()); // 递归调用处理回复
+            }
+        }
+    }
+
+
 
     private CommentDTO convertToDTO(Comment comment) {
         CommentDTO dto = new CommentDTO();

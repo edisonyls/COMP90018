@@ -1,7 +1,10 @@
 package com.comp90018.controller;
 
+
+import com.comp90018.bo.ChangePasswordBO;
 import com.comp90018.bo.ChangeUserImgBO;
 import com.comp90018.bo.ChangeUserInfoBO;
+import com.comp90018.enums.ChangeResEnum;
 import com.comp90018.enums.RedisEnum;
 import com.comp90018.enums.ResponseStatusEnum;
 import com.comp90018.jsonResult.JSONResult;
@@ -12,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +35,16 @@ public class UserController extends BaseController{
             return JSONResult.errorCustom(ResponseStatusEnum.CHANGE_USER_INFO_FAIL);
         }
         return JSONResult.ok(newUser);
+    }
+
+    @ApiOperation("change user password")
+    @PostMapping("/changePassword")
+    public JSONResult changePassword(@RequestBody ChangePasswordBO changePasswordBO) {
+        String s = userService.changePassword(changePasswordBO);
+        if (ChangeResEnum.CHANGE_SUCCESS.getChangeRes().equals(s)) {
+            return JSONResult.ok(s);
+        }
+        return JSONResult.errorMsg(s);
     }
 
     @PostMapping("uploadProfile")
@@ -78,15 +92,24 @@ public class UserController extends BaseController{
 
         int myFollows = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FOLLOW_NUM + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FOLLOW_NUM + userId));
         int myFans = StringUtils.isBlank(redis.get(RedisEnum.REDIS_FAN_NUM + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_FAN_NUM + userId));
-        int myPostLikes = StringUtils.isBlank(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId));
+        int myVlogLikes = StringUtils.isBlank(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_VLOG_LIKES + userId));
         int myCommentLikes = StringUtils.isBlank(redis.get(RedisEnum.REDIS_COMMENT_LIKES + userId))? 0: Integer.parseInt(redis.get(RedisEnum.REDIS_COMMENT_LIKES + userId));
 
         usersVO.setMyFollows(myFollows);
         usersVO.setMyFans(myFans);
-        usersVO.setMyPostLikes(myPostLikes);
+        usersVO.setMyVlogLikes(myVlogLikes);
         usersVO.setMyCommentLikes(myCommentLikes);
 
         return JSONResult.ok(usersVO);
     }
 
+    @PostMapping("queryUserStatus")
+    @ApiOperation("query user status")
+    public JSONResult queryUserStatus(@RequestParam String usrId) {
+        if(redis.keyIsExist(RedisEnum.REDIS_TOKEN + usrId)) {
+            return JSONResult.ok(ResponseStatusEnum.USER_ALREADY_LOGIN);
+        }
+        return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_LOGIN);
+
+    }
 }

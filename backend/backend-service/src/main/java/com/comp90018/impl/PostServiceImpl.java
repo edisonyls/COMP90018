@@ -33,66 +33,49 @@ public class PostServiceImpl implements PostService {
         Post post = new Post();
         post.setLikesCounts(0);
         post.setCommentsCounts(0);
-        post.setPrivateLevel(0);
         post.setPrivateLevel(PostPrivateLevelEnum.PUBLIC.getPrivateLevel());
 
-        String postId = sid.nextShort();
+//        String postId = sid.nextShort();
+        String postId = uploadPostBO.getPostId();
         uploadPostBO.setPostId(postId);
         Date date = new Date();
         post.setCreatedTime(date);
         post.setUpdatedTime(date);
         post.setId(postId);
-        post.setPrivateLevel(uploadPostBO.getPrivateLevel());
-        post.setPicture(uploadPostBO.getPostImg());
+
         post.setPosterId(uploadPostBO.getUserId());
-        post.setLongitude(uploadPostBO.getLongitude());
+
         post.setLatitude(uploadPostBO.getLatitude());
-        String location = uploadPostBO.getLocation();
-        if (location == null) {
-            uploadPostBO.setLocation("Default");
-        } else {
-            post.setLocation(location);
+        post.setLongitude(uploadPostBO.getLongitude());
+        post.setPicture(uploadPostBO.getPostImg());
+
+        String title = uploadPostBO.getTitle();
+        if (title == null) {
+            title = postId;
         }
+        post.setTitle(title);
+        post.setPetCategory(uploadPostBO.getPetCategory());
+        post.setPetBreed(uploadPostBO.getPetBreed());
+        post.setPetName(uploadPostBO.getPetName());
+        post.setLocation("Default");
+        post.setContactNum(uploadPostBO.getContactNumber());
+        post.setRewards(uploadPostBO.getRewards());
+        post.setDescription(uploadPostBO.getDescription());
+        post.setSubject(uploadPostBO.getSubject());
+        post.setContent(uploadPostBO.getContent());
+        post.setTag(uploadPostBO.getTag());
+        post.setUpdatedTime(date);
+
         String postType = uploadPostBO.getPostType();
         switch (postType) {
             case "Missing":
-                post.setDescription(uploadPostBO.getDescription());
-                post.setTitle(uploadPostBO.getTitle());
-                post.setPetName(uploadPostBO.getPetName());
-                post.setPetCategory(uploadPostBO.getPetCategory());
-                post.setPetBread(uploadPostBO.getPetBread());
-                post.setRewards(uploadPostBO.getRewards());
-                post.setContactNum(uploadPostBO.getContactNumber());
                 post.setPostType(PostTypeEnum.MISSING.getPostType());
-                post.setTag("Default");
-                post.setContent("Default");
-                post.setSubject("Default");
                 break;
             case "Found":
-                post.setDescription(uploadPostBO.getDescription());
-                post.setTitle(uploadPostBO.getTitle());
-                post.setPetBread(uploadPostBO.getPetBread());
-                post.setPetCategory(uploadPostBO.getPetCategory());
-                post.setPetName(uploadPostBO.getPetName());
-                post.setContactNum(uploadPostBO.getContactNumber());
                 post.setPostType(PostTypeEnum.FOUND.getPostType());
-                post.setTag("Default");
-                post.setContent("Default");
-                post.setSubject("Default");
-                post.setRewards("Default");
                 break;
             default:
-                post.setContent(uploadPostBO.getContent());
-                post.setSubject(uploadPostBO.getSubject());
-                post.setTag(uploadPostBO.getTag());
                 post.setPostType(PostTypeEnum.GENERAL.getPostType());
-                post.setDescription("Default");
-                post.setTitle("Default");
-                post.setPetBread("Default");
-                post.setPetCategory("Default");
-                post.setPetName("Default");
-                post.setContactNum("Default");
-                post.setRewards("Default");
                 break;
         }
         postMapper.insert(post);
@@ -104,19 +87,19 @@ public class PostServiceImpl implements PostService {
         Example example = new Example(Post.class);
         switch (postType) {
             case "Missing":
-                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel())
                         .andEqualTo("postType", PostTypeEnum.MISSING.getPostType());
                 break;
             case "Found":
-                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel())
                         .andEqualTo("postType", PostTypeEnum.FOUND.getPostType());
                 break;
             case "General":
-                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC)
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel())
                         .andEqualTo("postType", PostTypeEnum.GENERAL.getPostType());
                 break;
             default:
-                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
+                example.createCriteria().andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel());
                 break;
         }
         List<Post> postList = postMapper.selectByExample(example);
@@ -127,9 +110,47 @@ public class PostServiceImpl implements PostService {
     public List<Post> getAllPostPerUser(String userId) {
         Example example = new Example(Post.class);
         example.createCriteria().andEqualTo("posterId", userId)
-                .andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC);
+                .andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel());
         return postMapper.selectByExample(example);
     }
+
+    /**
+     * Can be filtered by category: Cat/Dog/All
+     * @param petCategory
+     * @return
+     */
+    @Override
+    public List<Post> getFilteredPost(String petCategory) {
+        Example example = new Example(Post.class);
+        example.createCriteria().andEqualTo("petCategory", toTitleCase(petCategory))
+                .andEqualTo("privateLevel", PostPrivateLevelEnum.PUBLIC.getPrivateLevel());
+        return postMapper.selectByExample(example);
+    }
+
+    public static String toTitleCase(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            } else {
+                c = Character.toLowerCase(c);
+            }
+
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
+    }
+
 
     @Override
     @Transactional
@@ -146,26 +167,26 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    @Override
-    @Transactional
-    public Post updatePost(UploadPostBO uploadPostBO) {
-        Example example = new Example(Post.class);
-        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId())
-                .andEqualTo("posterId", uploadPostBO.getUserId());
-        List<Post> postList = postMapper.selectByExample(example);
-        if (postList.isEmpty() || postList == null) {
-            return null;
-        }
-        else {
-            Post post = postList.get(0);
-            Date date = new Date();
-            post.setUpdatedTime(date);
-            BeanUtils.copyProperties(uploadPostBO, post);
-            if (postMapper.updateByPrimaryKeySelective(post) == 0) {
-                return null;
-            }
-            return post;
-        }
-    }
+//    @Override
+//    @Transactional
+//    public Post updatePost(UploadPostBO uploadPostBO) {
+//        Example example = new Example(Post.class);
+//        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId())
+//                .andEqualTo("posterId", uploadPostBO.getUserId());
+//        List<Post> postList = postMapper.selectByExample(example);
+//        if (postList.isEmpty() || postList == null) {
+//            return null;
+//        }
+//        else {
+//            Post post = postList.get(0);
+//            Date date = new Date();
+//            post.setUpdatedTime(date);
+//            BeanUtils.copyProperties(uploadPostBO, post);
+//            if (postMapper.updateByPrimaryKeySelective(post) == 0) {
+//                return null;
+//            }
+//            return post;
+//        }
+//    }
 
 }

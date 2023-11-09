@@ -9,11 +9,12 @@ spring:
 #      ddl-auto: create
   servlet:
     multipart:
-      max-file-size: 2MB
-      max-request-size: 2MB
+      max-file-size: 100MB
+      max-request-size: 100MB
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/mobile?mobile?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     url: jdbc:mysql://localhost:3306/mobile?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: root
     password: root
@@ -39,23 +40,30 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
         debug: true
   redis:
-    host: 180.76.230.251
+    host: 47.74.87.207
     database: 10
     port: 6379
-    password: root
+    password: root1234
   data:
     mongodb:
-      uri: mongodb://root:12345678@180.76.230.251:27017
+      uri: mongodb://root:root@47.74.87.207:27017
       database: comp90018
+  rabbitmq:
+    host: 47.74.87.207
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: mobile
+
 
 minio:
-  endpoint: http://180.76.230.251:9000
-  fileHost: http://180.76.230.251:9000
+  endpoint: http://47.74.87.207:9000
+  fileHost: http://47.74.87.207:9000
   bucketName: comp90018
   accessKey: root
   secretKey: 12345678
-  imgSize: 1024
-  fileSize: 1024
+  imgSize: 10240000
+  fileSize: 10240000
 
 mybatis:
   type-aliases-package: com.comp90018.pojo
