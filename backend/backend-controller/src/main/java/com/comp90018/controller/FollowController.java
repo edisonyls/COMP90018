@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * follow controller
+ * follow, unfollow, check follow, list follower and following
+ */
+
 @RestController
 @Slf4j
 @Api(tags = "follow controller")

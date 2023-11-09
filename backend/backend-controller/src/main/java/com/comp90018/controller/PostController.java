@@ -17,6 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * post controller
+ */
+
 @RestController
 @Slf4j
 @Api(tags = "post")
