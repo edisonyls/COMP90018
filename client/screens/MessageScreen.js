@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { SafeAreaView, ScrollView, Text, StyleSheet, View, TextInput, Button, TouchableOpacity, Image} from 'react-native';
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { BASE_URL } from '../utils/utils';
 import axios from 'axios';
 
 const MessageScreen = ({ route, navigation }) => {
@@ -44,7 +45,8 @@ const MessageScreen = ({ route, navigation }) => {
 
   const sendMessage = async () => {
     try {
-        const response = await axios.post('http://192.168.1.111:8080/message/sendMessage', messageData);
+        const response = await axios.post(`http://${BASE_URL}:8080/message/sendMessage`, messageData);
+        // const response = await axios.post('http://192.168.1.111:8080/message/sendMessage', messageData);
         if (response.data.success) {
             setInputText('');
         } else {
@@ -58,7 +60,8 @@ const MessageScreen = ({ route, navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('http://192.168.1.111:8080/message/listChat', contactData);
+        const response = await axios.post(`http://${BASE_URL}:8080/message/listChat`, contactData);
+        // const response = await axios.post('http://192.168.1.111:8080/message/listChat', contactData);
         if (response.data.success) {
           if (response.data !== null) {
           
@@ -223,19 +226,19 @@ const styles = StyleSheet.create({
     },
     input: {
       flex: 1,
-      merginRight: 10,
+      marginRight: 10, // Corrected typo here from 'merginRight' to 'marginRight'
       marginHorizontal: 20,
       marginTop: 10,
       marginBottom: 20,
       paddingHorizontal: 15,
       paddingVertical: 10,
       height: 50,
-      fontSize: 18, // 字体大小
-      borderColor: 'gray', // 边框颜色
-      borderWidth: 1, // 边框宽度
-      borderRadius: 10, // 边框圆角
-      backgroundColor: 'white', // 背景颜色
-    },
+      fontSize: 18,
+      borderColor: 'gray',
+      borderWidth: 1,
+      borderRadius: 10,
+      backgroundColor: 'white',
+    },    
     footerContainer: {
       flexDirection: 'row', // Align children in a row
       paddingHorizontal: 10, // Horizontal padding

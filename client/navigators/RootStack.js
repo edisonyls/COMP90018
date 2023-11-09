@@ -83,12 +83,9 @@ const RootStack = () => {
         <Stack.Screen name="ContactUs" component={ContactUsScreen} />
         <Stack.Screen name="Post" component={PostScreen} />
         <Stack.Screen name="Message" component={MessageScreen} />
-
-        <Stack.Screen name="Activities" component={ActivitiesScreen} />
-        <Stack.Screen name="Followers" component={FollowersScreen} />
-        <Stack.Screen name="Followings" component={FollowingsScreen} />
-        <Stack.Screen name="Others" component={OthersProflie} />
-
+        <Stack.Screen name="Followers" component={FollowersScreen}/>
+        <Stack.Screen name="Others" component={OthersProflie}/>
+      
       </Stack.Navigator>
     </NavigationContainer>
   );
