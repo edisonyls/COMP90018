@@ -155,7 +155,7 @@ const AccountScreen = () => {
       <SafeAreaView className="flex-1 bg-white relative">
         <>
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            {isLoading && <LoadingView loading={isLoading} />}
+            {/* {isLoading && <LoadingView loading={isLoading} />} */}
             <View style={styles.headerContainer}>
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <AntDesign name="leftcircleo" size={24} color="black" />
