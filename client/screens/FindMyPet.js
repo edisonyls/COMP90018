@@ -217,6 +217,9 @@ const FindMyPet = () => {
   // Function to handle the form submission
   const handleSubmit = async() => {
 
+    Alert.alert('Successfully Sumbmitted!');
+    navigation.navigate('Home'); // replace 'NextScreen' with the actual name of your screen
+
     const isUploadImage = await uploadImage(formData);
     console.log("postId is "+ isUploadImage);
 
@@ -238,6 +241,7 @@ const FindMyPet = () => {
           console.log(`Contact Number: ${contactNumber}`);
           console.log(`Reward: ${reward}`);
           console.log(`Post Id: ${isUploadImage}`);
+          
           
           
           const petData = {
@@ -294,8 +298,7 @@ const FindMyPet = () => {
           // Clear other form fields as necessary
     
           // Use the navigation hook to navigate to another screen
-          Alert.alert('Successfully Sumbmitted!');
-          navigation.navigate('Home'); // replace 'NextScreen' with the actual name of your screen
+ 
     
         } else {
           console.log('Failed to retrieve location details.');

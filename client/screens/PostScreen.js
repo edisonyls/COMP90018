@@ -120,8 +120,8 @@ const PostScreen = ({ route, navigation }) => {
     behavior={Platform.OS === "ios" ? "padding" : "height"} 
     style={{flex: 1}}
   >
-    <SafeAreaView className="flex-1 bg-white">
-      
+    <SafeAreaView className="flex-1 bg-white relative">
+      <>
       <ScrollView>
       <View className="flex-1 bg-white">
         <View className="flex-row justify-between items-center p-2.5 mr-2">
@@ -276,7 +276,9 @@ const PostScreen = ({ route, navigation }) => {
       )}
     </View>
       </View>
+     
       </ScrollView>
+      </>
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Write comment..."
@@ -288,6 +290,7 @@ const PostScreen = ({ route, navigation }) => {
             <Text style={styles.sendButtonText}>Send</Text>
           </TouchableOpacity>
         </View>
+
     </SafeAreaView>
     </KeyboardAvoidingView>
   );

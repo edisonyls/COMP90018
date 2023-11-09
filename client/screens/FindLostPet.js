@@ -238,7 +238,7 @@ const FindMyPet = () => {
             postType: 'Found',
             description: description,
             title: title,
-            postId: postId
+            postId: isUploadImage
           };
 
           try {
@@ -247,7 +247,7 @@ const FindMyPet = () => {
           
             console.log(serverResponse.data);
           
-            if (serverResponse.success) {
+            if (serverResponse.data.success) {
                 console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
                 // ... (clear your form fields and navigate away)
             } else {
