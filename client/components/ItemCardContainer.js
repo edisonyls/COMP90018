@@ -37,7 +37,6 @@ const ItemCardContainer = ({ post, navigation }) => {
         setLocation("Unknown");
       }
     } catch (error) {
-      console.error("what", error);
       setLocation("Unknown");
     }
   };
