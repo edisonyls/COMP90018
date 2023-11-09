@@ -89,12 +89,11 @@ const MessageScreen = ({ route, navigation }) => {
                   senderProfile: item.profile
               }
             });
-
             setMessages(messageData);
         } else {
-
+          setMessages([]);
         }} else {
-          console.error('Failed to fetch messages: ', response.data.msg);
+          setMessages([]);
         }
       } catch (error) {
         console.error('Error fetching messages: ', error);
@@ -136,7 +135,7 @@ const MessageScreen = ({ route, navigation }) => {
         />
       </TouchableOpacity>
 
-      <Text style={styles.headerText}>{ contactName }</Text>
+      <Text style={styles.headerText}>{ contactUserName }</Text>
       </View>
       <ScrollView 
         onScroll={handleScroll}
