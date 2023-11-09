@@ -70,7 +70,10 @@ const ProfileScreen = () => {
     if (result) {
       updateUser(null);
       setIsLoading(false);
-      navigation.navigate("SignIn");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SignIn' }], // 确保这里的 'SignIn' 是你的登录屏幕的路由名称
+      });
     } else {
       setIsLoading(false);
       Alert.alert("Error", "Failed to logout");
