@@ -240,6 +240,7 @@ const FindMyPet = () => {
           console.log(`Post Id: ${isUploadImage}`);
           
           
+          
           const petData = {
             petName: petName,
             petCategory: petCategory,
