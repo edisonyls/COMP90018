@@ -4,10 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/**
- * @author Xingju Nie
- * @version 1.0
- */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

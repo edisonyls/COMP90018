@@ -49,17 +49,17 @@ public class MinIOUtils {
     public void createMinioClient() {
         try {
             if (null == minioClient) {
-                log.info("开始创建 MinioClient...");
+                log.info("start MinioClient...");
                 minioClient = MinioClient
                                 .builder()
                                 .endpoint(endpoint)
                                 .credentials(accessKey, secretKey)
                                 .build();
                 createBucket(bucketName);
-                log.info("创建完毕 MinioClient...");
+                log.info("finish MinioClient...");
             }
         } catch (Exception e) {
-            log.error("MinIO服务器异常：{}", e);
+            log.error("MinIO server exception：{}", e);
         }
     }
     public static String getBasisUrl() {
