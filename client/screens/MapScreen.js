@@ -16,16 +16,14 @@ import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Animated, Easing } from "react-native";
 import { useUserContext } from "../context/userContext";
-import { getAllPosts, queryUserInfo } from '../api/auth';
-// import { EvilIcons } from '@expo/vector-icons';
-import { Magnetometer } from 'expo-sensors';
+import { getAllPosts, queryUserInfo } from "../api/auth";
+import { EvilIcons } from "@expo/vector-icons";
+import LoadingView from "../components/LoadingView";
 import { Entypo } from '@expo/vector-icons';
-
-
+import { Magnetometer } from 'expo-sensors';
 const RadarAnimation = React.memo(() => {
   const scaleValue = new Animated.Value(0); // 初始值为0
   const [selectedMenu, setSelectedMenu] = useState("All");
-  
 
 
   const animateRadar = () => {
@@ -42,7 +40,6 @@ const RadarAnimation = React.memo(() => {
   useEffect(() => {
     animateRadar(); // 开始动画
     return () => scaleValue.stopAnimation(); // 当组件卸载时停止动画
-
   }, []);
 
   const scale = scaleValue.interpolate({
@@ -74,11 +71,13 @@ const RadarAnimation = React.memo(() => {
 const MapScreen = () => {
   const [type, setType] = useState("all");
   const [selectedMenu, setSelectedMenu] = useState("all");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLocationLoading, setIsLocationLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isPostLoading, setIsPostLoading] = useState(false);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const navigation = useNavigation();
-  const { user,setUser } = useUserContext();
+  const { user, setUser } = useUserContext();
   const [posts, setPosts] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [allPosts, setAllPosts] = useState([]); // 存储从后端获取的所有帖子
@@ -90,21 +89,19 @@ const MapScreen = () => {
       }
     : null;
 
-    const handleMarkerPress = async (post) => {
-      try {
-       
-          navigation.navigate('Post', { post: post });
-        
-          // 如果请求不成功，设置userInfo为空并可选择显示错误信息
-        
-      } catch (error) {
-        // 如果发生了其他类型的错误，如网络错误等，也设置userInfo为空并显示错误
-        setUserInfo(null);
-        console.error('Error fetching user info:', error);
-        // 同样可以显示一个错误弹窗
-        Alert.alert("Error", "An error occurred while trying to fetch user information.");
-      }
-    };
+  const handleMarkerPress = async (post) => {
+    try {
+      navigation.navigate("Post", { post: post });
+    } catch (error) {
+      setUserInfo(null);
+      console.error("Error fetching user info:", error);
+      Alert.alert(
+        "Error",
+        "An error occurred while trying to fetch user information."
+      );
+    }
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -136,7 +133,7 @@ const MapScreen = () => {
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true); // 开始加载数据
+      setIsLocationLoading(true);
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
@@ -145,28 +142,26 @@ const MapScreen = () => {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
-
-
-    
-    const fetchAllPosts = async () => {
-      setIsLoading(true);
-      try {
-        const postsData = await getAllPosts("All");
-        if (postsData && postsData.success) {
-          setAllPosts(postsData.data); // 保存所有帖子
-          setPosts(postsData.data); // 默认显示所有帖子
-        }
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
       setIsLoading(false);
-    };
 
-    fetchAllPosts();
-  })();
-}, []);
+      const fetchAllPosts = async () => {
+        setIsPostLoading(true);
+        try {
+          const postsData = await getAllPosts("All");
+          if (postsData && postsData.success) {
+            setAllPosts(postsData.data); // 保存所有帖子
+            setPosts(postsData.data); // 默认显示所有帖子
+          }
+        } catch (error) {
+          console.error("Error fetching posts:", error);
+        }
+        setIsPostLoading(false);
+      };
 
-  
+      fetchAllPosts();
+    })();
+    setIsLocationLoading(false);
+  }, []);
 
   const filterPosts = (menuSelection) => {
     let postType;
@@ -187,14 +182,14 @@ const MapScreen = () => {
         setPosts(allPosts);
         return;
     }
-    const filtered = allPosts.filter(post => post.postType === postType); // 确保这里不要转换成字符串
+    const filtered = allPosts.filter((post) => post.postType === postType); // 确保这里不要转换成字符串
     setPosts(filtered);
   };
 
   useEffect(() => {
     filterPosts(selectedMenu);
   }, [selectedMenu, allPosts]);
-
+  const msg = "hi";
   const region = location
     ? {
         latitude: location.coords.latitude,
@@ -212,10 +207,10 @@ const MapScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white relative">
-      {isLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0B646B" />
-        </View>
+      {isLocationLoading ? (
+        <LoadingView loading={isLocationLoading} msg={"Loading location..."} />
+      ) : isLoading ? (
+        <LoadingView loading={isLoading} msg={"Map Loading..."} />
       ) : (
         <ScrollView>
           <View className="flex-row items-between justify-between px-8">
@@ -223,7 +218,9 @@ const MapScreen = () => {
               <Text className="text-[40px] text-[#0B646B] font-bold">
                 {"Map"}
               </Text>
-              <Text className="text-[20px] text-[#527283]">{user.nickname}</Text>
+              <Text className="text-[20px] text-[#527283]">
+                {user.nickname}
+              </Text>
             </View>
             <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
               <Image
@@ -233,42 +230,42 @@ const MapScreen = () => {
             </View>
           </View>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <View className="flex-row item-center justify-center px-8 mt-4">
-            <MenuContainer
-              key={"all"}
-              title="All"
-              type={type}
-              setType={setType}
-              setSelectedMenu={setSelectedMenu}
-            />
-            <MenuContainer
-              key={"missing"}
-              title="Missing"
-              type={type}
-              setType={setType}
-               setSelectedMenu={() => setSelectedMenu("missing")}
-            />
-            <MenuContainer
-              key={"found"}
-              title="Found"
-           
-              type={type}
-              setType={setType}
-              setSelectedMenu={() => setSelectedMenu("found")}
-            />
-            <MenuContainer
+            <View className="flex-row item-center justify-center px-8 mt-4">
+              <MenuContainer
+                key={"all"}
+                title="All"
+                type={type}
+                setType={setType}
+                setSelectedMenu={setSelectedMenu}
+              />
+              <MenuContainer
+                key={"missing"}
+                title="Missing"
+                type={type}
+                setType={setType}
+                setSelectedMenu={() => setSelectedMenu("missing")}
+              />
+              <MenuContainer
+                key={"found"}
+                title="Found"
+                type={type}
+                setType={setType}
+                setSelectedMenu={() => setSelectedMenu("found")}
+              />
+              <MenuContainer
                 key={"general"}
                 title="General"
                 type={type}
                 setType={setType}
                 setSelectedMenu={() => setSelectedMenu("general")}
               />
-          </View>
+            </View>
           </ScrollView>
           <MapView
             style={styles.map}
             provider={MapView.PROVIDER_GOOGLE}
             region={region}
+            onMapLoaded={() => setIsLoading(false)}
           >
             {userLocation && (
               <Marker coordinate={userLocation}>
@@ -286,19 +283,17 @@ const MapScreen = () => {
             )}
             {posts.map((post) => (
               <Marker
-              key={post.id}
+                key={post.id}
                 coordinate={{
                   latitude: post.latitude,
                   longitude: post.longitude,
                 }}
-                onPress={() => handleMarkerPress(post)}// 添加点击事件
+                onPress={() => handleMarkerPress(post)} // 添加点击事件
               >
                 <Image
-                  source={{ uri: post.picture }} 
-                   style={styles.headshown}
-                 />
-                
-               
+                  source={{ uri: post.picture }}
+                  style={styles.headshown}
+                />
               </Marker>
             ))}
           </MapView>
@@ -317,12 +312,12 @@ const styles = StyleSheet.create({
     height: 500, // 为地图设置一个高度，这样它就能正确显示了
   },
   // 其他可能的样式
-  headshown:{
-    borderWidth: 2, 
-    borderColor: 'red', 
-    borderRadius: 25, 
-    width: 50, 
-    height: 50, 
+  headshown: {
+    borderWidth: 2,
+    borderColor: "red",
+    borderRadius: 25,
+    width: 50,
+    height: 50,
   },
 });
 

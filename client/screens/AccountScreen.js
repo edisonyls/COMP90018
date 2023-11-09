@@ -76,7 +76,7 @@ const AccountScreen = () => {
         id: user.id,
         mobile: phoneNumber,
         nickname: name,
-        password: user.password,
+        //password: user.password,
         postcode: user.postcode,
         sex: user.sex,
         state: user.state,
@@ -91,7 +91,6 @@ const AccountScreen = () => {
   };
 
   const pickImage = async (isBackground) => {
-    setIsLoading(true);
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -115,7 +114,6 @@ const AccountScreen = () => {
         setUploadProfilePic(true);
       }
     }
-    setIsLoading(false);
   };
 
   const saveAndGoBack = async () => {
@@ -155,52 +153,60 @@ const AccountScreen = () => {
       <SafeAreaView className="flex-1 bg-white relative">
         <>
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            {/* {isLoading && <LoadingView loading={isLoading} />} */}
-            <View style={styles.headerContainer}>
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <AntDesign name="leftcircleo" size={24} color="black" />
-              </TouchableOpacity>
-              <Text style={styles.headerTitle}>Account</Text>
-              <View />
-            </View>
-            <View style={styles.imageContainer}>
-              <Image style={styles.backgroundImage} source={backgroundUri} />
-              <TouchableOpacity
-                style={styles.editIcon}
-                onPress={() => pickImage(true)}
-              >
-                <AntDesign name="edit" size={24} color="black" />
-              </TouchableOpacity>
+            {isLoading ? (
+              <LoadingView loading={isLoading} msg={"Uploading Profile..."} />
+            ) : (
+              <>
+                <View style={styles.headerContainer}>
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <AntDesign name="leftcircleo" size={24} color="black" />
+                  </TouchableOpacity>
+                  <Text style={styles.headerTitle}>Account</Text>
+                  <View />
+                </View>
+                <View style={styles.imageContainer}>
+                  <Image
+                    style={styles.backgroundImage}
+                    source={backgroundUri}
+                  />
+                  <TouchableOpacity
+                    style={styles.editIcon}
+                    onPress={() => pickImage(true)}
+                  >
+                    <AntDesign name="edit" size={24} color="black" />
+                  </TouchableOpacity>
 
-              {/* 新的容器开始 */}
-              <View style={styles.profileContainer}>
-                <Image style={styles.headImage} source={headUri} />
-                <TouchableOpacity
-                  style={styles.editIcon}
-                  onPress={() => pickImage(false)}
-                >
-                  <AntDesign name="edit" size={24} color="black" />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.nameContainer}>
-              <Text style={styles.nameLabel}>Username</Text>
-              <TextInput
-                style={styles.nameInput}
-                value={name}
-                onChangeText={(text) => setName(text)}
-                placeholder="Enter your name"
-              />
-            </View>
-            <View style={styles.nameContainer}>
-              <Text style={styles.nameLabel}>Phone Number</Text>
-              <TextInput
-                style={styles.nameInput}
-                value={phoneNumber}
-                onChangeText={(text) => setPhoneNumber(text)}
-                placeholder="Enter your phone number"
-              />
-            </View>
+                  {/* 新的容器开始 */}
+                  <View style={styles.profileContainer}>
+                    <Image style={styles.headImage} source={headUri} />
+                    <TouchableOpacity
+                      style={styles.editIcon}
+                      onPress={() => pickImage(false)}
+                    >
+                      <AntDesign name="edit" size={24} color="black" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View style={styles.nameContainer}>
+                  <Text style={styles.nameLabel}>Username</Text>
+                  <TextInput
+                    style={styles.nameInput}
+                    value={name}
+                    onChangeText={(text) => setName(text)}
+                    placeholder="Enter your name"
+                  />
+                </View>
+                <View style={styles.nameContainer}>
+                  <Text style={styles.nameLabel}>Phone Number</Text>
+                  <TextInput
+                    style={styles.nameInput}
+                    value={phoneNumber}
+                    onChangeText={(text) => setPhoneNumber(text)}
+                    placeholder="Enter your phone number"
+                  />
+                </View>
+              </>
+            )}
           </ScrollView>
           <TouchableOpacity style={styles.saveButton} onPress={saveAndGoBack}>
             <Text style={styles.saveButtonText}>Save Changes</Text>
