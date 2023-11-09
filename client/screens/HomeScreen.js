@@ -8,12 +8,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useUserContext } from "../context/userContext";
+import { fetchAllPosts } from "../api/HomeAPI";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,19 +52,33 @@ const HomeScreen = () => {
         "This is a really long title, I want to see how it looks like when it is too long to fit in the card",
     },
   ]);
+  const [test, setTest] = useState([]);
+  useEffect(() => {
+    setIsLoading(true);
+    fetchAllPosts()
+      .then((res) => {
+        setTest(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   const { user } = useUserContext();
 
-  const filteredData = mainData.filter((item) => {
+  const filteredData = test.filter((item) => {
     switch (type) {
       case "all":
         return true;
       case "missing":
-        return item.badge === "Missing";
+        return item.postType === 0;
       case "found":
-        return item.badge === "Found";
+        return item.postType === 1;
       case "general":
-        return item.badge === "General";
+        return item.postType === 2;
       default:
         return true;
     }
@@ -100,14 +115,14 @@ const HomeScreen = () => {
               />
             </View>
           </View>
-          
+
           <View className="px-4 mt-4">
-          <View className="items-center justify-center">
-            <Image
-              source={require("../assets/HomeScreenImage.jpg")} // 替换为你的图片路径
-              style={{ width: 300, height: 180 }} // 根据需要调整宽度和高度
-            />
-          </View>
+            <View className="items-center justify-center">
+              <Image
+                source={require("../assets/HomeScreenImage.jpg")} // 替换为你的图片路径
+                style={{ width: 300, height: 180 }} // 根据需要调整宽度和高度
+              />
+            </View>
             <Text className="text-[#2C7379] text-[20px] font-bold">
               Category
             </Text>
@@ -164,8 +179,8 @@ const HomeScreen = () => {
                   <ItemCardContainer
                     navigation={navigation}
                     key={item.id}
-                    imageSrc={item.imageSrc}
-                    badge={item.badge}
+                    imageSrc={item.picture}
+                    badge={item.postType}
                     petName={item.petName}
                     petKind={item.petKind}
                     title={item.title}
