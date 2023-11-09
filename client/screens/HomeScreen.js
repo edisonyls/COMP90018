@@ -6,9 +6,15 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, {
+  useLayoutEffect,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
@@ -23,6 +29,7 @@ const HomeScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("All");
   const [postData, setPostData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const { user } = useUserContext();
 
@@ -42,6 +49,21 @@ const HomeScreen = () => {
       })
       .finally(() => {
         setIsLoading(false);
+      });
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    fetchAllPosts()
+      .then((res) => {
+        setPostData(res.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setRefreshing(false);
       });
   }, []);
 
@@ -76,7 +98,18 @@ const HomeScreen = () => {
           <ActivityIndicator size="large" color="#0B646B" />
         </View>
       ) : (
-        <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 60 }}
+          refreshControl={
+            // Add this prop to ScrollView
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh} // Bind your onRefresh function
+              colors={["#0B646B"]} // Optional: customize the spinner colors
+              tintColor="#0B646B" // Optional: iOS only: customize the spinner color
+            />
+          }
+        >
           <View className="flex-row items-between justify-between px-8">
             <View>
               <Text className="text-[40px] text-[#0B646B] font-bold">
