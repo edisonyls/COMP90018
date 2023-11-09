@@ -40,20 +40,22 @@ const HomeScreen = () => {
 
   const { user } = useUserContext();
 
-  const filteredData = postData ? postData.filter((item) => {
-    switch (type) {
-      case "all":
-        return true;
-      case "missing":
-        return item.postType === 0;
-      case "found":
-        return item.postType === 1;
-      case "general":
-        return item.postType === 2;
-      default:
-        return true;
-    }
-  }): [];
+  const filteredData = postData
+    ? postData.filter((item) => {
+        switch (type) {
+          case "all":
+            return true;
+          case "missing":
+            return item.postType === 0;
+          case "found":
+            return item.postType === 1;
+          case "general":
+            return item.postType === 2;
+          default:
+            return true;
+        }
+      })
+    : [];
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -76,8 +78,7 @@ const HomeScreen = () => {
                 {"Welcome :)"}
               </Text>
               <Text className="text-[20px] text-[#527283]">
-                {/* {user.nickname} */}
-                {"1"}
+                {user.nickname}
               </Text>
             </View>
             <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
@@ -103,9 +104,7 @@ const HomeScreen = () => {
             <View className="flex-row item-center justify-center px-8 mt-4">
               <MenuContainer
                 key={"all"}
-
                 title="All"
-
                 type={type}
                 setType={setType}
                 setSelectedMenu={setSelectedMenu}
