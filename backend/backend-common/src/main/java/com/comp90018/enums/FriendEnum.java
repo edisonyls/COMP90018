@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * is the user friend of mine
+ */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

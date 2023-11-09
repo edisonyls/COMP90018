@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * comment controller
+ * add, delete, list, like comments
+ */
 @RestController
 @Slf4j
 @Api(tags = "comment")

@@ -46,6 +46,30 @@ const OthersProfile = ({ route, navigation }) => {
       // 获取其他用户信息
       const otherUserInfo = await queryUserInfo(otherUser.id);
 
+<<<<<<< HEAD
+    const [isFollowing, setIsFollowing] = useState(false); // State to manage follow button
+    
+    const postTypeToBadge = {
+      0: "Missing",
+      1: "Found",
+      2: "General",
+    };
+    const handleMessagePress = async () => {
+      setIsLoading(true);
+      try {
+        // 获取当前用户信息
+        const currentUserInfo = await queryUserInfo(user.id);
+        // 获取其他用户信息
+        const otherUserInfo = await queryUserInfo(otherUser.id);
+    
+        if (currentUserInfo.success && otherUserInfo.success) {
+          console.log(currentUserInfo);
+          // 如果成功获取了信息，导航到消息页面并传递这些信息
+          navigation.navigate('Message', {
+            currentUser: currentUserInfo.data,
+            otherUser: otherUserInfo.data,
+          });
+=======
       if (currentUserInfo.success && otherUserInfo.success) {
         // 如果成功获取了信息，导航到消息页面并传递这些信息
         navigation.navigate("Message", {
@@ -75,6 +99,7 @@ const OthersProfile = ({ route, navigation }) => {
         if (userInfo.id === user.id) {
           // 如果相同，则导航到 "Profile" 界面
           navigation.navigate('Profile');
+>>>>>>> 6a5058323898a8922f82e2f277335529f32c0a9f
         } else {
           // 如果不同，则导航到 "Others" 界面，并传递用户信息
           navigation.navigate('Others', { otherUser: userInfo });

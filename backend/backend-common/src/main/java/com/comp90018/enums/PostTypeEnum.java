@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * post type
+ */
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

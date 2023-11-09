@@ -17,7 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * minio util class
+ */
 @Slf4j
 public class MinIOUtils {
 

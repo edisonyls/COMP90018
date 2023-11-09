@@ -1,6 +1,5 @@
 package com.comp90018.controller;
 
-
 import com.comp90018.bo.ChatBO;
 import com.comp90018.bo.SendMsgBO;
 import com.comp90018.dto.Message;
@@ -18,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
+
+/**
+ * message controller
+ * send, list messages
+ */
 
 @RestController
 @Slf4j

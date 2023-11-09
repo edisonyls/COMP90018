@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * post controller
+ * like a post
+ */
 @RestController
 @Slf4j
 @Api(tags = "like post controller")

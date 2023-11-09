@@ -11,7 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 import PostOption from "../screens/PostOption";
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import ActivitiesScreen from "../screens/ActivitiesScreen";
 import MessageScreen from "../screens/MessageScreen";
 import FollowerScreen from "../screens/FollowersScreen";
 
@@ -112,13 +111,13 @@ const RootTab = ({ navigation }) => {
       />
 
       <Tab.Screen
-        name="ActivitiesScreen"
-        component={ActivitiesScreen}
+        name="FollowersScreen"
+        component={FollowerScreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
               <TouchableOpacity
-                onPress={() => navigation.navigate("ActivitiesScreen")}
+                onPress={() => navigation.navigate("FollowersScreen")}
               >
                 <View className="items-center justify-center">
                   <Entypo
