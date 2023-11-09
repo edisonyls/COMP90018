@@ -76,7 +76,7 @@ const AccountScreen = () => {
         id: user.id,
         mobile: phoneNumber,
         nickname: name,
-        password: user.password,
+        //password: user.password,
         postcode: user.postcode,
         sex: user.sex,
         state: user.state,
