@@ -16,8 +16,6 @@ import { useUserContext } from "../context/userContext";
 import { queryUserInfo } from '../api/auth';
 import axios from 'axios';
 
-const BASE_URL = "192.168.1.111";
-
 const ListItem = ({ name, imageProfile, isClicked, onPress, senderId}) => {
     
     const textColor = isClicked ? 'black' : '#9747FF';
@@ -58,7 +56,7 @@ const FollowersScreen = ({ navigation }) => {
     setIsLoading(true);
     try {
       const userId = user.id;
-      const response = await axios.get(`${BASE_URL}/post/listFollower`, {
+      const response = await axios.get('http://192.168.1.111:8080/post/listFollower', {
         params: { userId },
       });
   
@@ -71,9 +69,8 @@ const FollowersScreen = ({ navigation }) => {
           imageProfile: item.profile,
           senderId: item.id,
         }));
-  
+        //console.log(transformedData);
         setActivities(transformedData);
-        console.log(transformedData);
       } else {
         console.log('No data found.');
       }
@@ -85,10 +82,10 @@ const FollowersScreen = ({ navigation }) => {
   };
 
   const navigateToUserInfo = async (senderId) => {
-    console.log(senderId);
     try {
       const userInfoData = await queryUserInfo(senderId);
       if (userInfoData && userInfoData.success) {
+        console.log(userInfoData.data);
         // Navigate and pass the data to 'Others' screen
         navigation.navigate('Others', { otherUser: userInfoData.data });
       } else {
@@ -100,6 +97,7 @@ const FollowersScreen = ({ navigation }) => {
   };
   
       
+
   useEffect(() => {
     fetchActivities();
 

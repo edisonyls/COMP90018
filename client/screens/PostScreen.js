@@ -54,19 +54,6 @@ const PostScreen = ({ route, navigation }) => {
       postId: post.id,
       posterId: post.posterId,
       
-      // replies:[
-      //   {
-      //     "commentUserId": "",
-      //     "content": "",
-      //     "createTime": "",
-      //     "fatherCommentId": "",
-      //     "id": "",
-      //     "likeCounts": 0,
-      //     "postId": "",
-      //     "posterId": "",
-      //     "replies": []
-      //   }
-      // ] 
     };
 
     // 调用接口函数发送评论
