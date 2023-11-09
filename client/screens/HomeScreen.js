@@ -40,7 +40,7 @@ const HomeScreen = () => {
 
   const { user } = useUserContext();
 
-  const filteredData = postData.filter((item) => {
+  const filteredData = postData ? postData.filter((item) => {
     switch (type) {
       case "all":
         return true;
@@ -53,7 +53,7 @@ const HomeScreen = () => {
       default:
         return true;
     }
-  });
+  }): [];
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
