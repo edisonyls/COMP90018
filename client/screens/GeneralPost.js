@@ -16,12 +16,12 @@ import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
 import {BASE_URL} from "../api/auth";
-
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
 const GeneralPost = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
+  const [formData, setFormData] = useState(null);
   const [postTag, setPostTag] = useState('');
   
   const [description, setDescription] = useState ('');
@@ -101,7 +101,14 @@ const GeneralPost = () => {
               quality: 1,
             });
             if (!cameraResult.canceled) {
-              setImageUri(cameraResult.assets[0].uri);
+              const asset = cameraResult.assets[0];
+              const uri = asset.uri;
+              setImageUri(uri);
+              const type = asset.type;
+              const name = uri.split('/').pop();
+              let formData = new FormData();
+              formData.append('multipartFile', { uri, name, type });
+              setFormData(formData);
             }
           }
         },
@@ -120,7 +127,14 @@ const GeneralPost = () => {
               quality: 1,
             });
             if (!libraryResult.canceled) {
-              setImageUri(libraryResult.assets[0].uri);
+              const asset = libraryResult.assets[0];
+              const uri = asset.uri;
+              setImageUri(uri);
+              const type = asset.type;
+              const name = uri.split('/').pop();
+              let formData = new FormData();
+              formData.append('multipartFile', { uri, name, type });
+              setFormData(formData);
             }
           }
         },
@@ -130,49 +144,33 @@ const GeneralPost = () => {
     );
   };
 
-
-  const convertUriToMultipartFile = async (imageUri) => {
-    // Step 1: Convert the image URI to a Blob or File object
-    const response = await fetch(imageUri);
-    const blob = await response.blob();
-    
-    // Create a new file object (if necessary, depending on your backend requirements)
-    const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
-  
-    // Step 2: Create a FormData object and append the image file to it
-    const formData = new FormData();
-    formData.append('image', file);
-  
-    // Now formData contains the image in MultipartFile format
-    return formData;
-  };
-
-
+  //Upload image to backend 
   const uploadImage = async (formData) => {
-
+    console.log("Sending data for uploading img...");
     // Step 3: Send the FormData object using Axios with the appropriate headers
     try {
-      const response = await axios.post('http://'+ BASE_URL +':8080/post/uploadPostImg', formData, {
+      const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      });
-  
-      // Handle the response from the server
-      if (response.success === 'true') {
+      };
+      const res = await axios.post(`http://${BASE_URL}:8080/post/uploadImg`, formData, config);
+      const response = res.data;
+      if (response.success === true) { // check if response is in valid format
+        // Image uploaded successfully
         console.log('Image uploaded successfully. ID:', response.data.postId);
-        setPostId(response.data.postId);
-        return true;
-
+        return response.data.postId;
       } else {
+        // Handle any other HTTP status codes
         console.log('Server responded with an unexpected status.');
         return false;
       }
     } catch (error) {
-      console.error('An error occurred while uploading the image:', error);
+      console.log(error);
       return false;
     }
   };
+
 
   const validateForm = () => {
     if (!imageUri || !postTag || !selectedPlaceId || !description) {
@@ -185,8 +183,8 @@ const GeneralPost = () => {
 
     // Function to handle the form submission
     const handleSubmit = async() => {
-        const formData = convertUriToMultipartFile(imageUri);
-        if (validateForm() && uploadImage(formData)) {
+        const isUploadImage = await uploadImage(formData);
+        if (validateForm() && isUploadImage) {
           try {
             // Fetch the detailed information of the selected location
             const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
@@ -208,35 +206,23 @@ const GeneralPost = () => {
                 location_lat: location.lat,
                 location_lng: location.lng,
                 userId: user.id,
-                postType: "General"
+                postType: "General",
+                postId: isUploadImage
 
               };
 
               try {
                 const serverResponse = await axios.post('http://'+ BASE_URL +':8080/post/uploadPost', generalPostData);
                 console.log(serverResponse);
-                if (serverResponse.status === 'success') {
+                if (serverResponse.data.success) {
                     console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
-                    // ... (clear your form fields and navigate away)
+                    // ... (clear form fields and navigate away)
                 } else {
                     console.log('Server responded with an unexpected status.');
                 }
               } catch (error) {
                   //console.error('An error occurred while submitting the form:', error);
-                  if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                  } else if (error.request) {
-                    // The request was made but no response was received
-                    console.log(error.request);
-                  } else {
-                    // Something happened in setting up the request and triggered an Error
-                    console.log('Error', error.message);
-                  }
-
+                  console.log(error);
               }
 
 

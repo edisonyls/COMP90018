@@ -125,6 +125,7 @@ const OthersProfile = ({ route, navigation}) => {
 
             {/* Follow and Message buttons */}
             <View style={{ flexDirection: 'row', padding: 10, justifyContent: 'center' }}>
+
                 <TouchableOpacity
                   style={buttonStyle(isFollowing)}
                   onPress={handleFollowPress}
@@ -134,6 +135,7 @@ const OthersProfile = ({ route, navigation}) => {
                     {isFollowing ? "Following" : "Follow"}
                   </Text>
                 </TouchableOpacity>
+
                 
                 <TouchableOpacity
                   style={buttonStyle(false)}
@@ -142,6 +144,7 @@ const OthersProfile = ({ route, navigation}) => {
                 >
                   <Text style={{ color: 'black' }}>Message</Text>
                 </TouchableOpacity>
+                
             </View>
 
 

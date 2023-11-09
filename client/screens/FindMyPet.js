@@ -8,13 +8,15 @@ import { AntDesign } from '@expo/vector-icons'; // Importing AntDesign for the d
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
-import { BASE_URL } from '../api/auth';
+//import { BASE_URL } from '../api/auth';
+const BASE_URL = "192.168.1.107";
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
 const FindMyPet = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
+  const [formData, setFormData] = useState(null);
   //const [petCategory, setPetCategory] = useState(null);
   const [isPickerOpen, setIsPickerOpen] = useState(false); // New state variable to track picker status
   const [petCategory, setPetCategory] = useState(null); // State variable for the selected pet category
@@ -108,13 +110,26 @@ const FindMyPet = () => {
               aspect: [4, 3],
               quality: 1,
             });
-            if (!cameraResult.canceled) {
-              setImageUri(cameraResult.assets[0].uri);
-              const type = cameralResult.type;
-              const name = imageUri.split('/').pop();
+            // if (!cameraResult.canceled && cameraResult.assets) {
+            //   const newImageUri = cameraResult.assets[0].uri;
+            //   setImageUri(newImageUri);
+            //   const type = cameraResult.assets[0].type;
+            //   const name = newImageUri.split('/').pop();
+            //   let formData = new FormData();
+            //   formData.append('multipartFile', { uri: newImageUri, name: 'imagefilename.jpg', type: 'image/jpeg' });
+            //   setFormData(formData);
+            
+            // }
+            if (!cameraResult.canceled && cameraResult.assets) {
+              const asset = cameraResult.assets[0];
+              const uri = asset.uri;
+              setImageUri(uri);
+              const type = asset.type;
+              const name = uri.split('/').pop();
               let formData = new FormData();
-              formData.append('file',{uri, name, type});
-              
+              formData.append('multipartFile', { uri, name, type });
+              setFormData(formData);
+            
             }
           }
         },
@@ -132,12 +147,15 @@ const FindMyPet = () => {
               aspect: [4, 3],
               quality: 1,
             });
-            if (!libraryResult.canceled) {
-              setImageUri(libraryResult.assets[0].uri);
-              const type = cameralResult.type;
-              const name = imageUri.split('/').pop();
+            if (!libraryResult.canceled && libraryResult.assets) {
+              const asset = libraryResult.assets[0];
+              const uri = asset.uri;
+              setImageUri(uri);
+              const type = asset.type;
+              const name = uri.split('/').pop();
               let formData = new FormData();
-              formData.append('file',{uri, name, type});
+              formData.append('multipartFile', { uri, name, type });
+              setFormData(formData);
             }
           }
         },
@@ -147,52 +165,29 @@ const FindMyPet = () => {
     );
   };
 
-  // const convertUriToMultipartFile = async (imageUri) => {
-  //   try {
-  //     // Extract file name and type from the URI
-  //     let uriParts = imageUri.split('/');
-  //     let fileName = uriParts[uriParts.length - 1];
-  //     let fileType = fileName.split('.').pop();
   
-  //     // Fetch the blob from the local file system using the FileSystem API
-  //     const blob = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
-  //     const fileBlob = new Blob([blob], { type: `image/${fileType}` });
-  
-  //     // Create a new FormData object and append the file
-  //     const formData = new FormData();
-  //     formData.append('image', { uri: imageUri, name: fileName, type: `image/${fileType}` });
-  
-  //     return formData;
-  //   } catch (error) {
-  //     console.error('Error converting image URI to multipart file:', error);
-  //     throw error;
-  //   }
-  // };
-  
-
-
   const uploadImage = async (formData) => {
-
+    console.log("Sending data for uploading img...");
     // Step 3: Send the FormData object using Axios with the appropriate headers
     try {
-      const response = await axios.post('http://'+ BASE_URL +':8080/post/uploadPostImg', formData, {
+      const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      });
-  
-      // Handle the response from the server
-      if (response.success === 'true') {
+      };
+      const res = await axios.post(`http://${BASE_URL}:8080/post/uploadImg`, formData, config);
+      const response = res.data;
+      if (response.success === true) { // check if response is in valid format
+        // Image uploaded successfully
         console.log('Image uploaded successfully. ID:', response.data.postId);
-        setPostId(response.data.postId);
-        return true;
-
+        return response.data.postId;
       } else {
+        // Handle any other HTTP status codes
         console.log('Server responded with an unexpected status.');
         return false;
       }
     } catch (error) {
-      console.error('An error occurred while uploading the image:', error);
+      console.log(error);
       return false;
     }
   };
@@ -217,15 +212,12 @@ const FindMyPet = () => {
 
   // Function to handle the form submission
   const handleSubmit = async() => {
-
-    //const formData = convertUriToMultipartFile(imageUri);
     const isUploadImage = await uploadImage(formData);
-
+    console.log("postId is "+ isUploadImage);
     if (validateForm() && isUploadImage) {
       try {
         // Fetch the detailed information of the selected location
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
-    
         if (response.data.result) {
           // Extract the coordinates
           const location = response.data.result.geometry.location;
@@ -240,7 +232,7 @@ const FindMyPet = () => {
           console.log(`Pet Name: ${petName}`);
           console.log(`Contact Number: ${contactNumber}`);
           console.log(`Reward: ${reward}`);
-          console.log(`Post Id: ${postId}`);
+          console.log(`Post Id: ${isUploadImage}`);
           
           
           const petData = {
@@ -255,7 +247,7 @@ const FindMyPet = () => {
             userId: user.id,
             postType: 'Missing',
             description: description,
-            postId: postId
+            postId: isUploadImage
           };
 
           try {
@@ -273,20 +265,7 @@ const FindMyPet = () => {
                 console.log('Server responded with an unexpected status.');
             }
           } catch (error) {
-              //console.error('An error occurred while submitting the form:', error);
-              if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-              } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-              } else {
-                // Something happened in setting up the request and triggered an Error
-                console.log('Error', error.message);
-              }
+             console.log(error);
               
           }
 
