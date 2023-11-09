@@ -151,12 +151,6 @@ const HomeScreen = () => {
                     post={item}
                     navigation={navigation}
                     key={item.id}
-                    imageSrc={item.picture}
-                    badge={item.postType}
-                    petName={item.petName}
-                    petKind={item.petKind}
-                    title={item.title}
-                    location={item.location}
                   />
                 ))
               ) : (

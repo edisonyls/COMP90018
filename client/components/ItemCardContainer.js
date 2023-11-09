@@ -10,17 +10,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 
-const ItemCardContainer = ({
-  post,
-  navigation,
-  imageSrc,
-  badge,
-  petName,
-  petKind,
-  title,
-  location,
-  onCardPress, // 这里添加一个新的属性来接收点击事件的处理函数
-}) => {
+const ItemCardContainer = ({ post, navigation }) => {
   const [like, setLike] = useState(false);
 
   const handleLike = () => {
@@ -38,14 +28,15 @@ const ItemCardContainer = ({
       );
     }
   };
-  if (badge === 0) {
+  let badge;
+  if (post.postType === 0) {
     badge = "Missing";
-  } else if (badge === 1) {
+  } else if (post.postType === 1) {
     badge = "Found";
-  } else if (badge === 2) {
+  } else if (post.postType === 2) {
     badge = "General";
   } else {
-    badge = badge;
+    badge = "All";
   }
 
   return (
@@ -57,11 +48,13 @@ const ItemCardContainer = ({
         <View className="flex-row items-start space-x-1 mb-1">
           <FontAwesome name="map-marker" size={14} color="#8597A2" />
           <Text className="text-[#428288] text-[14px] font-bold">
-            {location?.length > 14 ? `${location.slice(0, 14)}...` : location}
+            {post.location?.length > 14
+              ? `${location.slice(0, 14)}...`
+              : post.location}
           </Text>
         </View>
         <Image
-          source={{ uri: imageSrc }}
+          source={{ uri: post.picture }}
           className="w-full h-32 rounded-md object-cover mb-1"
         />
         <View className="flex-col items-start">
@@ -79,10 +72,10 @@ const ItemCardContainer = ({
             </Text>
           )}
           <Text className="mb-1">
-            {petName}, {petKind}
+            {post.petName}, {post.petKind}
           </Text>
           <Text className="text-[#428288] text-[16px] font-bold mb-1">
-            {title?.length > 30 ? `${title.slice(0, 30)}...` : title}
+            {post.title?.length > 30 ? `${title.slice(0, 30)}...` : post.title}
           </Text>
         </View>
       </View>
