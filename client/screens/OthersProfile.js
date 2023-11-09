@@ -46,6 +46,7 @@ const OthersProfile = ({ route, navigation}) => {
         const otherUserInfo = await queryUserInfo(otherUser.id);
     
         if (currentUserInfo.success && otherUserInfo.success) {
+          console.log(currentUserInfo);
           // 如果成功获取了信息，导航到消息页面并传递这些信息
           navigation.navigate('Message', {
             currentUser: currentUserInfo.data,
