@@ -72,8 +72,9 @@ const ProfileScreen = () => {
       setIsLoading(false);
       navigation.reset({
         index: 0,
-        routes: [{ name: 'SignIn' }], // 确保这里的 'SignIn' 是你的登录屏幕的路由名称
-      });no
+        routes: [{ name: "SignIn" }], // 确保这里的 'SignIn' 是你的登录屏幕的路由名称
+      });
+      no;
     } else {
       setIsLoading(false);
       Alert.alert("Error", "Failed to logout");
@@ -157,14 +158,14 @@ const ProfileScreen = () => {
                 />
               </TouchableOpacity>
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => navigation.navigate("Notification")}
               >
                 <Image
                   source={require("../assets/ProfileNotification.jpg")} // replace with your image's path
                   style={styles.sectionImage}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
               <TouchableOpacity onPress={() => navigation.navigate("Security")}>
                 <Image

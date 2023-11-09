@@ -4,4 +4,6 @@ export const isValidEmail = (email) => {
   return re.test(String(email).toLowerCase());
 };
 
-export const BASE_URL = "192.168.1.107";
+export const BASE_URL = "192.168.1.109";
+
+export const API_KEY = "AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng";

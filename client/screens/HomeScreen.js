@@ -24,6 +24,13 @@ const HomeScreen = () => {
   const [selectedMenu, setSelectedMenu] = useState("All");
   const [postData, setPostData] = useState([]);
 
+  const { user } = useUserContext();
+
+  const userProfile =
+    user && user.profile !== "default"
+      ? { uri: user.profile }
+      : require("../assets/ProfileHead.jpg");
+
   useEffect(() => {
     setIsLoading(true);
     fetchAllPosts()
@@ -38,22 +45,22 @@ const HomeScreen = () => {
       });
   }, []);
 
-  const { user } = useUserContext();
-
-  const filteredData = postData ? postData.filter((item) => {
-    switch (type) {
-      case "all":
-        return true;
-      case "missing":
-        return item.postType === 0;
-      case "found":
-        return item.postType === 1;
-      case "general":
-        return item.postType === 2;
-      default:
-        return true;
-    }
-  }): [];
+  const filteredData = postData
+    ? postData.filter((item) => {
+        switch (type) {
+          case "all":
+            return true;
+          case "missing":
+            return item.postType === 0;
+          case "found":
+            return item.postType === 1;
+          case "general":
+            return item.postType === 2;
+          default:
+            return true;
+        }
+      })
+    : [];
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -82,7 +89,7 @@ const HomeScreen = () => {
             <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
               <Image
                 className="w-full h-full rounded-md object-cover"
-                source={require("./../assets/logo.jpg")}
+                source={userProfile}
               />
             </View>
           </View>
