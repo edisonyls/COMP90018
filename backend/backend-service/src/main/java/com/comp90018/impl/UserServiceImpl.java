@@ -82,7 +82,8 @@ public class UserServiceImpl implements UserService {
 
         user.setId(userId);
 
-        user.setProfile("default");
+        user.setProfile("http://47.74.87.207:9000/comp90018/profile.jpg");
+        user.setBgImg("http://47.74.87.207:9000/comp90018/bg.jpg");
         user.setSex(SexEnum.OTHER.getSex());
         user.setBirthday(DateUtil.stringToDate("1800-11-11"));
         user.setDescription("default");
