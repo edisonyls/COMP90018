@@ -41,8 +41,7 @@ const SignIn = ({ navigation }) => {
   const handleFormSubmission = async (values) => {
     if (values.email === "" || values.password === "") {
       Alert.alert("Oops!", "Please fill in your credentials!");
-    }
-    if (!isValidEmail(values.email)) {
+    } else if (!isValidEmail(values.email)) {
       Alert.alert(
         "Invalid Email",
         "The email address you entered is not valid."
@@ -64,12 +63,16 @@ const SignIn = ({ navigation }) => {
         setLoading(false);
 
         navigation.reset({
-        index: 0,
-        routes: [{ name: 'Home' }], // 确保这里的 'Home' 是你的 Tab 导航器的路由名称
-      });
+          index: 0,
+          routes: [{ name: "Home" }], // 确保这里的 'Home' 是你的 Tab 导航器的路由名称
+        });
       }
       setLoading(false);
     }
+  };
+
+  const handleGoogleSubmit = () => {
+    Alert.alert("Oops!", "This function is for future implementation only!");
   };
 
   return (
@@ -124,7 +127,7 @@ const SignIn = ({ navigation }) => {
                 <ButtonText>Sign In</ButtonText>
               </StyledButton>
               <Line />
-              <StyledButton google={true} onPress={handleSubmit}>
+              <StyledButton google={true} onPress={handleGoogleSubmit}>
                 <Fontisto name="google" color={primary} size={25} />
                 <ButtonText google={true}>Sign In with Google</ButtonText>
               </StyledButton>

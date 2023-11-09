@@ -5,7 +5,7 @@ import React from "react";
 
 const { brand } = Colors;
 
-const LoadingView = ({ loading }) => {
+const LoadingView = ({ loading, msg }) => {
   return (
     <>
       <Modal
@@ -35,6 +35,7 @@ const LoadingView = ({ loading }) => {
             }}
           >
             <ActivityIndicator size="large" color={brand} />
+            <Text>{msg ? msg : "Loading"}</Text>
           </View>
         </View>
       </Modal>
