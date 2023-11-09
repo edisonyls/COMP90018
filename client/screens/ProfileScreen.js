@@ -51,26 +51,18 @@ const ProfileScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getAllPostsPerUser(user.id);
-        if (data.success) {
-          setMainData(data.data);
-        } else {
-          console.error("Failed to fetch posts: ", data.msg);
-        }
-      } catch (error) {
-        console.error("Error fetching posts: ", error);
-      } finally {
+    setIsLoading(true);
+    getAllPostsPerUser(user.id)
+      .then((res) => {
+        setMainData(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
         setIsLoading(false);
-      }
-    };
-
-    if (selectedMenu === "post") {
-      fetchPosts();
-    }
-  }, [selectedMenu, user.id]);
+      });
+  }, []);
 
   const handleLogout = async () => {
     setIsLoading(true);
@@ -131,15 +123,17 @@ const ProfileScreen = () => {
           {selectedMenu === "Post" ? (
             <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">
               {mainData?.length > 0 ? (
-                mainData.map((post) => (
+                mainData.map((item) => (
                   <ItemCardContainer
-                    key={post.id}
-                    imageSrc={{ uri: post.picture }} // 使用网络图片地址
-                    badge={postTypeToBadge[post.postType] || "Unknown"} // 使用对象映射来确定badge文本
-                    petName={post.petName}
-                    petKind={post.petCategory}
-                    location={post.location}
-                    title={post.title}
+                    post={item}
+                    navigation={navigation}
+                    key={item.id}
+                    imageSrc={item.picture}
+                    badge={item.postType}
+                    petName={item.petName}
+                    petKind={item.petKind}
+                    title={item.title}
+                    location={item.location}
                   />
                 ))
               ) : (
