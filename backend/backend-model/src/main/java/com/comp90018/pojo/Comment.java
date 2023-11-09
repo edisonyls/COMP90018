@@ -68,7 +68,7 @@ public class Comment {
     }
 
     /**
-     * 获取user id of the post commented
+     * user id of the post commented
      *
      * @return poster_id - user id of the post commented
      */
@@ -77,7 +77,7 @@ public class Comment {
     }
 
     /**
-     * 设置user id of the post commented
+     * user id of the post commented
      *
      * @param posterId user id of the post commented
      */
@@ -86,7 +86,7 @@ public class Comment {
     }
 
     /**
-     * 获取post id of the comment
+     * post id of the comment
      *
      * @return post_id - post id of the comment
      */
@@ -95,7 +95,7 @@ public class Comment {
     }
 
     /**
-     * 设置post id of the comment
+     * post id of the comment
      *
      * @param postId post id of the comment
      */
@@ -104,7 +104,7 @@ public class Comment {
     }
 
     /**
-     * 获取if it is a reply to a comment, then it is a sub-comment and requires an associated query
+     * if it is a reply to a comment, then it is a sub-comment and requires an associated query
      *
      * @return father_comment_id - if it is a reply to a comment, then it is a sub-comment and requires an associated query
      */
@@ -113,7 +113,7 @@ public class Comment {
     }
 
     /**
-     * 设置if it is a reply to a comment, then it is a sub-comment and requires an associated query
+     * if it is a reply to a comment, then it is a sub-comment and requires an associated query
      *
      * @param fatherCommentId if it is a reply to a comment, then it is a sub-comment and requires an associated query
      */
@@ -122,7 +122,7 @@ public class Comment {
     }
 
     /**
-     * 获取user id of the one comments
+     * user id of the one comments
      *
      * @return comment_user_id - user id of the one comments
      */
@@ -131,7 +131,7 @@ public class Comment {
     }
 
     /**
-     * 设置user id of the one comments
+     * user id of the one comments
      *
      * @param commentUserId user id of the one comments
      */
@@ -140,7 +140,7 @@ public class Comment {
     }
 
     /**
-     * 获取comment content
+     * comment content
      *
      * @return content - comment content
      */
@@ -149,7 +149,7 @@ public class Comment {
     }
 
     /**
-     * 设置comment content
+     * comment content
      *
      * @param content comment content
      */
@@ -158,7 +158,7 @@ public class Comment {
     }
 
     /**
-     * 获取total number of likes
+     * total number of likes
      *
      * @return like_counts - total number of likes
      */
@@ -167,7 +167,7 @@ public class Comment {
     }
 
     /**
-     * 设置total number of likes
+     * total number of likes
      *
      * @param likeCounts total number of likes
      */
@@ -176,7 +176,7 @@ public class Comment {
     }
 
     /**
-     * 获取created time
+     * created time
      *
      * @return create_time - created time
      */
@@ -185,7 +185,7 @@ public class Comment {
     }
 
     /**
-     * 设置created time
+     * created time
      *
      * @param createTime created time
      */
