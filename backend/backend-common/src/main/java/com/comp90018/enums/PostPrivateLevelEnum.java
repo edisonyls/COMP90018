@@ -4,6 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * public means posts are shown to all users
+ * private means only the owner can see
+ */
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
