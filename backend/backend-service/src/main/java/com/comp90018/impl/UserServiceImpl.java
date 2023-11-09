@@ -1,7 +1,9 @@
 package com.comp90018.impl;
 
+import com.comp90018.bo.ChangePasswordBO;
 import com.comp90018.bo.ChangeUserImgBO;
 import com.comp90018.bo.ChangeUserInfoBO;
+import com.comp90018.enums.ChangeResEnum;
 import com.comp90018.enums.SexEnum;
 import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.UsersMapper;
@@ -116,11 +118,6 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(changeUserInfoBO, newUser);
         String id = changeUserInfoBO.getId();
 
-        //encrypt
-        if(newUser.getPassword() != null && newUser.getPassword().length() != 0) {
-            newUser.setPassword(BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt(12)));
-        }
-
         Example example = new Example(Users.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("id", id);
@@ -136,6 +133,43 @@ public class UserServiceImpl implements UserService {
         }else {
             return null;
         }
+    }
+
+    @Override
+    public String changePassword(ChangePasswordBO changePasswordBO) {
+        String newPassword = changePasswordBO.getNewPassword();
+        String originalPassword = changePasswordBO.getOriginalPassword();
+        String id = changePasswordBO.getUserId();
+
+        Example example = new Example(Users.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id", id);
+        Users users = usersMapper.selectOneByExample(example);
+
+        if(users == null) {
+            return ChangeResEnum.USERID_IS_WRONG.getChangeRes();
+        }
+
+        String savePassword = users.getPassword();
+        if(!BCrypt.checkpw(originalPassword, savePassword)) {
+            return ChangeResEnum.ORIGINAL_PASSWORD_IS_WRONG.getChangeRes();
+        }
+
+        if(originalPassword.equals(newPassword)) {
+            return ChangeResEnum.NEW_PASSWORD_IS_SAME_WITH_ORIGINAL_PASSWORD.getChangeRes();
+        }
+
+        Users newUser = new Users();
+        newUser.setId(id);
+        newUser.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt(12)));
+
+        int updateByPrimaryKeySelective = usersMapper.updateByPrimaryKeySelective(newUser);
+        if(updateByPrimaryKeySelective == 1) {
+            return ChangeResEnum.CHANGE_SUCCESS.getChangeRes();
+        }else {
+            return ChangeResEnum.CHANGE_FAIL.getChangeRes();
+        }
+
     }
 
     /**
