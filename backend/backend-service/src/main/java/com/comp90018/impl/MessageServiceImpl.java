@@ -60,6 +60,12 @@ public class MessageServiceImpl implements MessageService {
         return messageList;
     }
 
+    /**
+     * list chat information between two users
+     * @param userId
+     * @param contactId
+     * @return
+     */
     @Override
     public List<Message> listMessagesWithOne(String userId, String contactId) {
         List<Message> list = messageDao.findAllBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimeAsc(userId, contactId, contactId, userId);
