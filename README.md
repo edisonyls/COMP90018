@@ -113,7 +113,7 @@ Our project is constructed using a contemporary Java technology stack, aimed at 
 
     - Security Encryption: Integration with Spring Security safeguards password integrity during storage and transmission, employing advanced encryption algorithms to prevent unauthorized access.
 
- - Data Caching Optimization: Redis is utilized for efficient recording and storage of social interaction data, significantly speeding up data retrieval and enhancing user experience.
+    - Data Caching Optimization: Redis is utilized for efficient recording and storage of social interaction data, significantly speeding up data retrieval and enhancing user experience.
 
     - Cloud Storage Integration: With MinIO, the project offers a reliable cloud-based image storage solution, ensuring secure and convenient upload, storage, and retrieval of user image data.
 
