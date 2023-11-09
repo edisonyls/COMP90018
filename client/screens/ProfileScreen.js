@@ -18,6 +18,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useUserContext } from "../context/userContext";
 import { logoutAction, getAllPostsPerUser } from "../api/ProfileAPI";
 import LoadingView from "../components/LoadingView";
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons'; 
 
 const Tab = createBottomTabNavigator();
 
@@ -150,43 +153,43 @@ const ProfileScreen = () => {
           ) : selectedMenu === "Settings" ? (
             <View>
               <Text style={styles.sectionTitle}>Account</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Account")}>
-                <Image
-                  source={require("../assets/ProfileAccount.jpg")} // replace with your image's path
-                  style={styles.sectionImage}
-                />
+              <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Account")}>
+                <View style={styles.iconContainer}>
+                  <SimpleLineIcons name="user" size={24} color="black" />
+                </View>
+                <Text style={styles.menuText}>Profile</Text>
+                
               </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Notification")}
-              >
-                <Image
-                  source={require("../assets/ProfileNotification.jpg")} // replace with your image's path
-                  style={styles.sectionImage}
-                />
+              <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Security")}>
+                <View style={styles.iconContainer}>
+                  <AntDesign name="lock1" size={24} color="black" />
+                </View>
+                <Text style={styles.menuText}>Profile</Text>
+              
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => navigation.navigate("Security")}>
-                <Image
-                  source={require("../assets/ProfileSecurity.jpg")} // replace with your image's path
-                  style={styles.sectionImage}
-                />
-              </TouchableOpacity>
+              
+
+            
+              {/* </TouchableOpacity> */}
               <Text style={styles.sectionTitle}>Help</Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("ContactUs")}
-              >
-                <Image
-                  source={require("../assets/ProfileContactUs.jpg")} // replace with your image's path
-                  style={styles.sectionImage}
-                />
+              <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("ContactUs")}>
+                <View style={styles.iconContainer}>
+                  <AntDesign name="phone" size={24} color="black" />
+                </View>
+                <Text style={styles.menuText}>Contact Us</Text>
+              
               </TouchableOpacity>
+             
               <Text style={styles.sectionTitle}>Log Out</Text>
-              <TouchableOpacity onPress={handleLogout}>
-                <Image
-                  source={require("../assets/ProfileLogout.jpg")} // replace with your image's path
-                  style={styles.sectionImage}
-                />
+              <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+              <View style={styles.iconContainer}>
+              <Feather name="log-out" size={24} color="black" />
+                </View>
+                
+                <Text style={styles.menuText}>Log out</Text>          
+                
               </TouchableOpacity>
             </View>
           ) : null}
@@ -256,6 +259,35 @@ const styles = StyleSheet.create({
     position: "absolute", // 使用绝对定位
     top: 10, // 距离容器顶部10单位
     right: 10, // 距离容器右侧10单位
+  },
+  menuItem: {
+    flexDirection: 'row', // Arrange icon and text in a row
+    alignItems: 'center', // Center align items
+    paddingVertical: 10, // Add padding above and below
+    paddingHorizontal: 16, // Add padding on the sides
+    marginLeft:20,
+  },
+  iconContainer: {
+    width: 40, // Width of the circle
+    height: 40, // Height of the circle
+    borderRadius: 20, // Make it round
+    backgroundColor: '#e0e0e0', // Grey background
+    justifyContent: 'center', // Center content horizontally
+    alignItems: 'center', // Center content vertically
+    marginRight: 8, // Add space between the icon and the text
+  },
+  menuText: {
+    fontSize: 16, // Increase font size
+    color: '#333', // Dark grey color for the text
+    marginLeft: 8, // Add space between the icon and the text
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 20,
+    marginBottom: 10,
+    marginLeft: 16,
   },
 });
 
