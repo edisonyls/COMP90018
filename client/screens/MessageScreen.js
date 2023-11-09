@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { SafeAreaView, ScrollView, Text, StyleSheet, View, TextInput, Button, TouchableOpacity, Image} from 'react-native';
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import {BASE_URL} from "../api/auth";
 import axios from 'axios';
 
 const MessageScreen = ({ route, navigation }) => {
@@ -44,7 +45,8 @@ const MessageScreen = ({ route, navigation }) => {
 
   const sendMessage = async () => {
     try {
-        const response = await axios.post('http://192.168.1.111:8080/message/sendMessage', messageData);
+        const response = await axios.post(`${BASE_URL}/message/sendMessage`, messageData);
+        // const response = await axios.post('http://192.168.1.111:8080/message/sendMessage', messageData);
         if (response.data.success) {
             setInputText('');
         } else {
@@ -58,7 +60,8 @@ const MessageScreen = ({ route, navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('http://192.168.1.111:8080/message/listChat', contactData);
+        const response = await axios.post(`${BASE_URL}/message/listChat`, contactData);
+        // const response = await axios.post('http://192.168.1.111:8080/message/listChat', contactData);
         if (response.data.success) {
           if (response.data !== null) {
           

@@ -56,9 +56,9 @@ const FollowersScreen = ({ navigation }) => {
     setIsLoading(true);
     setFollowers([]);
     const endpoints = {
-      activities: 'http://192.168.1.111:8080/message/listNotifications',
-      follower: 'http://192.168.1.111:8080/post/listFollower',
-      following: 'http://192.168.1.111:8080/post/listFollowing',
+      activities: `${BASE_URL}/message/listNotifications`,
+      follower: `${BASE_URL}/post/listFollower`,
+      following: `${BASE_URL}/post/listFollowing`,
     };
 
     const currentEndpoint = endpoints[type];
