@@ -4,6 +4,10 @@ import com.comp90018.enums.ResponseStatusEnum;
 
 import java.util.Map;
 
+/**
+ * json format, commute with frontend
+ */
+
 public class JSONResult {
 
     private Integer status;

@@ -1,5 +1,16 @@
 package com.comp90018.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+/**
+ * redis key prefix enum
+ */
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public enum RedisEnum {
     REDIS_IP("redis_ip:"),
     REDIS_CODE("redis_code:"),
@@ -12,18 +23,6 @@ public enum RedisEnum {
     REDIS_HASH("redis_hash:"),
     REDIS_POST_ID("redis_id");
 
-
-
     private String redisKey;
 
-    RedisEnum(String redisKey) {
-        this.redisKey = redisKey;
-    }
-
-    RedisEnum() {
-    }
-
-    public String getRedisKey() {
-        return redisKey;
-    }
 }

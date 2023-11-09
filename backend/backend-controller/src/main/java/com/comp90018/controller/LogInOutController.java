@@ -21,6 +21,10 @@ import javax.validation.Valid;
 import java.util.UUID;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+/**
+ * login and logout controller
+ * send verify email, register, login, logout
+ */
 
 @RestController
 @Slf4j
@@ -104,11 +108,11 @@ public class LogInOutController extends BaseController{
         userVO.setUserToken(userToken);
 
         if (redis.keyIsExist(RedisEnum.REDIS_TOKEN + userVO.getId())) {
-            return JSONResult.errorCustom(ResponseStatusEnum.USER_ALREADY_LOGIN);
+//            return JSONResult.errorCustom(ResponseStatusEnum.USER_ALREADY_LOGIN);
+        }else {
+            redis.set(RedisEnum.REDIS_TOKEN + userVO.getId(), userToken, 60 * 60 * 24 * 7);
+
         }
-
-        redis.set(RedisEnum.REDIS_TOKEN + userVO.getId(), userToken, 60 * 60 * 24 * 7);
-
         return JSONResult.ok(userVO);
     }
 

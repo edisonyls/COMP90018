@@ -21,10 +21,7 @@ public enum ResponseStatusEnum {
     MESSAGE_SEND_FAIL(false, "message send fail"),
     NO_MESSAGES(false, "no messages");
 
-
-    // 调用是否成功
     private Boolean success;
-    // 响应消息，可以为成功或者失败的消息
     private String msg;
 
     ResponseStatusEnum(Boolean success, String msg) {

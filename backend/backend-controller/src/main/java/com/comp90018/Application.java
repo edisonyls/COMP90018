@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import tk.mybatis.spring.annotation.MapperScan;
 
+/**
+ * application start
+ */
+
 @EnableMongoRepositories
 @SpringBootApplication
 @MapperScan(basePackages = "com.comp90018.mapper")
