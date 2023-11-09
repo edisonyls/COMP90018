@@ -9,84 +9,109 @@ import {
   ScrollView,
   SafeAreaView,
   ActivityIndicator,
-  ImageBackground,
 } from 'react-native';
-import MenuContainer from "../components/MenuContainer"; 
+import MenuContainer from "../components/MenuContainer";
 import { useUserContext } from "../context/userContext";
 import { queryUserInfo } from '../api/auth';
 import axios from 'axios';
 
-const ListItem = ({ name, imageProfile, isClicked, onPress, senderId}) => {
-    
-    const textColor = isClicked ? 'black' : '#9747FF';
-  
-    return (
-      <TouchableOpacity onPress={() => onPress(senderId)} style={styles.listItem}>
-        <Image source={{ uri: imageProfile }} style={styles.profilePic} />
-        <View style={styles.textContainer}>
-            <Text style={styles.name}>{name}</Text>
-            {/* <Text style={[styles.action, { color: textColor }]}>{action}</Text> */}
-        </View>
-      </TouchableOpacity>
-    );
+const ListItem = ({ name, imageProfile, onPress, senderId, behavior, type }) => {
+  return (
+    <TouchableOpacity onPress={() => onPress(senderId)} style={styles.listItem}>
+      <Image source={{ uri: imageProfile }} style={styles.profilePic} />
+      <View style={styles.textContainer}>
+        <Text style={styles.name}>{name}</Text>
+        {type === 'activities' && behavior ? (
+          <Text style={styles.behaviorText}>{behavior}</Text>
+        ) : null}
+      </View>
+    </TouchableOpacity>
+  );
 };
 
 const FollowersScreen = ({ navigation }) => {
-
   const { user } = useUserContext();
-  const [userInfo, setUserInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [type, setType] = useState("activities");
+  const [selectedMenu, setSelectedMenu] = useState("activities");
+  // const navigateToActivities = () => setActiveTab('activities');
+  // const navigateToFollowers = () => setActiveTab('follower');
+  // const navigateToFollowings = () => setActiveTab('following');
 
-  const [activities, setActivities] = useState([]);
-
-  const [activeTab, setActiveTab] = useState('follower');
-  const [clickedItems, setClickedItems] = useState({});
-
-  const handleItemClick = (index) => {
-    setClickedItems(prevState => ({
-      ...prevState,
-      [index]: true
-    }));
-  };
-
-  console.log('ActiveTab:', activeTab); 
-
-
-  const fetchActivities = async () => {
+  const fetchContent = async () => {
     setIsLoading(true);
+    const endpoints = {
+      activities: 'http://192.168.1.111:8080/message/listNotifications',
+      follower: 'http://192.168.1.111:8080/post/listFollower',
+      following: 'http://192.168.1.111:8080/post/listFollowing',
+    };
+
+    const currentEndpoint = endpoints[type];
+
+    if (!currentEndpoint) {
+      console.error(`Invalid active tab: ${type}`);
+      setIsLoading(false);
+      return;
+    }
+  
     try {
-      const userId = user.id;
-      const response = await axios.get('http://192.168.1.111:8080/post/listFollower', {
-        params: { userId },
-      });
-  
-      console.log(response.data);
-      const messages = response.data.data;
-  
-      if (messages) {
-        const transformedData = messages.map((item, index) => ({
-          name: item.nickname,
-          imageProfile: item.profile,
-          senderId: item.id,
-        }));
-        //console.log(transformedData);
-        setActivities(transformedData);
+      let response;
+
+      // Check if the active tab is 'activities', if so, make a POST request
+      if (type === 'activities') {
+        const postData = new URLSearchParams();
+        postData.append('userId', user.id);
+      
+        response = await axios.post(currentEndpoint, postData.toString(), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
       } else {
-        console.log('No data found.');
+        // For 'follower' and 'following', make a GET request
+        const queryParams = new URLSearchParams({ userId: user.id }).toString();
+        response = await axios.get(`${currentEndpoint}?${queryParams}`);
+      }
+
+      if (response.data.success) {
+        let data;
+        if (type === 'activities') {
+          // Special handling for 'activities' data
+          data = response.data.data.map(item => ({
+            id: item.id,
+            name: item.senderNickname,
+            imageProfile: item.senderProfile,
+            senderId: item.senderId,
+            behavior: item.content.behavior,
+          }));
+        } else {
+          data = response.data.data.map(item => ({
+            name: item.nickname,
+            imageProfile: item.profile,
+            senderId: item.id,
+          }));
+        }
+        setFollowers(data);
+      } else {
+        console.log(`No data found for ${type}.`);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error(`Error fetching data for ${type}:`, error);
     } finally {
       setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchContent();
+  }, [type, user.id]);
+
+
   const navigateToUserInfo = async (senderId) => {
     try {
       const userInfoData = await queryUserInfo(senderId);
-      if (userInfoData && userInfoData.success) {
-        console.log(userInfoData.data);
-        // Navigate and pass the data to 'Others' screen
+      if (userInfoData.success) {
         navigation.navigate('Others', { otherUser: userInfoData.data });
       } else {
         console.error('Failed to fetch user info:', userInfoData.msg);
@@ -95,156 +120,117 @@ const FollowersScreen = ({ navigation }) => {
       console.error('Error fetching user info:', error);
     }
   };
-  
-      
-
-  useEffect(() => {
-    fetchActivities();
-
-    const interval = setInterval(() => {
-      fetchActivities();
-    }, 7000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (activeTab.toLowerCase() === 'following') {
-      navigation.navigate('Followings');
-    } else if (activeTab.toLowerCase() === 'activities') {
-        navigation.navigate('Activities');
-    }
-  }, [activeTab, navigation]);
-
-
 
   return (
-    <SafeAreaView className="flex-1 bg-white relative">
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0B646B" />
-        </View>
+        <ActivityIndicator size="large" color="#0B646B" />
+      </View>
       ) : (
-        <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
-            <View className="flex-row items-between justify-between px-8">
-                <View>
-                <Text className="text-[40px] text-[#0B646B] font-bold">
-                    {"Notification"}
-                </Text>
-                <Text className="text-[20px] text-[#527283]">
-                    {user.nickname}
-                </Text>
-                </View>
-                <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
-                <Image
-                    className="w-full h-full rounded-md object-cover"
-                    source={require("./../assets/logo.jpg")}
-                />
-                </View>
-            </View>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+          <View className="flex-row items-between justify-between px-8">
+              <View>
+              <Text className="text-[40px] text-[#0B646B] font-bold">
+                  {"Notification"}
+              </Text>
+              <Text className="text-[20px] text-[#527283]">
+                  {user.nickname}
+              </Text>
+              </View>
+              <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
+              <Image
+                  className="w-full h-full rounded-md object-cover"
+                  source={require("./../assets/logo.jpg")}
+              />
+              </View>
+          </View>
 
-          <ScrollView 
-            horizontal={true} 
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            showsHorizontalScrollIndicator={false}>
-            <View className="flex-row item-center justify-center px-8 mt-4">
+          <View className="flex-row item-center justify-center px-8 mt-4">
             <MenuContainer
-                    title="Activities"
-                    type={activeTab.toLowerCase()}
-                    setType={setActiveTab}
-                    setSelectedMenu={setActiveTab}    
-                />
-                <MenuContainer
-                    title="Follower"
-                    type={activeTab.toLowerCase()}
-                    setType={setActiveTab}
-                    setSelectedMenu={setActiveTab}
-                />
-                <MenuContainer
-                    title="Following"
-                    type={activeTab.toLowerCase()}
-                    setType={setActiveTab}
-                    setSelectedMenu={setActiveTab}
-                />
-            </View>
-          </ScrollView>
-
-          <ScrollView style={styles.scrollView}>
-    
-            {activeTab === 'follower' && activities.map((activity, index) => (
-            <ListItem 
-                key={index} 
-                name={activity.name} 
-                //action={activity.action} 
-                imageProfile={activity.imageProfile}  
-                isClicked={clickedItems[index]}
-                onPress={() => navigateToUserInfo(activity.senderId)}
+              title="Activities"
+              //onPress={navigateToActivities}
+              isActive={type === 'activities'}
+              type={type}
+              setType={setType}
+              setSelectedMenu={setSelectedMenu}
             />
-            ))}
-          </ScrollView> 
+            <MenuContainer
+              title="Follower"
+              isActive={type === 'follower'}
+              type={type}
+              setType={setType}
+              setSelectedMenu={setSelectedMenu}
+            />
+            <MenuContainer
+              title="Following"
+              isActive={type === 'following'}
+              type={type}
+              setType={setType}
+              setSelectedMenu={setSelectedMenu}
+            />
+          </View>
+          {followers.map((item, index) => (
+            <ListItem
+              key={index}
+              name={item.name}
+              imageProfile={item.imageProfile}
+              onPress={navigateToUserInfo}
+              senderId={item.senderId}
+              behavior={item.behavior} // Add this line
+              type={type} // And this line
+            />
+          ))}
+
         </ScrollView>
       )}
     </SafeAreaView>
   );
 };
 
-  
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
+    backgroundColor: '#F5F5F5',
   },
-  tabContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f4f4f4',
+  contentContainer: {
+    paddingBottom: 60,
   },
-  tabWrapper: {
-    flexDirection: 'row',
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 15,
-    alignItems: 'center',
-  },
-  activeTab: {
-    backgroundColor: '#9747FF',
-  },
-  tabText: {
-    color: '#333',
-    fontWeight: '600',
-  },
-  scrollView: {
-    backgroundColor: '#fff',
+  behaviorText: {
+    fontSize: 16,
+    color: 'gray',
+    marginTop: 4, // Adjust as needed
   },
   listItem: {
     flexDirection: 'row',
+    alignItems: 'center',
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    justifyContent: 'space-between',
   },
   profilePic: {
     width: 50,
     height: 50,
-    borderRadius: 30,
-    marginRight: 10,
+    borderRadius: 25,
   },
   textContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-end',
-    flex: 1,
   },
   name: {
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
-    fontSize: 20,
-    marginRight: 20,
     textAlign: 'right',
+    marginBottom: 10,
+    marginRight: 20,
+  },
+  loaderContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
