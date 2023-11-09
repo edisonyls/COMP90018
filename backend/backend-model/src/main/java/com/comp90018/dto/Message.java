@@ -11,6 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * mongodb document
+ */
 @Data
 @ToString
 @AllArgsConstructor
