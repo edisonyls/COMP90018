@@ -22,42 +22,13 @@ const HomeScreen = () => {
   const [type, setType] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("All");
-  const [mainData, setMainData] = useState([
-    {
-      id: "post_id_1",
-      imageSrc: require("./../assets/dog_example_1.jpg"),
-      badge: "Missing",
-      petName: "Ross",
-      petKind: "British",
-      location: "West Melbourne",
-      title: "$100 Reward",
-    },
-    {
-      id: "post_id_2",
-      imageSrc: require("./../assets/logo.jpg"),
-      badge: "Found",
-      petName: "Miso",
-      petKind: "Sausage",
-      location: "Carlton",
-      title: "Seen at Carlton",
-    },
-    {
-      id: "post_id_3",
-      imageSrc: require("./../assets/logo.jpg"),
-      badge: "General",
-      petName: "Miso",
-      petKind: "Sausage",
-      location: "Carlton",
-      title:
-        "This is a really long title, I want to see how it looks like when it is too long to fit in the card",
-    },
-  ]);
-  const [test, setTest] = useState([]);
+  const [postData, setPostData] = useState([]);
+
   useEffect(() => {
     setIsLoading(true);
     fetchAllPosts()
       .then((res) => {
-        setTest(res.data);
+        setPostData(res.data);
       })
       .catch((error) => {
         console.log(error);
@@ -69,7 +40,7 @@ const HomeScreen = () => {
 
   const { user } = useUserContext();
 
-  const filteredData = test.filter((item) => {
+  const filteredData = postData.filter((item) => {
     switch (type) {
       case "all":
         return true;
@@ -177,6 +148,7 @@ const HomeScreen = () => {
               {filteredData?.length > 0 ? (
                 filteredData.map((item) => (
                   <ItemCardContainer
+                    post={item}
                     navigation={navigation}
                     key={item.id}
                     imageSrc={item.picture}

@@ -11,6 +11,8 @@ import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 
 const ItemCardContainer = ({
+  post,
+  navigation,
   imageSrc,
   badge,
   petName,
@@ -25,6 +27,17 @@ const ItemCardContainer = ({
     setLike(!like);
   };
 
+  const handleMarkerPress = async (post) => {
+    try {
+      navigation.navigate("Post", { post: post });
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      Alert.alert(
+        "Error",
+        "An error occurred while trying to fetch user information."
+      );
+    }
+  };
   if (badge === 0) {
     badge = "Missing";
   } else if (badge === 1) {
@@ -37,7 +50,7 @@ const ItemCardContainer = ({
 
   return (
     <TouchableOpacity
-      onPress={onCardPress}
+      onPress={() => handleMarkerPress(post)}
       className="relative rounded-md border border-gray-300 space-y-2 px-3 py-2 shadow-md bg-white w-[160px] h-[280px] my-2"
     >
       <View>
