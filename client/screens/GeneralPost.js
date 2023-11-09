@@ -15,7 +15,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
-import {BASE_URL} from "../api/auth";
+import { BASE_URL } from '../utils/utils';
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
@@ -23,6 +23,9 @@ const GeneralPost = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
   const [postTag, setPostTag] = useState('');
+  const [formData, setFormData] = useState('');
+  const [title, setTitle] = useState('');
+  const [ content, setContent] = useState('');
   
   const [description, setDescription] = useState ('');
   const { user } = useUserContext();
@@ -32,8 +35,6 @@ const GeneralPost = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isShowingResults, setIsShowingResults] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
-  const [postId, setPostId] = useState(null);
-
   const searchLocation = async (text) => {
     setSearchKeyword(text);
 
@@ -101,7 +102,14 @@ const GeneralPost = () => {
               quality: 1,
             });
             if (!cameraResult.canceled) {
-              setImageUri(cameraResult.assets[0].uri);
+              const asset = cameraResult.assets[0];
+              const uri = asset.uri;
+              setImageUri(uri);
+              const type = asset.type;
+              const name = uri.split('/').pop();
+              let formData = new FormData();
+              formData.append('multipartFile', { uri, name, type });
+              setFormData(formData);
             }
           }
         },
@@ -120,7 +128,14 @@ const GeneralPost = () => {
               quality: 1,
             });
             if (!libraryResult.canceled) {
-              setImageUri(libraryResult.assets[0].uri);
+              const asset = libraryResult.assets[0];
+              const uri = asset.uri;
+              setImageUri(uri);
+              const type = asset.type;
+              const name = uri.split('/').pop();
+              let formData = new FormData();
+              formData.append('multipartFile', { uri, name, type });
+              setFormData(formData);
             }
           }
         },
@@ -130,52 +145,41 @@ const GeneralPost = () => {
     );
   };
 
-
-  const convertUriToMultipartFile = async (imageUri) => {
-    // Step 1: Convert the image URI to a Blob or File object
-    const response = await fetch(imageUri);
-    const blob = await response.blob();
-    
-    // Create a new file object (if necessary, depending on your backend requirements)
-    const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
-  
-    // Step 2: Create a FormData object and append the image file to it
-    const formData = new FormData();
-    formData.append('image', file);
-  
-    // Now formData contains the image in MultipartFile format
-    return formData;
-  };
-
-
   const uploadImage = async (formData) => {
-
+    console.log("Sending data for uploading img...");
     // Step 3: Send the FormData object using Axios with the appropriate headers
     try {
-      const response = await axios.post('http://'+ BASE_URL +':8080/post/uploadPostImg', formData, {
+
+      const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      });
-  
-      // Handle the response from the server
-      if (response.success === 'true') {
+      };
+      const res = await axios.post(`http://${BASE_URL}:8080/post/uploadImg`, formData, config);
+      const response = res.data;
+      if (response.success === true) { // check if response is in valid format
+        // Image uploaded successfully
         console.log('Image uploaded successfully. ID:', response.data.postId);
-        setPostId(response.data.postId);
-        return true;
+        return response.data.postId;
 
       } else {
+        // Handle any other HTTP status codes
         console.log('Server responded with an unexpected status.');
         return false;
       }
+      
     } catch (error) {
-      console.error('An error occurred while uploading the image:', error);
+      console.log(error);
       return false;
     }
   };
 
+  const handlePickerFocus = () => {
+    setIsPickerOpen(previousState => !previousState); // Toggle the current state of the picker's open/close status
+  };
+
   const validateForm = () => {
-    if (!imageUri || !postTag || !selectedPlaceId || !description) {
+    if (!imageUri || !postTag || !selectedPlaceId || !content|| !title) {
       Alert.alert('Missing Information', 'Please fill in all fields before submitting.');
       return false;
     }
@@ -185,8 +189,11 @@ const GeneralPost = () => {
 
     // Function to handle the form submission
     const handleSubmit = async() => {
-        const formData = convertUriToMultipartFile(imageUri);
-        if (validateForm() && uploadImage(formData)) {
+
+      const isUploadImage = await uploadImage(formData);
+      console.log("postId is "+ isUploadImage);
+
+        if (validateForm() && isUploadImage) {
           try {
             // Fetch the detailed information of the selected location
             const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
@@ -203,40 +210,27 @@ const GeneralPost = () => {
               console.log(`Description: ${description}`);
 
               const generalPostData = {
-                image_uri: imageUri,
-                description: description,
-                location_lat: location.lat,
-                location_lng: location.lng,
+                latitude: location.lat,
+                longitude: location.lng,
                 userId: user.id,
-                postType: "General"
+                postType: "General",
+                title: title,
+                content: content,
+                postId: postId
 
               };
 
               try {
                 const serverResponse = await axios.post('http://'+ BASE_URL +':8080/post/uploadPost', generalPostData);
-                console.log(serverResponse);
-                if (serverResponse.status === 'success') {
+                console.log(serverResponse.data);
+                if (serverResponse.data.success) {
                     console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
                     // ... (clear your form fields and navigate away)
                 } else {
                     console.log('Server responded with an unexpected status.');
                 }
-              } catch (error) {
-                  //console.error('An error occurred while submitting the form:', error);
-                  if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                  } else if (error.request) {
-                    // The request was made but no response was received
-                    console.log(error.request);
-                  } else {
-                    // Something happened in setting up the request and triggered an Error
-                    console.log('Error', error.message);
-                  }
-
+              } catch (error) {  
+                console.log(error);
               }
 
 
@@ -247,11 +241,11 @@ const GeneralPost = () => {
 
               // After successful submission, clear the form fields
 
-              
               setSelectedPlaceId(null);
               setDescription('');
               setImageUri('');
               setPostTag('');
+              setTitle('');
 
               // or however you clear your location field
               // Clear other form fields as necessary
@@ -298,6 +292,18 @@ const GeneralPost = () => {
               )}
       </View>
 
+       {/* Post title */}
+       <View style={styles.inputContainer}>
+                      <Text style={styles.inputLabel}> * Title</Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onChangeText={setTitle}
+                            value={title}
+                            placeholder="Enter post's title"
+                            autoCapitalize="words"
+                        />
+       </View>
+
 
 
 
@@ -311,18 +317,6 @@ const GeneralPost = () => {
         )}
       </TouchableOpacity>
 
-
-
-      {/* Description Input */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>* Description</Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={setDescription}
-          value={description}
-          placeholder="Enter description about the pawfriend"
-        />
-      </View>
 
       {/* Tag selection */}
       <View style={styles.dropdownContainer}>
@@ -338,8 +332,6 @@ const GeneralPost = () => {
             { label: 'newbie', value: 'newbie' },
             { label: 'other', value: 'other' }
             
-            
-            // ... other pet categories
           ]}
           style={pickerSelectStyles}
           placeholder={{ label: "Select a tag...", value: null }}
@@ -356,7 +348,6 @@ const GeneralPost = () => {
       </View>
 
 
-
       {/* Submit Button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>Submit</Text>
@@ -365,149 +356,162 @@ const GeneralPost = () => {
   );
 };
 
-
-
-
-
-
-
-
 const styles = StyleSheet.create({
-    mainContainer: {
-      flex: 1,
-      backgroundColor: '#fff',
-    },
-    formContainer: {
-      paddingTop: 125,
-      paddingHorizontal: 35,
-    },
-    imageSelector: {
-      borderWidth: 1,
-      borderColor: 'grey',
-      borderStyle: 'dashed',
-      borderRadius: 1,
-      width: 320,
-      height: 100,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 20, // reduced space for the next form field
-      marginTop: 35,
-    },
-    imagePreview: {
-      width: 300,
-      height: 90,
-    },
-    iconContainer: {
-      // This is the new style for the icon container
-      position: 'absolute',
-      right: 10, // for horizontal positioning - adjust as needed
-      top: 7,   // for vertical positioning - adjust as needed
-      // You can also add padding, backgroundColor, etc., here if needed
-    },
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  locationContainer:{
+    paddingTop: 100,
+    paddingHorizontal: 35,
+    zIndex:1,
+    marginBottom: -70,
+    marginTop: 50,
+  },
 
-    inputContainer: {
-      marginBottom: 20, // Space for the next form field
-      // You can add more styling for the container if you need
-    },
-    inputLabel: {
-      fontSize: 13, // or another appropriate size
-      fontWeight: 'bold',
-      marginBottom: 6, // space below the label
-      // ... any other styling you need
-    },
-    textInput: {
-      height: 40, // or whatever height you find appropriate
-      borderColor: 'gray', // you can have a specific color for your project
-      borderWidth: 1, // this is the border for the input field
-      paddingLeft: 10, // space between text and the border
-      borderRadius: 5, // if you want rounded corners
-      // ... other styles you might want
-    },
+  formContainer: {
+    paddingTop: 120,
+    paddingHorizontal: 35,
+    marginTop:80,
+    //paddingBottom:-50,
+  },
+  imageSelector: {
+    borderWidth: 1,
+    borderColor: 'grey',
+    borderStyle: 'dashed',
+    borderRadius: 1,
+    width: 320,
+    height: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20, // reduced space for the next form field
+    marginTop: 15,
+  },
+  imagePreview: {
+    width: 300,
+    height: 90,
+  },
+  iconContainer: {
+    // This is the new style for the icon container
+    position: 'absolute',
+    right: 10, // for horizontal positioning - adjust as needed
+    top: 7,   // for vertical positioning - adjust as needed
+    // You can also add padding, backgroundColor, etc., here if needed
+  },
 
-    map: {
-      width: '100%',
-      height: '70%', // Adjust as needed
-    },
+  inputContainer: {
+    marginBottom: 20, // Space for the next form field
+    // You can add more styling for the container if you need
+    marginTop: 40,
+  },
+  inputLabel: {
+    fontSize: 13, // or another appropriate size
+    fontWeight: 'bold',
+    marginBottom: 6, // space below the label
+    // ... any other styling you need
+  },
+  textInput: {
+    height: 40, // or whatever height you find appropriate
+    borderColor: 'gray', // you can have a specific color for your project
+    borderWidth: 1, // this is the border for the input field
+    paddingLeft: 10, // space between text and the border
+    borderRadius: 5, // if you want rounded corners
+    // ... other styles you might want
+  },
 
-    autocompleteContainer: {
-      zIndex: 1,
-    },
-    searchResultsContainer: {
-      width: 320, // or '100%' if you want it to have the full width of the screen
-      maxHeight: 200, // or whatever maximum height you want
-      backgroundColor: '#fff',
-      position: 'absolute',
-      top: 75, // this positions your results just below the TextInput field
-      borderRadius:5,
-    },
-    resultItem: {
-      width: '100%',
-      justifyContent: 'center',
-      height: 50,
-      borderBottomColor: '#ccc',
-      borderBottomWidth: 1,
-      paddingLeft: 10,
-    },
-    searchBox: {
-      width: 320, // or '100%' if you want it to have the full width of the screen
-      height: 40,
-      fontSize: 14,
-      borderRadius: 5,
-      borderColor: 'grey',
-      color: '#000',
-      //backgroundColor: '#fff',
-      borderWidth: 1,
-      paddingLeft: 10,
-    },
+  map: {
+    width: '100%',
+    height: '70%', // Adjust as needed
+  },
 
-    submitButton: {
-      backgroundColor: 'plum', // Use your app's color scheme here
-      padding: 10,
-      alignItems: 'center',
-      borderRadius: 5,
-      marginTop: 10, // Adjust as needed for spacing from the last form field
-    },
-    submitButtonText: {
-      color: '#fff',
-      fontSize: 18,
-    },
+  autocompleteContainer: {
+    position: "absolute",
+    marginTop: 70,
+    paddingLeft:35,
+    flex: 100,
+    zIndex: 10,
+  },
+  searchResultsContainer: {
+    width: 320, // or '100%' if you want it to have the full width of the screen
+    maxHeight: 200, // or whatever maximum height you want
+    backgroundColor: '#fff',
+    position: 'absolute',
+    top: 75, // this positions your results just below the TextInput field
+    borderRadius:5,
+    zIndex:10,
+    marginLeft: 35,
+    paddingLeft:5,
+  },
+  resultItem: {
+    width: '100%',
+    justifyContent: 'center',
+    height: 50,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+    paddingLeft: 10,
+  },
+  searchBox: {
+    width: 320, // or '100%' if you want it to have the full width of the screen
+    height: 40,
+    fontSize: 14,
+    borderRadius: 5,
+    borderColor: 'grey',
+    color: '#000',
+    //backgroundColor: '#fff',
+    borderWidth: 1,
+    paddingLeft: 10,
+  },
 
-  });
+  submitButton: {
+    backgroundColor: 'plum', // Use your app's color scheme here
+    padding: 10,
+    alignItems: 'center',
+    borderRadius: 5,
+    //marginTop: 10, // Adjust as needed for spacing from the last form field
+    marginBottom: 60,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 18,
+  },
 
-  const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-      fontSize: 14,
-      paddingVertical: 12,
-      paddingHorizontal: 10,
-      borderWidth: 1,
-      borderColor: 'gray',
-      borderRadius: 4,
-      color: 'black',
-      paddingRight: 30, // to ensure the text is never behind the icon
-      marginBottom: 20, // space for the next form field
-    },
-    inputAndroid: {
-      fontSize: 14,
-      paddingHorizontal: 10,
-      paddingVertical: 8,
-      borderWidth: 0.5,
-      borderColor: 'purple',
-      borderRadius: 8,
-      color: 'black',
-      paddingRight: 30, // to ensure the text is never behind the icon
-      marginBottom: 20, // space for the next form field
-    },
+});
 
-    dropdownLabel: {
-      fontSize: 14, // or another appropriate size
-      fontWeight: 'bold',
-      marginBottom: 10, // space below the label
-      // ... any other styling you need
-    },
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30, // to ensure the text is never behind the icon
+    marginBottom: 20, // space for the next form field
+  },
+  inputAndroid: {
+    fontSize: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30, // to ensure the text is never behind the icon
+    marginBottom: 20, // space for the next form field
+  },
 
+  dropdownLabel: {
+    fontSize: 14, // or another appropriate size
+    fontWeight: 'bold',
+    marginBottom: 10, // space below the label
+    // ... any other styling you need
+  },
 
+  
 
-  });
+});
+
 
 
 
