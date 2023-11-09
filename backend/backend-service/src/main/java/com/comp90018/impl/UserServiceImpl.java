@@ -11,6 +11,7 @@ import com.comp90018.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -72,7 +73,11 @@ public class UserServiceImpl implements UserService {
         Users user = new Users();
         user.setEmail1(email);
         user.setNickname(nickname);
-        user.setPassword(password);
+
+        //encrypt password
+        String hashPw = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        user.setPassword(hashPw);
+
         user.setId(userId);
 
         user.setProfile("default");
@@ -110,6 +115,11 @@ public class UserServiceImpl implements UserService {
         Users newUser = new Users();
         BeanUtils.copyProperties(changeUserInfoBO, newUser);
         String id = changeUserInfoBO.getId();
+
+        //encrypt
+        if(newUser.getPassword() != null && newUser.getPassword().length() != 0) {
+            newUser.setPassword(BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt(12)));
+        }
 
         Example example = new Example(Users.class);
         Example.Criteria criteria = example.createCriteria();

@@ -14,24 +14,6 @@ import java.util.Date;
 public class ChangeUserImgBO {
     // change profile and bgImg
     private String id;
-
-    private String password;
-
-    private String mobile;
-
-    private String nickname;
-
-    private Integer sex;
-
-    private Date birthday;
-
-    private String country;
-
-    private String state;
-
-    private Integer postcode;
-
-    private String description;
     private String bgImg;
     private String profile;
 

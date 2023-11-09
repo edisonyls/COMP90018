@@ -12,6 +12,8 @@ public enum ResponseStatusEnum {
     FAILED(false, "failure!"),
     WRONG_CODE(false, "verify code is wrong or outdated"),
     USER_NOT_EXIST(false, "user does not exist!"),
+    USER_ALREADY_LOGIN(false, "user already login"),
+    EMAIL_AND_PASSWORD_WRONG(false, "email and password wrong"),
     USER_NOT_LOGIN(false, "user not logged in"),
     CHANGE_USER_INFO_FAIL(false, "change user info fail"),
     CAN_NOT_FOLLOW_SELF(false, "user can not follow itself"),
