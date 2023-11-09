@@ -14,13 +14,14 @@ import {
 import MenuContainer from "../components/MenuContainer"; 
 import { useUserContext } from "../context/userContext";
 import axios from 'axios';
+import { queryUserInfo } from '../api/auth';
 
-const ListItem = ({ name, imageProfile, isClicked, onPress }) => {
+const ListItem = ({ name, imageProfile, isClicked, onPress, senderId}) => {
     
     const textColor = isClicked ? 'black' : '#9747FF';
   
     return (
-      <TouchableOpacity onPress={onPress} style={styles.listItem}>
+      <TouchableOpacity onPress={() => onPress(senderId)} style={styles.listItem}>
         <Image source={{ uri: imageProfile }} style={styles.profilePic} />
         <View style={styles.textContainer}>
             <Text style={styles.name}>{name}</Text>
@@ -41,6 +42,7 @@ const FollowingsScreen = ({ navigation }) => {
   const [clickedItems, setClickedItems] = useState({});
 
   const handleItemClick = (index) => {
+    console.log(nickname);
     setClickedItems(prevState => ({
       ...prevState,
       [index]: true
@@ -53,7 +55,7 @@ const FollowingsScreen = ({ navigation }) => {
   const fetchActivities = async () => {
     setIsLoading(true);
     try {
-      const userId = '2311080WS9DACK8H'; // This should ideally come from your user context or state
+      const userId = user.id;
       const response = await axios.get('http://192.168.1.111:8080//post/listFollowing', {
         params: { userId },
       });
@@ -65,8 +67,9 @@ const FollowingsScreen = ({ navigation }) => {
         const transformedData = messages.map((item, index) => ({
           name: item.nickname,
           imageProfile: item.profile,
+          senderId: item.id,
         }));
-  
+        
         setActivities(transformedData);
       } else {
         console.log('No data found.');
@@ -75,6 +78,22 @@ const FollowingsScreen = ({ navigation }) => {
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const navigateToUserInfo = async (senderId) => {
+    try {
+      const userInfoData = await queryUserInfo(senderId);
+      // console.log(senderId);
+      // console.log(userInfoData.data);
+      if (userInfoData && userInfoData.success) {
+        // Navigate and pass the data to 'Others' screen
+        navigation.navigate('Others', { otherUser: userInfoData.data });
+      } else {
+        console.error('Failed to fetch user info:', userInfoData.msg);
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
     }
   };
   
@@ -163,7 +182,8 @@ const FollowingsScreen = ({ navigation }) => {
                 //action={activity.action} 
                 imageProfile={activity.imageProfile}  
                 isClicked={clickedItems[index]}
-                onPress={() => handleItemClick(index)}
+                onPress={() => navigateToUserInfo(activity.senderId)}
+                nickname={activity.name}
             />
             ))}
           </ScrollView> 

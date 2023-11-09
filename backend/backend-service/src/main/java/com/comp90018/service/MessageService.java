@@ -11,7 +11,7 @@ public interface MessageService {
     Message createMessage(String senderId, String receiverId, Integer type, Map content);
 
     //list all messages of an user
-    List<Message> listAllMessage(String userId);
+    List<Message> listAllNotification(String userId);
 
     List<Message> listMessagesWithOne(String userId, String contactId);
 }

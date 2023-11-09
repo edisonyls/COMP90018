@@ -9,7 +9,11 @@ import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
 //import { BASE_URL } from '../api/auth';
+<<<<<<< HEAD
 const BASE_URL = "192.168.1.107";
+=======
+const BASE_URL = "192.168.1.111";
+>>>>>>> main
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
@@ -110,6 +114,7 @@ const FindMyPet = () => {
               aspect: [4, 3],
               quality: 1,
             });
+<<<<<<< HEAD
             // if (!cameraResult.canceled && cameraResult.assets) {
             //   const newImageUri = cameraResult.assets[0].uri;
             //   setImageUri(newImageUri);
@@ -128,6 +133,16 @@ const FindMyPet = () => {
               const name = uri.split('/').pop();
               let formData = new FormData();
               formData.append('multipartFile', { uri, name, type });
+=======
+            if (!cameraResult.canceled) {
+              const newImageUri = cameraResult.assets[0].uri;
+              setImageUri(newImageUri);
+              console.log(newImageUri);
+              const type = cameraResult.assets[0].type;
+              const name = newImageUri.split('/').pop();
+              let formData = new FormData();
+              formData.append('file', { uri: newImageUri, name: 'imagefilename.jpg', type: 'image/jpeg' });
+>>>>>>> main
               setFormData(formData);
             
             }
@@ -147,6 +162,7 @@ const FindMyPet = () => {
               aspect: [4, 3],
               quality: 1,
             });
+<<<<<<< HEAD
             if (!libraryResult.canceled && libraryResult.assets) {
               const asset = libraryResult.assets[0];
               const uri = asset.uri;
@@ -155,6 +171,15 @@ const FindMyPet = () => {
               const name = uri.split('/').pop();
               let formData = new FormData();
               formData.append('multipartFile', { uri, name, type });
+=======
+            if (!libraryResult.canceled) {
+              const newImageUri = libraryResult.assets[0].uri;
+              setImageUri(newImageUri);
+              const type = libraryResult.assets[0].type;
+              const name = newImageUri.split('/').pop();
+              let formData = new FormData();
+              formData.append('file', { uri: newImageUri, name: 'imagefilename.jpg', type: 'image/jpeg' });
+>>>>>>> main
               setFormData(formData);
             }
           }
@@ -165,11 +190,36 @@ const FindMyPet = () => {
     );
   };
 
+<<<<<<< HEAD
+=======
+  // const convertUriToMultipartFile = async (imageUri) => {
+  //   try {
+  //     // Extract file name and type from the URI
+  //     let uriParts = imageUri.split('/');
+  //     let fileName = uriParts[uriParts.length - 1];
+  //     let fileType = fileName.split('.').pop();
+  
+  //     // Fetch the blob from the local file system using the FileSystem API
+  //     const blob = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+  //     const fileBlob = new Blob([blob], { type: `image/${fileType}` });
+  
+  //     // Create a new FormData object and append the file
+  //     const formData = new FormData();
+  //     formData.append('image', { uri: imageUri, name: fileName, type: `image/${fileType}` });
+  
+  //     return formData;
+  //   } catch (error) {
+  //     console.error('Error converting image URI to multipart file:', error);
+  //     throw error;
+  //   }
+  // };
+>>>>>>> main
   
   const uploadImage = async (formData) => {
     console.log("Sending data for uploading img...");
     // Step 3: Send the FormData object using Axios with the appropriate headers
     try {
+<<<<<<< HEAD
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -181,13 +231,55 @@ const FindMyPet = () => {
         // Image uploaded successfully
         console.log('Image uploaded successfully. ID:', response.data.postId);
         return response.data.postId;
+=======
+      const response = await axios.post(`http://${BASE_URL}:8080/post/uploadPostImg`, formData);
+
+      if (response.status === 200) {
+        // Image uploaded successfully
+        console.log('Image uploaded successfully. ID:', response.data.postId);
+        setPostId(response.data.postId);
+        return true;
+>>>>>>> main
       } else {
         // Handle any other HTTP status codes
         console.log('Server responded with an unexpected status.');
         return false;
       }
+      
+
+      // const response = await axios.post('http://'+ BASE_URL +':8080/post/uploadPostImg', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
+  
+      // // Handle the response from the server
+      // if (response.success === 'true') {
+      //   console.log('Image uploaded successfully. ID:', response.data.postId);
+      //   setPostId(response.data.postId);
+      //   return true;
+
+      // } else {
+      //   console.log('Server responded with an unexpected status.');
+      //   return false;
+      // }
     } catch (error) {
+<<<<<<< HEAD
       console.log(error);
+=======
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Error data:', error.response.data);
+        console.error('Error status:', error.response.status);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('Error request:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error message:', error.message);
+      }
+>>>>>>> main
       return false;
     }
   };
@@ -212,8 +304,15 @@ const FindMyPet = () => {
 
   // Function to handle the form submission
   const handleSubmit = async() => {
+<<<<<<< HEAD
     const isUploadImage = await uploadImage(formData);
     console.log("postId is "+ isUploadImage);
+=======
+
+    //const formData = convertUriToMultipartFile(imageUri);
+    const isUploadImage = await uploadImage(formData);
+
+>>>>>>> main
     if (validateForm() && isUploadImage) {
       try {
         // Fetch the detailed information of the selected location

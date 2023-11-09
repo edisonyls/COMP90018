@@ -15,8 +15,6 @@ public class ChangeUserInfoBO {
     // change info without pictures
     private String id;
 
-    private String password;
-
     private String mobile;
 
     private String nickname;

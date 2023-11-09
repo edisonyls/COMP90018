@@ -58,7 +58,7 @@ const ActivitiesScreen = ({ navigation }) => {
   
       const response = await axios({
         method: 'post',
-        url: 'http://192.168.1.111:8080/message/listMessages',
+        url: 'http://192.168.1.111:8080/message/listNotifications',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         data: userIdParam.toString(),
       });
