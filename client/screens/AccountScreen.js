@@ -20,6 +20,7 @@ import {
   uploadBackground,
   changeUserInfo,
 } from "../api/ProfileAPI";
+import LoadingView from "../components/LoadingView";
 
 const AccountScreen = () => {
   const { user, updateUser } = useUserContext();
@@ -60,6 +61,7 @@ const AccountScreen = () => {
 
   const updateUserProfile = async () => {
     try {
+      setIsLoading(true);
       const updatedAttributes = {
         bgImg: backgroundUri.uri,
         mobile: phoneNumber,
@@ -81,13 +83,15 @@ const AccountScreen = () => {
       };
       updateUser(updatedAttributes);
       const response = await changeUserInfo(updatedUserInfo);
-      // 处理响应，更新上下文等
+      setIsLoading(false);
     } catch (e) {
       console.error("更新用户资料失败", e);
+      setIsLoading(false);
     }
   };
 
   const pickImage = async (isBackground) => {
+    setIsLoading(true);
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -111,9 +115,11 @@ const AccountScreen = () => {
         setUploadProfilePic(true);
       }
     }
+    setIsLoading(false);
   };
 
   const saveAndGoBack = async () => {
+    setIsLoading(true);
     try {
       if (
         typeof backgroundUri === "object" &&
@@ -133,27 +139,23 @@ const AccountScreen = () => {
       }
 
       await updateUserProfile(); // 使用新昵称和手机号更新用户资料
-
-      navigation.navigate("Home");
+      setIsLoading(false);
+      navigation.goBack();
     } catch (e) {
       console.error("Failed to save profile information", e);
+      setIsLoading(false);
     }
   };
 
   return (
-    <KeyboardAvoidingView 
-    behavior={Platform.OS === "ios" ? "padding" : "height"} 
-    style={{flex: 1}}
-  >
-    <SafeAreaView className="flex-1 bg-white relative">
-      {console.log(user)}
-      {isLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0B646B" />
-        </View>
-      ) : (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView className="flex-1 bg-white relative">
         <>
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            {isLoading && <LoadingView loading={isLoading} />}
             <View style={styles.headerContainer}>
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <AntDesign name="leftcircleo" size={24} color="black" />
@@ -204,94 +206,91 @@ const AccountScreen = () => {
             <Text style={styles.saveButtonText}>Save Changes</Text>
           </TouchableOpacity>
         </>
-      )}
-    </SafeAreaView>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F3F3', // 添加底部边界线以区分头部
+    borderBottomColor: "#F3F3F3", // 添加底部边界线以区分头部
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333', // 使用深色字体提高可读性
+    fontWeight: "bold",
+    color: "#333", // 使用深色字体提高可读性
   },
   imageContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
     marginBottom: 20, // 增加底部边距以避免挤压
   },
   backgroundImage: {
-    width: '100%',
+    width: "100%",
     height: 200, // 修改高度以适应不同设备
-    resizeMode: 'cover', // 确保图片完全覆盖容器
+    resizeMode: "cover", // 确保图片完全覆盖容器
   },
   editIcon: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: '#FFF', // 明亮的背景色确保图标可见
+    backgroundColor: "#FFF", // 明亮的背景色确保图标可见
     borderRadius: 30,
     padding: 10,
     elevation: 4, // 在安卓上添加阴影
-    shadowColor: '#000', // iOS阴影
-    shadowOffset: {width: 0, height: 2},
+    shadowColor: "#000", // iOS阴影
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
   profileContainer: {
-    position: 'absolute', // 更改为绝对定位
+    position: "absolute", // 更改为绝对定位
     top: 150, // 调整位置以重叠背景图片
-    alignItems: 'center',
+    alignItems: "center",
   },
   headImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
     borderWidth: 4,
-    borderColor: '#FFF', // 添加边框突出头像
-    overflow: 'hidden', // 确保图片不会溢出边界
+    borderColor: "#FFF", // 添加边框突出头像
+    overflow: "hidden", // 确保图片不会溢出边界
   },
   saveButton: {
-    backgroundColor: '#9747FF',
+    backgroundColor: "#9747FF",
     paddingVertical: 15,
     borderRadius: 25,
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 50,
     marginTop: 20, // 为按钮添加上边距
-    shadowColor: '#9747FF', // iOS阴影
-    shadowOffset: {width: 0, height: 2},
+    shadowColor: "#9747FF", // iOS阴影
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4, // 在安卓上添加阴影
   },
   saveButtonText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   nameContainer: {
     margin: 20,
     marginBottom: 10,
-    borderBottomColor: '#DDD', // 添加底部边界线以区分输入框
-    paddingBottom: 10, // 增加底部内边距    
-    
+    borderBottomColor: "#DDD", // 添加底部边界线以区分输入框
+    paddingBottom: 10, // 增加底部内边距
   },
   nameLabel: {
     fontSize: 18,
     fontWeight: "bold",
-    color: '#555', // 暗色标签更易读
+    color: "#555", // 暗色标签更易读
     marginBottom: 5, // 增加标签与输入框的距离
-    
   },
   nameInput: {
     fontSize: 16,
