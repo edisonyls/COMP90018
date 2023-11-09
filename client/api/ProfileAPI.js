@@ -67,16 +67,11 @@ export const logoutAction = async (usrId) => {
 export const getAllPostsPerUser = async (userId) => {
   try {
     const response = await axios.get(
-      `http://${BASE_URL}:8080/post/getAllPostsPerUser`,
-      {
-        params: {
-          userId: userId,
-        },
-      }
+      "http://" + BASE_URL + ":8080/post/getAllPostsPerUser",
+      { params: { userId: userId } }
     );
     return response.data;
   } catch (error) {
-    console.error("Error fetching posts per user", error);
-    return { success: false, data: [] };
+    console.error("An error occurred while fetching the posts", error);
   }
 };

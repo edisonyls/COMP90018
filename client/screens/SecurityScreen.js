@@ -14,7 +14,6 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useProfile } from "../navigators/ProfileContext";
 import { useUserContext } from "../context/userContext";
 import { changeUserInfo } from "../api/ProfileAPI";
 
