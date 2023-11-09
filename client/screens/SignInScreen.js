@@ -62,7 +62,11 @@ const SignIn = ({ navigation }) => {
       } else {
         setUser(res.data);
         setLoading(false);
-        navigation.navigate("Home");
+
+        navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }], // 确保这里的 'Home' 是你的 Tab 导航器的路由名称
+      });
       }
       setLoading(false);
     }

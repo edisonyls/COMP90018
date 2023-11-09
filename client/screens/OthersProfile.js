@@ -70,7 +70,16 @@ const OthersProfile = ({ route, navigation }) => {
   };
   const handleMarkerPress = async (post) => {
     try {
-      navigation.navigate("Post", { post: post });
+      if (userInfo) {
+        // 检查当前的用户 ID 是否与帖子发布者的 ID 相同
+        if (userInfo.id === user.id) {
+          // 如果相同，则导航到 "Profile" 界面
+          navigation.navigate('Profile');
+        } else {
+          // 如果不同，则导航到 "Others" 界面，并传递用户信息
+          navigation.navigate('Others', { otherUser: userInfo });
+        }
+      }
 
       // 如果请求不成功，设置userInfo为空并可选择显示错误信息
     } catch (error) {
