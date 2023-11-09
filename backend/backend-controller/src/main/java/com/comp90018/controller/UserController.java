@@ -103,4 +103,13 @@ public class UserController extends BaseController{
         return JSONResult.ok(usersVO);
     }
 
+    @PostMapping("queryUserStatus")
+    @ApiOperation("query user status")
+    public JSONResult queryUserStatus(@RequestParam String usrId) {
+        if(redis.keyIsExist(RedisEnum.REDIS_TOKEN + usrId)) {
+            return JSONResult.ok(ResponseStatusEnum.USER_ALREADY_LOGIN);
+        }
+        return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_LOGIN);
+
+    }
 }
