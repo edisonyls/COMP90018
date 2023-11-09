@@ -15,19 +15,28 @@ import { useUserContext } from "../context/userContext";
 import { queryUserInfo } from '../api/auth';
 import axios from 'axios';
 
-const ListItem = ({ name, imageProfile, onPress, senderId, behavior, type }) => {
+const ListItem = ({ name, imageProfile, onPress, senderId, behavior, time, type, extraInfo }) => {
+  // Format the time string as needed, for example:
+  const formattedTime = type === 'activities' && time ? new Date(time).toLocaleTimeString() : null;
+
   return (
     <TouchableOpacity onPress={() => onPress(senderId)} style={styles.listItem}>
       <Image source={{ uri: imageProfile }} style={styles.profilePic} />
       <View style={styles.textContainer}>
         <Text style={styles.name}>{name}</Text>
-        {type === 'activities' && behavior ? (
-          <Text style={styles.behaviorText}>{behavior}</Text>
-        ) : null}
+        {type === 'activities' && behavior && (
+          <Text style={styles.behaviorText}>
+            {formattedTime && `${formattedTime} - `}{behavior}
+          </Text>
+        )}
+        {(type === 'follower' || type === 'following') && extraInfo && (
+          <Text style={styles.extraInfoText}>{extraInfo}</Text>
+        )}
       </View>
     </TouchableOpacity>
   );
 };
+
 
 const FollowersScreen = ({ navigation }) => {
   const { user } = useUserContext();
@@ -35,12 +44,17 @@ const FollowersScreen = ({ navigation }) => {
   const [followers, setFollowers] = useState([]);
   const [type, setType] = useState("activities");
   const [selectedMenu, setSelectedMenu] = useState("activities");
-  // const navigateToActivities = () => setActiveTab('activities');
-  // const navigateToFollowers = () => setActiveTab('follower');
-  // const navigateToFollowings = () => setActiveTab('following');
+
+  useEffect(() => {
+    fetchContent();
+    const intervalId = setInterval(fetchContent, 5000); 
+    return () => clearInterval(intervalId); 
+  }, [type, user.id]);
+
 
   const fetchContent = async () => {
     setIsLoading(true);
+    setFollowers([]);
     const endpoints = {
       activities: 'http://192.168.1.111:8080/message/listNotifications',
       follower: 'http://192.168.1.111:8080/post/listFollower',
@@ -85,7 +99,8 @@ const FollowersScreen = ({ navigation }) => {
             senderId: item.senderId,
             behavior: item.content.behavior,
           }));
-        } else {
+        } else if (type === 'follower' || type === 'following') {
+          // Handling for 'follower' and 'following' data
           data = response.data.data.map(item => ({
             name: item.nickname,
             imageProfile: item.profile,
@@ -94,6 +109,7 @@ const FollowersScreen = ({ navigation }) => {
         }
         setFollowers(data);
       } else {
+        setFollowers([]);
         console.log(`No data found for ${type}.`);
       }
     } catch (error) {
@@ -154,21 +170,21 @@ const FollowersScreen = ({ navigation }) => {
               isActive={type === 'activities'}
               type={type}
               setType={setType}
-              setSelectedMenu={setSelectedMenu}
+              setSelectedMenu={() => setSelectedMenu(type)}
             />
             <MenuContainer
               title="Follower"
               isActive={type === 'follower'}
               type={type}
               setType={setType}
-              setSelectedMenu={setSelectedMenu}
+              setSelectedMenu={() => setSelectedMenu(type)}
             />
             <MenuContainer
               title="Following"
               isActive={type === 'following'}
               type={type}
               setType={setType}
-              setSelectedMenu={setSelectedMenu}
+              setSelectedMenu={() => setSelectedMenu(type)}
             />
           </View>
           {followers.map((item, index) => (

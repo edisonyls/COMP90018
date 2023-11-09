@@ -73,18 +73,9 @@ const RootStack = () => {
         <Stack.Screen name="ContactUs" component={ContactUsScreen} />
         <Stack.Screen name="Post" component={PostScreen} />
         <Stack.Screen name="Message" component={MessageScreen} />
-<<<<<<< HEAD
-        
         <Stack.Screen name="Followers" component={FollowersScreen}/>
-        
         <Stack.Screen name="Others" component={OthersProflie}/>
        
-=======
-        <Stack.Screen name="Activities" component={ActivitiesScreen} />
-        <Stack.Screen name="Followers" component={FollowersScreen} />
-        <Stack.Screen name="Followings" component={FollowingsScreen} />
-        <Stack.Screen name="Others" component={OthersProflie} />
->>>>>>> 6a5058323898a8922f82e2f277335529f32c0a9f
       </Stack.Navigator>
     </NavigationContainer>
   );
