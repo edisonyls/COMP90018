@@ -8,6 +8,9 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * date util class
+ */
 public class DateUtil {
 
     /**
