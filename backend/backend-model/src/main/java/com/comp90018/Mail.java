@@ -3,6 +3,9 @@ package com.comp90018;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * mail object
+ */
 @Data
 @AllArgsConstructor
 public class Mail {

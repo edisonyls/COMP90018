@@ -99,7 +99,7 @@ public class Users {
     }
 
     /**
-     * 获取email address
+     * email address
      *
      * @return email1 - email address
      */
@@ -108,7 +108,7 @@ public class Users {
     }
 
     /**
-     * 设置email address
+     * email address
      *
      * @param email1 email address
      */
@@ -117,7 +117,7 @@ public class Users {
     }
 
     /**
-     * 获取password
+     * password
      *
      * @return password - password
      */
@@ -126,7 +126,7 @@ public class Users {
     }
 
     /**
-     * 设置password
+     * password
      *
      * @param password password
      */
@@ -135,7 +135,7 @@ public class Users {
     }
 
     /**
-     * 获取mobile phone number
+     * mobile phone number
      *
      * @return mobile - mobile phone number
      */
@@ -144,7 +144,7 @@ public class Users {
     }
 
     /**
-     * 设置mobile phone number
+     * mobile phone number
      *
      * @param mobile mobile phone number
      */
@@ -153,7 +153,7 @@ public class Users {
     }
 
     /**
-     * 获取nickname
+     * nickname
      *
      * @return nickname - nickname
      */
@@ -162,7 +162,7 @@ public class Users {
     }
 
     /**
-     * 设置nickname
+     * nickname
      *
      * @param nickname nickname
      */
@@ -172,7 +172,7 @@ public class Users {
 
 
     /**
-     * 获取profile picture
+     * profile picture
      *
      * @return profile - profile picture
      */
@@ -181,7 +181,7 @@ public class Users {
     }
 
     /**
-     * 设置profile picture
+     * profile picture
      *
      * @param profile profile picture
      */
@@ -190,7 +190,7 @@ public class Users {
     }
 
     /**
-     * 获取sex 0: man 1: woman 2: other
+     * sex 0: man 1: woman 2: other
      *
      * @return sex - sex 0: man 1: woman 2: other
      */
@@ -199,7 +199,7 @@ public class Users {
     }
 
     /**
-     * 设置sex 0: man 1: woman 2: other
+     * sex 0: man 1: woman 2: other
      *
      * @param sex sex 0: man 1: woman 2: other
      */
@@ -208,7 +208,7 @@ public class Users {
     }
 
     /**
-     * 获取birthday
+     * birthday
      *
      * @return birthday - birthday
      */
@@ -217,7 +217,7 @@ public class Users {
     }
 
     /**
-     * 设置birthday
+     * birthday
      *
      * @param birthday birthday
      */
@@ -226,7 +226,7 @@ public class Users {
     }
 
     /**
-     * 获取country
+     * country
      *
      * @return country - country
      */
@@ -235,7 +235,7 @@ public class Users {
     }
 
     /**
-     * 设置country
+     * country
      *
      * @param country country
      */
@@ -244,7 +244,7 @@ public class Users {
     }
 
     /**
-     * 获取state
+     * state
      *
      * @return state - state
      */
@@ -253,7 +253,7 @@ public class Users {
     }
 
     /**
-     * 设置state
+     * state
      *
      * @param state state
      */
@@ -262,7 +262,7 @@ public class Users {
     }
 
     /**
-     * 获取postcode
+     * postcode
      *
      * @return postcode - postcode
      */
@@ -271,7 +271,7 @@ public class Users {
     }
 
     /**
-     * 设置postcode
+     * postcode
      *
      * @param postcode postcode
      */
@@ -280,7 +280,7 @@ public class Users {
     }
 
     /**
-     * 获取personal introduction
+     * personal introduction
      *
      * @return description - personal introduction
      */
@@ -289,7 +289,7 @@ public class Users {
     }
 
     /**
-     * 设置personal introduction
+     * personal introduction
      *
      * @param description personal introduction
      */
@@ -298,7 +298,7 @@ public class Users {
     }
 
     /**
-     * 获取background image
+     * background image
      *
      * @return bg_img - background image
      */
@@ -307,7 +307,7 @@ public class Users {
     }
 
     /**
-     * 设置background image
+     * background image
      *
      * @param bgImg background image
      */
@@ -317,7 +317,7 @@ public class Users {
 
 
     /**
-     * 获取created time
+     * created time
      *
      * @return created_time - created time
      */
@@ -326,7 +326,7 @@ public class Users {
     }
 
     /**
-     * 设置created time
+     * created time
      *
      * @param createdTime created time
      */
@@ -335,7 +335,7 @@ public class Users {
     }
 
     /**
-     * 获取updated time
+     * updated time
      *
      * @return updated_time - updated time
      */
@@ -344,7 +344,7 @@ public class Users {
     }
 
     /**
-     * 设置updated time
+     * updated time
      *
      * @param updatedTime updated time
      */

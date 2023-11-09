@@ -141,7 +141,7 @@ public class Post {
     }
 
     /**
-     * 获取post publisher, associated users table id
+     * post publisher, associated users table id
      *
      * @return poster_id - post publisher, associated users table id
      */
@@ -150,7 +150,7 @@ public class Post {
     }
 
     /**
-     * 设置post publisher, associated users table id
+     * post publisher, associated users table id
      *
      * @param posterId post publisher, associated users table id
      */
@@ -159,7 +159,7 @@ public class Post {
     }
 
     /**
-     * 获取latitude
+     * latitude
      *
      * @return latitude - latitude
      */
@@ -168,7 +168,7 @@ public class Post {
     }
 
     /**
-     * 设置latitude
+     * latitude
      *
      * @param latitude latitude
      */
@@ -177,7 +177,7 @@ public class Post {
     }
 
     /**
-     * 获取longitude
+     * longitude
      *
      * @return longitude - longitude
      */
@@ -186,7 +186,7 @@ public class Post {
     }
 
     /**
-     * 设置longitude
+     * longitude
      *
      * @param longitude longitude
      */
@@ -195,7 +195,7 @@ public class Post {
     }
 
     /**
-     * 获取post type, 0: find my pet, 1: help pets go home, 2: share experience
+     * post type, 0: find my pet, 1: help pets go home, 2: share experience
      *
      * @return post_type - post type, 0: find my pet, 1: help pets go home, 2: share experience
      */
@@ -204,7 +204,7 @@ public class Post {
     }
 
     /**
-     * 设置post type, 0: find my pet, 1: help pets go home, 2: share experience
+     * post type, 0: find my pet, 1: help pets go home, 2: share experience
      *
      * @param postType post type, 0: find my pet, 1: help pets go home, 2: share experience
      */
@@ -213,7 +213,7 @@ public class Post {
     }
 
     /**
-     * 获取pet picture
+     * pet picture
      *
      * @return picture - pet picture
      */
@@ -222,7 +222,7 @@ public class Post {
     }
 
     /**
-     * 设置pet picture
+     * pet picture
      *
      * @param picture pet picture
      */
@@ -231,7 +231,7 @@ public class Post {
     }
 
     /**
-     * 获取post title
+     * post title
      *
      * @return title - post title
      */
@@ -240,7 +240,7 @@ public class Post {
     }
 
     /**
-     * 设置post title
+     * post title
      *
      * @param title post title
      */
@@ -249,7 +249,7 @@ public class Post {
     }
 
     /**
-     * 获取pet category
+     * pet category
      *
      * @return pet_category - pet category
      */
@@ -258,7 +258,7 @@ public class Post {
     }
 
     /**
-     * 设置pet category
+     * pet category
      *
      * @param petCategory pet category
      */
@@ -267,7 +267,7 @@ public class Post {
     }
 
     /**
-     * 获取pet breed
+     * pet breed
      *
      * @return pet_breed - pet breed
      */
@@ -276,7 +276,7 @@ public class Post {
     }
 
     /**
-     * 设置pet breed
+     * pet breed
      *
      * @param petBreed pet breed
      */
@@ -285,7 +285,7 @@ public class Post {
     }
 
     /**
-     * 获取pet name
+     * pet name
      *
      * @return pet_name - pet name
      */
@@ -294,7 +294,7 @@ public class Post {
     }
 
     /**
-     * 设置pet name
+     * pet name
      *
      * @param petName pet name
      */
@@ -303,7 +303,7 @@ public class Post {
     }
 
     /**
-     * 获取location of lost
+     * location of lost
      *
      * @return location - location of lost
      */
@@ -312,7 +312,7 @@ public class Post {
     }
 
     /**
-     * 设置location of lost
+     * location of lost
      *
      * @param location location of lost
      */
@@ -321,7 +321,7 @@ public class Post {
     }
 
     /**
-     * 获取contact number
+     * contact number
      *
      * @return contact_num - contact number
      */
@@ -330,7 +330,7 @@ public class Post {
     }
 
     /**
-     * 设置contact number
+     * contact number
      *
      * @param contactNum contact number
      */
@@ -339,7 +339,7 @@ public class Post {
     }
 
     /**
-     * 获取rewards
+     * rewards
      *
      * @return rewards - rewards
      */
@@ -348,7 +348,7 @@ public class Post {
     }
 
     /**
-     * 设置rewards
+     * rewards
      *
      * @param rewards rewards
      */
@@ -357,7 +357,7 @@ public class Post {
     }
 
     /**
-     * 获取description
+     * description
      *
      * @return description - description
      */
@@ -366,7 +366,7 @@ public class Post {
     }
 
     /**
-     * 设置description
+     * description
      *
      * @param description description
      */
@@ -375,7 +375,7 @@ public class Post {
     }
 
     /**
-     * 获取subject
+     * subject
      *
      * @return subject - subject
      */
@@ -384,7 +384,7 @@ public class Post {
     }
 
     /**
-     * 设置subject
+     * subject
      *
      * @param subject subject
      */
@@ -393,7 +393,7 @@ public class Post {
     }
 
     /**
-     * 获取content
+     * content
      *
      * @return content - content
      */
@@ -402,7 +402,7 @@ public class Post {
     }
 
     /**
-     * 设置content
+     * content
      *
      * @param content content
      */
@@ -411,7 +411,7 @@ public class Post {
     }
 
     /**
-     * 获取tag
+     * tag
      *
      * @return tag - tag
      */
@@ -420,7 +420,7 @@ public class Post {
     }
 
     /**
-     * 设置tag
+     * tag
      *
      * @param tag tag
      */
@@ -429,7 +429,7 @@ public class Post {
     }
 
     /**
-     * 获取total number of likes
+     * total number of likes
      *
      * @return likes_counts - total number of likes
      */
@@ -438,7 +438,7 @@ public class Post {
     }
 
     /**
-     * 设置total number of likes
+     * total number of likes
      *
      * @param likesCounts total number of likes
      */
@@ -447,7 +447,7 @@ public class Post {
     }
 
     /**
-     * 获取total number of comments
+     * total number of comments
      *
      * @return comments_counts - total number of comments
      */
@@ -456,7 +456,7 @@ public class Post {
     }
 
     /**
-     * 设置total number of comments
+     * total number of comments
      *
      * @param commentsCounts total number of comments
      */
@@ -465,7 +465,7 @@ public class Post {
     }
 
     /**
-     * 获取privacy setting, 0: default, everyone, 1: friends, 2: followers, 3: self
+     * privacy setting, 0: default, everyone, 1: friends, 2: followers, 3: self
      *
      * @return private_level - privacy setting, 0: default, everyone, 1: friends, 2: followers, 3: self
      */
@@ -474,7 +474,7 @@ public class Post {
     }
 
     /**
-     * 设置privacy setting, 0: default, everyone, 1: friends, 2: followers, 3: self
+     * privacy setting, 0: default, everyone, 1: friends, 2: followers, 3: self
      *
      * @param privateLevel privacy setting, 0: default, everyone, 1: friends, 2: followers, 3: self
      */
@@ -483,7 +483,7 @@ public class Post {
     }
 
     /**
-     * 获取created time
+     * created time
      *
      * @return created_time - created time
      */
@@ -492,7 +492,7 @@ public class Post {
     }
 
     /**
-     * 设置created time
+     * created time
      *
      * @param createdTime created time
      */
@@ -501,7 +501,7 @@ public class Post {
     }
 
     /**
-     * 获取updated time
+     * updated time
      *
      * @return updated_time - updated time
      */
@@ -510,7 +510,7 @@ public class Post {
     }
 
     /**
-     * 设置updated time
+     * updated time
      *
      * @param updatedTime updated time
      */
