@@ -1,6 +1,6 @@
 package com.comp90018.service;
 
-import com.comp90018.dto.Message;
+import com.comp90018.dto.MessageDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -8,11 +8,11 @@ import java.util.Map;
 public interface MessageService {
 
     //create a system message or user message
-    Message createMessage(String senderId, String receiverId, Integer type, Map content);
+    MessageDTO createMessage(String senderId, String receiverId, Integer type, Map content);
 
     //list all messages of an user
-    List<Message> listAllNotification(String userId);
+    List<MessageDTO> listAllNotification(String userId);
 
     //list messages between two
-    List<Message> listMessagesWithOne(String userId, String contactId);
+    List<MessageDTO> listMessagesWithOne(String userId, String contactId);
 }

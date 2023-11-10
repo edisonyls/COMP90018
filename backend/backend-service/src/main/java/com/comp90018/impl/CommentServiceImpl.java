@@ -1,5 +1,6 @@
 package com.comp90018.impl;
 
+import com.comp90018.bo.MessageConvertBO;
 import com.comp90018.dto.CommentDTO;
 import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.enums.MessageTypeEnum;
@@ -12,7 +13,10 @@ import com.comp90018.pojo.Post;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.CommentService;
 import com.comp90018.service.MessageService;
+import com.comp90018.utils.JsonUtils;
+import com.comp90018.utils.RabbitMQUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +33,8 @@ public class CommentServiceImpl implements CommentService {
     private MessageService messageService;
     @Autowired
     private CommentMapper commentMapper;
-
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     @Autowired
     private PostMapper postMapper;
 
@@ -76,7 +81,17 @@ public class CommentServiceImpl implements CommentService {
 
             HashMap<String, Object> map = new HashMap<>();
             map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.COMMENT_NOTIFY.getSystemMessage()); // (behavior, comment)
-            messageService.createMessage(commentDTO.getCommentUserId(), commentDTO.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+//            messageService.createMessage(commentDTO.getCommentUserId(), commentDTO.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+
+            MessageConvertBO messageConvertBO = new MessageConvertBO();
+            messageConvertBO.setSenderId(commentDTO.getCommentUserId());
+            messageConvertBO.setReceiverId(commentDTO.getPosterId());
+            messageConvertBO.setType(MessageTypeEnum.SYSTEM_MESSAGE.getType());
+            messageConvertBO.setContent(map);
+
+            rabbitTemplate.convertAndSend(RabbitMQUtils.EXCHANGE_MSG,
+                    "sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.COMMENT_NOTIFY.getSystemMessage(),
+                    JsonUtils.objectToJson(messageConvertBO));
 
             return comment;
         }
@@ -110,7 +125,17 @@ public class CommentServiceImpl implements CommentService {
 
             HashMap<String, Object> map = new HashMap<>();
             map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.COMMENT_LIKE_NOTIFY.getSystemMessage()); // (behavior, like)
-            messageService.createMessage(comment.getCommentUserId(), comment.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+//            messageService.createMessage(comment.getCommentUserId(), comment.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+
+            MessageConvertBO messageConvertBO = new MessageConvertBO();
+            messageConvertBO.setSenderId(comment.getCommentUserId());
+            messageConvertBO.setReceiverId(comment.getPosterId());
+            messageConvertBO.setType(MessageTypeEnum.SYSTEM_MESSAGE.getType());
+            messageConvertBO.setContent(map);
+
+            rabbitTemplate.convertAndSend(RabbitMQUtils.EXCHANGE_MSG,
+                    "sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.COMMENT_LIKE_NOTIFY.getSystemMessage(),
+                    JsonUtils.objectToJson(messageConvertBO));
 
             return comment;
         }
