@@ -26,14 +26,10 @@ import LoadingView from "../components/LoadingView";
 
 const PostScreen = ({ route, navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
-<<<<<<< HEAD
-  const { post } = route.params;
-  const [address, setAddress] = useState('');
-=======
+
   const [loading, setLoading] = useState(false);
   const { post, userId } = route.params; // 从路由参数中获取post对象
   const [address, setAddress] = useState("");
->>>>>>> 8bcbee6b861abce169af63c763339195c70fec7f
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState("");
 
@@ -63,20 +59,14 @@ const PostScreen = ({ route, navigation }) => {
    
     const response = await addComment(commentData);
     if (response.success) {
-<<<<<<< HEAD
-      setCommentContent('');
-      fetchComments();
-    } else {
-      
-      console.error('评论失败:', response.message);
-=======
+
       // 评论成功后的操作，比如清空输入框，重新获取评论列表等
       setCommentContent("");
       fetchComments();
     } else {
       // 处理错误情况
       console.error("评论失败:", response.message);
->>>>>>> 8bcbee6b861abce169af63c763339195c70fec7f
+
     }
   };
 
@@ -151,128 +141,7 @@ const PostScreen = ({ route, navigation }) => {
   }, [post.posterId]);
 
   return (
-<<<<<<< HEAD
-    <KeyboardAvoidingView 
-    behavior={Platform.OS === "ios" ? "padding" : "height"} 
-    style={{flex: 1}}
-  >
-    <SafeAreaView className="flex-1 bg-white relative">
-      <>
-      <ScrollView>
-      <View className="flex-1 bg-white">
-        <View className="flex-row justify-between items-center p-2.5 mr-2">
-          <View className="flex-row items-center">
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              className="mr-4"
-            >
-              <AntDesign name="left" size={24} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                
-                if (userInfo) {
-                  if (userInfo.id === user.id) {
-                   
-                    navigation.navigate('Profile');
-                  } else {
-                    
-                    navigation.navigate('Others', { otherUser: userInfo });
-                  }
-                }
-              }}
-              className="flex-row items-center"
-            >
-              {userInfo && (
-                <>
-                  <Image
-                    source={{ uri: userInfo.profile }}
-                    className="w-10 h-10 rounded-full mr-2 border"
-                    style={{ borderColor: "#D3D3D3" }}
-                  />
-                  <Text className="font-bold">{userInfo.nickname}</Text>
-                </>
-              )}
-            </TouchableOpacity>
-          </View>
-    
-        </View>
 
-        <TouchableOpacity>
-          <View className="mt-2 items-center">
-            <Image
-              source={{ uri: post.picture }} 
-              style={{
-                width: screenWidth - 20,
-                height: screenWidth - 20,
-                resizeMode: "cover",
-              }}
-            />
-          </View>
-        </TouchableOpacity>
-      
-            
-            {post.title && (
-            <View>
-                {/* <Text style={styles.infoLabel}>Title:</Text> */}
-                <Text style={styles.titleText}>{post.title}</Text>
-            </View>
-            )}
-            <View style={styles.detailsContainer}>
-              {post.petCategory && (
-              <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Pet's Category:</Text>
-                  <Text style={styles.infoValue}>{post.petCategory}</Text>
-              </View>
-              )}
-              {post.content && (
-              <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Content:</Text>
-                  <Text style={styles.infoValue}>{post.content}</Text>
-              </View>
-              )}
-                {post.description && (
-              <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Description:</Text>
-                  <Text style={styles.infoValue}>{post.description}</Text>
-              </View>
-              )}
-      
-              {post.petBreed && (
-              <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Pet's Breed:</Text>
-                  <Text style={styles.infoValue}>{post.petBreed}</Text>
-              </View>
-              )}
-      
-              {post.petName && (
-              <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Pet's Name:</Text>
-                  <Text style={styles.infoValue}>{post.petName}</Text>
-              </View>
-              )}
-      
-              
-      
-              {post.rewards && (
-              <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Rewards:</Text>
-                  <Text style={styles.infoValue}>{post.rewards}</Text>
-              </View>
-              )}
-              {post.contactNum && (
-              <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Contact Number:</Text>
-                  <Text style={styles.infoValue}>{post.contactNum}</Text>
-              </View>
-              )}
-              {post.tag && (
-              <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>Tag:</Text>
-                  <Text style={styles.infoValue}>{post.tag}</Text>
-              </View>
-              )}
-=======
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
@@ -347,7 +216,7 @@ const PostScreen = ({ route, navigation }) => {
                     />
                   </View>
                 </TouchableOpacity>
->>>>>>> 8bcbee6b861abce169af63c763339195c70fec7f
+
 
                 {post.title && (
                   <View>
