@@ -216,7 +216,7 @@ const GeneralPost = () => {
                 postType: "General",
                 title: title,
                 content: content,
-                postId: postId
+                postId: isUploadImage
 
               };
 
@@ -300,8 +300,21 @@ const GeneralPost = () => {
                             onChangeText={setTitle}
                             value={title}
                             placeholder="Enter post's title"
-                            autoCapitalize="words"
+                           
                         />
+       </View>
+
+
+        {/* Post content */}
+        <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}> * Content</Text>
+                  <TextInput
+                      style={styles.textInput}
+                      onChangeText={setContent}
+                      value={content}
+                      placeholder="Enter post's content"
+
+                  />
        </View>
 
 
@@ -385,7 +398,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20, // reduced space for the next form field
-    marginTop: 15,
+    marginTop: 50,
   },
   imagePreview: {
     width: 300,
@@ -400,7 +413,7 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    marginBottom: 20, // Space for the next form field
+    marginBottom: 0, // Space for the next form field
     // You can add more styling for the container if you need
     marginTop: 40,
   },

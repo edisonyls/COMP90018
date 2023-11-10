@@ -3,6 +3,7 @@ import { SafeAreaView, ScrollView, Text, StyleSheet, View, TextInput, Button, To
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { BASE_URL } from '../utils/utils';
+import { queryUserInfo } from '../api/auth';
 import axios from 'axios';
 
 const MessageScreen = ({ route, navigation }) => {
@@ -57,6 +58,19 @@ const MessageScreen = ({ route, navigation }) => {
     }
   };
 
+  const navigateToUserInfo = async (senderId) => {
+    try {
+      const userInfoData = await queryUserInfo(senderId);
+      if (userInfoData.success) {
+        navigation.navigate('Others', { otherUser: userInfoData.data });
+      } else {
+        console.error('Failed to fetch user info:', userInfoData.msg);
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,12 +89,11 @@ const MessageScreen = ({ route, navigation }) => {
                   senderProfile: item.profile
               }
             });
-
             setMessages(messageData);
         } else {
-
+          setMessages([]);
         }} else {
-          console.error('Failed to fetch messages: ', response.data.msg);
+          setMessages([]);
         }
       } catch (error) {
         console.error('Error fetching messages: ', error);
@@ -115,11 +128,14 @@ const MessageScreen = ({ route, navigation }) => {
             >
               <AntDesign name="left" size={24} color="black" />
       </TouchableOpacity>
-      <Image
+      <TouchableOpacity onPress={() => navigateToUserInfo(contactId)}>
+        <Image
           source={{ uri: contactProfile }}
           style={styles.contactProfileImage}
-      />
-      <Text style={styles.headerText}>{ contactName }</Text>
+        />
+      </TouchableOpacity>
+
+      <Text style={styles.headerText}>{ contactUserName }</Text>
       </View>
       <ScrollView 
         onScroll={handleScroll}

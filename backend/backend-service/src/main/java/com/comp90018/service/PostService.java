@@ -15,6 +15,6 @@ public interface PostService {
 
     boolean deletedPost(String postId);
 
-//    Post updatePost(UploadPostBO uploadPostBO);
+    Post updatePost(UploadPostBO uploadPostBO);
 
 }

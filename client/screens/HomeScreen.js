@@ -6,9 +6,15 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, {
+  useLayoutEffect,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { useNavigation } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
@@ -23,6 +29,14 @@ const HomeScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("All");
   const [postData, setPostData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const { user } = useUserContext();
+
+  const userProfile =
+    user && user.profile !== "default"
+      ? { uri: user.profile }
+      : require("../assets/ProfileHead.jpg");
 
   useEffect(() => {
     setIsLoading(true);
@@ -38,22 +52,37 @@ const HomeScreen = () => {
       });
   }, []);
 
-  const { user } = useUserContext();
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
 
-  const filteredData = postData ? postData.filter((item) => {
-    switch (type) {
-      case "all":
-        return true;
-      case "missing":
-        return item.postType === 0;
-      case "found":
-        return item.postType === 1;
-      case "general":
-        return item.postType === 2;
-      default:
-        return true;
-    }
-  }): [];
+    fetchAllPosts()
+      .then((res) => {
+        setPostData(res.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setRefreshing(false);
+      });
+  }, []);
+
+  const filteredData = postData
+    ? postData.filter((item) => {
+        switch (type) {
+          case "all":
+            return true;
+          case "missing":
+            return item.postType === 0;
+          case "found":
+            return item.postType === 1;
+          case "general":
+            return item.postType === 2;
+          default:
+            return true;
+        }
+      })
+    : [];
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -69,21 +98,31 @@ const HomeScreen = () => {
           <ActivityIndicator size="large" color="#0B646B" />
         </View>
       ) : (
-        <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 60 }}
+          refreshControl={
+            // Add this prop to ScrollView
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh} // Bind your onRefresh function
+              colors={["#0B646B"]} // Optional: customize the spinner colors
+              tintColor="#0B646B" // Optional: iOS only: customize the spinner color
+            />
+          }
+        >
           <View className="flex-row items-between justify-between px-8">
             <View>
               <Text className="text-[40px] text-[#0B646B] font-bold">
                 {"Welcome :)"}
               </Text>
               <Text className="text-[20px] text-[#527283]">
-                {/* {user.nickname} */}
-                {"1"}
+                {user.nickname}
               </Text>
             </View>
             <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
               <Image
                 className="w-full h-full rounded-md object-cover"
-                source={require("./../assets/logo.jpg")}
+                source={userProfile}
               />
             </View>
           </View>
@@ -103,9 +142,7 @@ const HomeScreen = () => {
             <View className="flex-row item-center justify-center px-8 mt-4">
               <MenuContainer
                 key={"all"}
-
                 title="All"
-
                 type={type}
                 setType={setType}
                 setSelectedMenu={setSelectedMenu}

@@ -165,26 +165,27 @@ public class PostServiceImpl extends BaseImpl implements PostService {
         }
     }
 
-//    @Override
-//    @Transactional
-//    public Post updatePost(UploadPostBO uploadPostBO) {
-//        Example example = new Example(Post.class);
-//        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId())
-//                .andEqualTo("posterId", uploadPostBO.getUserId());
-//        List<Post> postList = postMapper.selectByExample(example);
-//        if (postList.isEmpty() || postList == null) {
-//            return null;
-//        }
-//        else {
-//            Post post = postList.get(0);
-//            Date date = new Date();
-//            post.setUpdatedTime(date);
-//            BeanUtils.copyProperties(uploadPostBO, post);
-//            if (postMapper.updateByPrimaryKeySelective(post) == 0) {
-//                return null;
-//            }
-//            return post;
-//        }
-//    }
+    @Override
+    @Transactional
+    public Post updatePost(UploadPostBO uploadPostBO) {
+        System.out.println(uploadPostBO.getPostId());
+        Example example = new Example(Post.class);
+        example.createCriteria().andEqualTo("id", uploadPostBO.getPostId())
+                .andEqualTo("posterId", uploadPostBO.getUserId());
+        List<Post> postList = postMapper.selectByExample(example);
+        if (postList.isEmpty() || postList == null) {
+            return null;
+        }
+        else {
+            Post post = postList.get(0);
+            Date date = new Date();
+            post.setUpdatedTime(date);
+            BeanUtils.copyProperties(uploadPostBO, post);
+            if (postMapper.updateByPrimaryKeySelective(post) == 0) {
+                return null;
+            }
+            return post;
+        }
+    }
 
 }

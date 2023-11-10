@@ -30,6 +30,7 @@ import {
 import { Octicons, Ionicons } from "@expo/vector-icons";
 import { sendVerifyRequest } from "../api/auth";
 import LoadingView from "../components/LoadingView";
+import { isValidEmail } from "../utils/utils";
 
 const { darkLight, brand } = Colors;
 
@@ -46,24 +47,38 @@ const Register = ({ navigation }) => {
   };
 
   const handleFormSubmission = async (values) => {
-    setIsLoading(true);
-    const res = await sendVerifyRequest(values.email);
-    console.log(res);
-    if (!res) {
-      console.log("Server side is down. Check api connection.");
-      Alert.alert("Oops!", "Try again later.");
-      setIsLoading(false);
-    } else if (res.success) {
-      setIsLoading(false);
-      navigation.navigate("Verify", {
-        email: values.email,
-        password: values.password,
-        username: values.userName,
-      });
+    console.log(values);
+    if (
+      values.email === "" ||
+      values.password === "" ||
+      values.userName === ""
+    ) {
+      Alert.alert("Oops!", "Please fill in all the fields!");
+    } else if (!isValidEmail(values.email)) {
+      Alert.alert(
+        "Invalid Email",
+        "The email address you entered is not valid."
+      );
     } else {
-      console.log("Register failing...");
-      Alert.alert("Oops!", res.msg);
-      setIsLoading(false);
+      setIsLoading(true);
+      const res = await sendVerifyRequest(values.email);
+      console.log(res);
+      if (!res) {
+        console.log("Server side is down. Check api connection.");
+        Alert.alert("Oops!", "Try again later.");
+        setIsLoading(false);
+      } else if (res.success) {
+        setIsLoading(false);
+        navigation.navigate("Verify", {
+          email: values.email,
+          password: values.password,
+          username: values.userName,
+        });
+      } else {
+        console.log("Register failing...");
+        Alert.alert("Oops!", res.msg);
+        setIsLoading(false);
+      }
     }
   };
 
