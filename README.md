@@ -66,10 +66,10 @@ Brief Introduction on Why Should We Implement This App?
 TO BE UPDATED
 
 #### Database Setup
-TO BE UPDATED
+If you opt to use a cloud-based database, you do not need to configure a database locally. If you wish to use a local MySQL instance, please use version 5.7. Before running the project, you will need to create a local database table named 'mobile' and execute the SQL file 'mobile_sql.sql' located in the root directory of the project. Modify the 'application.yml' file found in the 'resources' folder of the 'backend-controller' subproject, where the default username and password are both set to 'root'. If yours are different, please update them accordingly.
 
 #### Backend Pre-requirements
-TO BE UPDATED
+For local running of Java backend, please use JDK version 1.8. Ensure that Maven dependencies are correctly loaded, then run the `main` method of the `Application` class under the `backend-controller` subproject. By default, the application uses cloud-based MySQL, MongoDB, Redis, and MinIO. If you wish to use a local MySQL, please use version 5.7. Before running the project, you need to create a local database table named 'mobile' and execute the SQL file `mobile_sql.sql` located in the project's root directory. Modify the `application.yml` file in the `resources` folder under the `backend-controller` subproject; the default username and password are both 'root'. If different, please make the necessary adjustments. For other middleware, if you wish to use local options, modify the corresponding sections in the yml file.
 
 #### Frontend Pre-requirements
 TO BE UPDATED
