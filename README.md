@@ -28,6 +28,8 @@ Nowadays, a growing number of individuals are embracing pet ownership, with anim
 :gem: Home Screen
 - Posts filtration by categories: All, Missing, Found, General.
 - Browse through posts made by the community.
+- Pull down to refresh.
+
 
 :gem: Map Screen
 - GPS-based real-time user location tracking.
@@ -36,7 +38,7 @@ Nowadays, a growing number of individuals are embracing pet ownership, with anim
 - Direct access to post details.
 
 :gem: Notifications
-- Near real-time update notifications for:
+- Near real-time update notifications (refresh every 7 seconds) for:
   - Comments on your posts.
   - New messages.
   - New followers or unfollowers.
@@ -56,6 +58,9 @@ Nowadays, a growing number of individuals are embracing pet ownership, with anim
 - Interface for publishing new posts to the community.
 
 :gem:  Create Different New Post
+- Missing: Looking for help if your pet is missing
+- Found: Once you locate any street animals or missing pets
+- General: Share your ideas with our friendly pet community.
 
 :gem: Sensors Implemented
 - GPS
