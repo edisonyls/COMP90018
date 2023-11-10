@@ -63,7 +63,6 @@ Brief Introduction on Why Should We Implement This App?
 - Camera
 
 ### Getting Started
-TO BE UPDATED
 
 #### Database Setup
 If you opt to use a cloud-based database, you do not need to configure a database locally. If you wish to use a local MySQL instance, please use version 5.7. Before running the project, you will need to create a local database table named 'mobile' and execute the SQL file 'mobile_sql.sql' located in the root directory of the project. Modify the 'application.yml' file found in the 'resources' folder of the 'backend-controller' subproject, where the default username and password are both set to 'root'. If yours are different, please update them accordingly.
@@ -80,7 +79,7 @@ TO BE UPDATED
 ### API Endpoints
 Note: You will need to make the backend running before accessing the following content.
 
-Detailed API documentation can be found [here](http://localhost:8080/doc.html). It might appear as a Chinese version but you can simply click the language switcher on the top right corner to switch to English.
+Detailed API documentation can be found [here](http://localhost:8080/doc.html). It might appear as a Chinese version but you can simply click the language switcher on the top right corner to switch to English. Or, you can choose to access the backend API documentation of the cloud server at http://47.74.87.207:8080/doc.html.
   
 ### TechStack
 Our project is constructed using a contemporary Java technology stack, aimed at delivering an efficient and secure web application platform. It is grounded in the Spring Boot framework, utilizing Spring MVC's design patterns for processing user requests, and MyBatis for the data access layer, ensuring developmental efficiency and flexibility. Moreover, the project ingeniously employs Redis for data caching to optimize performance for frequent queries, particularly enhancing response times for social features such as follower interactions and likes.
