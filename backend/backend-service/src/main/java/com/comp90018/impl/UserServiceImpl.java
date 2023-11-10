@@ -5,11 +5,9 @@ import com.comp90018.bo.ChangeUserImgBO;
 import com.comp90018.bo.ChangeUserInfoBO;
 import com.comp90018.enums.ChangeResEnum;
 import com.comp90018.enums.SexEnum;
-import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.UsersMapper;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.UserService;
-import com.comp90018.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
-import java.util.List;
+
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseImpl implements UserService {
 
     @Autowired
     private UsersMapper usersMapper;
 
-    @Autowired
-    private Sid sid;
 
     /**
      * query by email
@@ -95,9 +91,8 @@ public class UserServiceImpl implements UserService {
         user.setProfile("http://47.74.87.207:9000/comp90018/profile.jpg");
         user.setBgImg("http://47.74.87.207:9000/comp90018/bg.jpg");
         user.setSex(SexEnum.OTHER.getSex());
-        user.setBirthday(DateUtil.stringToDate("1800-11-11"));
         user.setDescription("default");
-
+        user.setBirthday(new Date());
         user.setCreatedTime(new Date());
         user.setUpdatedTime(new Date());
 
@@ -163,15 +158,18 @@ public class UserServiceImpl implements UserService {
         Users users = usersMapper.selectOneByExample(example);
 
         if(users == null) {
+            log.info(ChangeResEnum.USERID_IS_WRONG.getChangeRes());
             return ChangeResEnum.USERID_IS_WRONG.getChangeRes();
         }
 
         String savePassword = users.getPassword();
         if(!BCrypt.checkpw(originalPassword, savePassword)) {
+            log.info(ChangeResEnum.ORIGINAL_PASSWORD_IS_WRONG.getChangeRes());
             return ChangeResEnum.ORIGINAL_PASSWORD_IS_WRONG.getChangeRes();
         }
 
         if(originalPassword.equals(newPassword)) {
+            log.info(ChangeResEnum.NEW_PASSWORD_IS_SAME_WITH_ORIGINAL_PASSWORD.getChangeRes());
             return ChangeResEnum.NEW_PASSWORD_IS_SAME_WITH_ORIGINAL_PASSWORD.getChangeRes();
         }
 
@@ -181,8 +179,10 @@ public class UserServiceImpl implements UserService {
 
         int updateByPrimaryKeySelective = usersMapper.updateByPrimaryKeySelective(newUser);
         if(updateByPrimaryKeySelective == 1) {
+            log.info(ChangeResEnum.CHANGE_SUCCESS.getChangeRes());
             return ChangeResEnum.CHANGE_SUCCESS.getChangeRes();
         }else {
+            log.info(ChangeResEnum.CHANGE_FAIL.getChangeRes());
             return ChangeResEnum.CHANGE_FAIL.getChangeRes();
         }
 
@@ -207,6 +207,7 @@ public class UserServiceImpl implements UserService {
         Users users = usersMapper.selectOneByExample(example);
 
         if(users == null) {
+            log.info("no user");
             return null;
         }
 

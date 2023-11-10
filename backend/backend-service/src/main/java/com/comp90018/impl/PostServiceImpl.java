@@ -3,11 +3,12 @@ package com.comp90018.impl;
 import com.comp90018.bo.UploadPostBO;
 import com.comp90018.enums.PostPrivateLevelEnum;
 import com.comp90018.enums.PostTypeEnum;
-import com.comp90018.idworker.Sid;
+
 import com.comp90018.mapper.PostMapper;
 import com.comp90018.pojo.Post;
 import com.comp90018.service.PostService;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,11 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class PostServiceImpl implements PostService {
+public class PostServiceImpl extends BaseImpl implements PostService {
 
     @Autowired
     private PostMapper postMapper;
 
-    @Autowired
-    private Sid sid;
 
     @Override
     @Transactional
