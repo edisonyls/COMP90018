@@ -130,7 +130,7 @@ const RootTab = ({ navigation }) => {
                       focused ? "text-[#6D28D9]" : "text-[#111]"
                     }`}
                   >
-                    Chat
+                    Notification
                   </Text>
                 </View>
               </TouchableOpacity>

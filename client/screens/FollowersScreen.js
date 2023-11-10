@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,35 +9,45 @@ import {
   ScrollView,
   SafeAreaView,
   ActivityIndicator,
-} from 'react-native';
+} from "react-native";
 import MenuContainer from "../components/MenuContainer";
 import { useUserContext } from "../context/userContext";
-import { queryUserInfo } from '../api/auth';
-import axios from 'axios';
-import { BASE_URL } from '../utils/utils';
+import { queryUserInfo } from "../api/auth";
+import axios from "axios";
+import { BASE_URL } from "../utils/utils";
 
-const ListItem = ({ name, imageProfile, onPress, senderId, behavior, time, type, extraInfo }) => {
+const ListItem = ({
+  name,
+  imageProfile,
+  onPress,
+  senderId,
+  behavior,
+  time,
+  type,
+  extraInfo,
+}) => {
   // Format the time string as needed, for example:
-  const formattedTime = type === 'activities' && time ? new Date(time).toLocaleTimeString() : null;
+  const formattedTime =
+    type === "activities" && time ? new Date(time).toLocaleTimeString() : null;
 
   return (
     <TouchableOpacity onPress={() => onPress(senderId)} style={styles.listItem}>
       <Image source={{ uri: imageProfile }} style={styles.profilePic} />
       <View style={styles.textContainer}>
         <Text style={styles.name}>{name}</Text>
-        {type === 'activities' && behavior && (
+        {type === "activities" && behavior && (
           <Text style={styles.behaviorText}>
-            {formattedTime && `${formattedTime} - `}{behavior}
+            {formattedTime && `${formattedTime} - `}
+            {behavior}
           </Text>
         )}
-        {(type === 'follower' || type === 'following') && extraInfo && (
+        {(type === "follower" || type === "following") && extraInfo && (
           <Text style={styles.extraInfoText}>{extraInfo}</Text>
         )}
       </View>
     </TouchableOpacity>
   );
 };
-
 
 const FollowersScreen = ({ navigation }) => {
   const { user } = useUserContext();
@@ -48,10 +58,9 @@ const FollowersScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchContent();
-    const intervalId = setInterval(fetchContent, 5000); 
-    return () => clearInterval(intervalId); 
+    const intervalId = setInterval(fetchContent, 5000);
+    return () => clearInterval(intervalId);
   }, [type, user.id]);
-
 
   const fetchContent = async () => {
     setIsLoading(true);
@@ -69,19 +78,19 @@ const FollowersScreen = ({ navigation }) => {
       setIsLoading(false);
       return;
     }
-  
+
     try {
       let response;
 
       // Check if the active tab is 'activities', if so, make a POST request
-      if (type === 'activities') {
+      if (type === "activities") {
         const postData = new URLSearchParams();
-        postData.append('userId', user.id);
-      
+        postData.append("userId", user.id);
+
         response = await axios.post(currentEndpoint, postData.toString(), {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         });
       } else {
         // For 'follower' and 'following', make a GET request
@@ -91,18 +100,18 @@ const FollowersScreen = ({ navigation }) => {
 
       if (response.data.success) {
         let data;
-        if (type === 'activities') {
+        if (type === "activities") {
           // Special handling for 'activities' data
-          data = response.data.data.map(item => ({
+          data = response.data.data.map((item) => ({
             id: item.id,
             name: item.senderNickname,
             imageProfile: item.senderProfile,
             senderId: item.senderId,
             behavior: item.content.behavior,
           }));
-        } else if (type === 'follower' || type === 'following') {
+        } else if (type === "follower" || type === "following") {
           // Handling for 'follower' and 'following' data
-          data = response.data.data.map(item => ({
+          data = response.data.data.map((item) => ({
             name: item.nickname,
             imageProfile: item.profile,
             senderId: item.id,
@@ -124,17 +133,16 @@ const FollowersScreen = ({ navigation }) => {
     fetchContent();
   }, [type, user.id]);
 
-
   const navigateToUserInfo = async (senderId) => {
     try {
       const userInfoData = await queryUserInfo(senderId);
       if (userInfoData.success) {
-        navigation.navigate('Others', { otherUser: userInfoData.data });
+        navigation.navigate("Others", { otherUser: userInfoData.data });
       } else {
-        console.error('Failed to fetch user info:', userInfoData.msg);
+        console.error("Failed to fetch user info:", userInfoData.msg);
       }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
     }
   };
 
@@ -143,46 +151,40 @@ const FollowersScreen = ({ navigation }) => {
       <StatusBar barStyle="dark-content" />
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#0B646B" />
-      </View>
+          <ActivityIndicator size="large" color="#0B646B" />
+        </View>
       ) : (
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <View className="flex-row items-between justify-between px-8">
-              <View>
+            <View>
               <Text className="text-[40px] text-[#0B646B] font-bold">
-                  {"Notification"}
+                {"Notification"}
               </Text>
               <Text className="text-[20px] text-[#527283]">
-                  {user.nickname}
+                {user.nickname}
               </Text>
-              </View>
-              <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
-              <Image
-                  className="w-full h-full rounded-md object-cover"
-                  source={require("./../assets/logo.jpg")}
-              />
-              </View>
+            </View>
           </View>
 
           <View className="flex-row item-center justify-center px-8 mt-4">
             <MenuContainer
               title="Activities"
               //onPress={navigateToActivities}
-              isActive={type === 'activities'}
+              isActive={type === "activities"}
               type={type}
               setType={setType}
               setSelectedMenu={() => setSelectedMenu(type)}
             />
             <MenuContainer
               title="Follower"
-              isActive={type === 'follower'}
+              isActive={type === "follower"}
               type={type}
               setType={setType}
               setSelectedMenu={() => setSelectedMenu(type)}
             />
             <MenuContainer
               title="Following"
-              isActive={type === 'following'}
+              isActive={type === "following"}
               type={type}
               setType={setType}
               setSelectedMenu={() => setSelectedMenu(type)}
@@ -199,7 +201,6 @@ const FollowersScreen = ({ navigation }) => {
               type={type} // And this line
             />
           ))}
-
         </ScrollView>
       )}
     </SafeAreaView>
@@ -209,23 +210,23 @@ const FollowersScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
   },
   contentContainer: {
     paddingBottom: 60,
   },
   behaviorText: {
     fontSize: 16,
-    color: 'gray',
+    color: "gray",
     marginTop: 4, // Adjust as needed
   },
   listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    justifyContent: 'space-between',
+    borderBottomColor: "#ccc",
+    justifyContent: "space-between",
   },
   profilePic: {
     width: 50,
@@ -234,20 +235,20 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    justifyContent: "center",
+    alignItems: "flex-end",
   },
   name: {
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'right',
+    fontWeight: "bold",
+    textAlign: "right",
     marginBottom: 10,
     marginRight: 20,
   },
   loaderContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
