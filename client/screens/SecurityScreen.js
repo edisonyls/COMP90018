@@ -10,6 +10,7 @@ import {
   Dimensions,
   TextInput,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useLayoutEffect, useState } from "react";
@@ -25,24 +26,7 @@ const SecurityScreen = () => {
   const navigation = useNavigation();
   const { user } = useUserContext();
 
-  // const updateUserProfile = async () => {
-  //   try {
-  //     const updatedUserInfo = {
-  //       // ... 其他用户信息 ...
-  //       id: user.id,
-  //       mobile: user.mobile, // 更新的手机号码
-  //       nickname: user.nickname, // 更新的昵称
-  //       email1: user.email1, // 更新的邮箱
-  //       password: newPassword,
-  //       // ... 其他用户信息 ...
-  //     };
-
-  //     const response = await changeUserInfo(updatedUserInfo);
-  //     // 处理响应，更新上下文等
-  //   } catch (e) {
-  //     console.error("更新用户资料失败", e);
-  //   }
-  // };
+  
 
   const handleSave = async () => {
     try {
@@ -163,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 40, // 水平边距
     marginBottom: 20, // 底部边距
-    //position: "absolute", // 添加绝对定位
+    position: "absolute", // 添加绝对定位
     bottom: 20, // 按钮距离底部的距离
     left: 0, // 按钮距离左边的距离
     right: 0, // 按钮距离右边的距离

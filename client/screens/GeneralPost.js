@@ -287,7 +287,7 @@ const GeneralPost = () => {
      <View style={styles.locationContainer} >
         {/* Lost Location Input */}
         <View style={styles.autocompleteContainer}>
-              <Text style={styles.inputLabel}> * Location of Lost</Text>
+              <Text style={styles.inputLabel}> * Location</Text>
                 <TextInput
                   placeholder="Search for an address"
                   returnKeyType="search"
