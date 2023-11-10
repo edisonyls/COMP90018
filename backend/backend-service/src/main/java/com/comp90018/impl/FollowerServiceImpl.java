@@ -1,20 +1,19 @@
 package com.comp90018.impl;
 
 import com.comp90018.bo.MessageConvertBO;
-import com.comp90018.dto.MessageDTO;
 import com.comp90018.enums.*;
-import com.comp90018.idworker.Sid;
+
 import com.comp90018.mapper.FollowersMapper;
 import com.comp90018.mapper.ListFollowerMapper;
 import com.comp90018.mapper.ListFollowingMapper;
 import com.comp90018.pojo.Followers;
 import com.comp90018.service.FollowerService;
-import com.comp90018.service.MessageService;
+
 import com.comp90018.utils.JsonUtils;
 import com.comp90018.utils.RabbitMQUtils;
-import com.comp90018.utils.RedisOperator;
+
 import com.comp90018.vo.ListFollowerVO;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,26 +24,19 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class FollowerServiceImpl implements FollowerService {
+public class FollowerServiceImpl extends BaseImpl implements FollowerService {
 
     final String Follow = "Follow";
     final Integer MyFollower = 0;
     final Integer MyFollowing = 1;
 
     @Autowired
-    private Sid sid;
-    @Autowired
-    private MessageService messageService;
-    @Autowired
     private ListFollowingMapper listFollowingMapper;
     @Autowired
     private ListFollowerMapper listFollowerMapper;
     @Autowired
-    private RedisOperator redis;
-    @Autowired
     private FollowersMapper followersMapper;
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+
 
     @Override
     public boolean checkFollow(String followerId, String followingId) {

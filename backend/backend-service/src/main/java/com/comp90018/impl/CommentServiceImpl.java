@@ -4,7 +4,7 @@ import com.comp90018.bo.MessageConvertBO;
 import com.comp90018.dto.CommentDTO;
 import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.enums.MessageTypeEnum;
-import com.comp90018.idworker.Sid;
+
 import com.comp90018.mapper.CommentMapper;
 import com.comp90018.mapper.PostMapper;
 import com.comp90018.mapper.UsersMapper;
@@ -12,11 +12,11 @@ import com.comp90018.pojo.Comment;
 import com.comp90018.pojo.Post;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.CommentService;
-import com.comp90018.service.MessageService;
+
 import com.comp90018.utils.JsonUtils;
 import com.comp90018.utils.RabbitMQUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,23 +27,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl extends BaseImpl implements CommentService {
 
-    @Autowired
-    private MessageService messageService;
     @Autowired
     private CommentMapper commentMapper;
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Autowired
     private PostMapper postMapper;
-
     @Autowired
     private UsersMapper usersMapper;
-
-    @Autowired
-    private Sid sid;
-
 
     @Override
     @Transactional

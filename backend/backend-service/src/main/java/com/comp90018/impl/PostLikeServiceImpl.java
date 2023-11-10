@@ -4,17 +4,14 @@ import com.comp90018.bo.LikedPostBO;
 import com.comp90018.bo.MessageConvertBO;
 import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.enums.MessageTypeEnum;
-import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.MyLikedPostMapper;
 import com.comp90018.mapper.PostMapper;
 import com.comp90018.pojo.MyLikedPost;
 import com.comp90018.pojo.Post;
-import com.comp90018.service.MessageService;
 import com.comp90018.service.PostLikeService;
 import com.comp90018.utils.JsonUtils;
 import com.comp90018.utils.RabbitMQUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +23,8 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class PostLikeServiceImpl implements PostLikeService {
+public class PostLikeServiceImpl extends BaseImpl implements PostLikeService {
 
-    @Autowired
-    private Sid sid;
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-    @Autowired
-    private MessageService messageService;
     @Autowired
     private PostMapper postMapper;
 

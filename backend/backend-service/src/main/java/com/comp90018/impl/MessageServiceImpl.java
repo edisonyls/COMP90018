@@ -6,8 +6,7 @@ import com.comp90018.enums.RedisEnum;
 import com.comp90018.mongoDao.MessageDao;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.MessageService;
-import com.comp90018.service.UserService;
-import com.comp90018.utils.RedisOperator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MessageServiceImpl implements MessageService {
-    @Autowired
-    private RedisOperator redis;
-    @Autowired
-    private UserService userService;
+public class MessageServiceImpl extends BaseImpl implements MessageService {
+
     @Autowired
     private MessageDao messageDao;
     @Override

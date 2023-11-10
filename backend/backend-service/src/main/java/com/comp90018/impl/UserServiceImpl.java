@@ -5,7 +5,6 @@ import com.comp90018.bo.ChangeUserImgBO;
 import com.comp90018.bo.ChangeUserInfoBO;
 import com.comp90018.enums.ChangeResEnum;
 import com.comp90018.enums.SexEnum;
-import com.comp90018.idworker.Sid;
 import com.comp90018.mapper.UsersMapper;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.UserService;
@@ -19,17 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
-import java.util.List;
+
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseImpl implements UserService {
 
     @Autowired
     private UsersMapper usersMapper;
 
-    @Autowired
-    private Sid sid;
 
     /**
      * query by email
