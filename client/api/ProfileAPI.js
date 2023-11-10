@@ -43,7 +43,7 @@ export const changeUserInfo = async (userInfo) => {
     );
     return response.data;
   } catch (error) {
-    console.error("在changeUserInfo请求时出错", error);
+    console.error("在changeUserInfo fail", error);
   }
 };
 
@@ -83,7 +83,7 @@ export const changeUserPassword = async (
 ) => {
   try {
     const response = await axios.post(
-      `http://${BASE_URL}:8080/user/changePassword`, // 使用新的后端接口地址
+      `http://${BASE_URL}:8080/user/changePassword`, 
       {
         userId: userId,
         originalPassword: originalPassword,
@@ -91,14 +91,14 @@ export const changeUserPassword = async (
       },
       {
         headers: {
-          "Content-Type": "application/json", // 确保请求的内容类型为 application/json
+          "Content-Type": "application/json", 
         },
       }
     );
     return response.data;
   } catch (error) {
     console.error("Error while changing password", error);
-    throw error; // 抛出错误以便可以捕获并处理
+    throw error; 
   }
 };
 
