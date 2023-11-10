@@ -28,7 +28,7 @@ const PostScreen = ({ route, navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
 
   const [loading, setLoading] = useState(false);
-  const { post, userId } = route.params; // 从路由参数中获取post对象
+  const { post, userId } = route.params; 
   const [address, setAddress] = useState("");
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState("");
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontWeight: "bold",
-    //backgroundColor: '#A5A6F6',
+   
     borderRadius: 10,
     padding: 5,
     fontSize: 15,
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     textAlign: "center",
-    alignSelf: "center", // 这会确保Text组件自身在其父组件中居中
+    alignSelf: "center",
   },
   detailsContainer: {
     padding: 10,
@@ -391,40 +391,40 @@ const styles = StyleSheet.create({
   },
 
   commentUserName: {
-    fontWeight: "bold", // 字体加粗
-    color: "#333", // 深色字体
-    fontSize: 14, // 字体大小
-    marginBottom: 2, // 与下方内容的间隔
+    fontWeight: "bold",
+    color: "#333", 
+    fontSize: 14, 
+    marginBottom: 2, 
   },
   commentText: {
-    color: "#666", // 中等深色字体
-    fontSize: 15, // 字体大小稍小
-    lineHeight: 18, // 行高，增加可读性
-    marginTop: 2, // 与上方用户名的间隔
-    marginBottom: 2, // 与下方内容的间隔
-    backgroundColor: "#eee", // 背景色
-    borderRadius: 5, // 圆角效果
-    padding: 8, // 内边距
+    color: "#666", 
+    fontSize: 15, 
+    lineHeight: 18,
+    marginTop: 2, 
+    marginBottom: 2, 
+    backgroundColor: "#eee",
+    borderRadius: 5, 
+    padding: 8, 
   },
   commentContainer: {
-    backgroundColor: "#fff", // 评论部分的白色背景
-    padding: 10, // 评论容器内部的填充
-    marginVertical: 5, // 垂直方向的外边距
-    borderBottomWidth: 1, // 底部边框宽度，用于分隔评论
-    borderBottomColor: "#e1e1e1", // 底部边框颜色，浅灰色
-    flexDirection: "row", // 水平排列用户头像和评论内容
-    alignItems: "center", // 在交叉轴上居中对齐子元素
+    backgroundColor: "#fff", 
+    padding: 10, 
+    marginVertical: 5, 
+    borderBottomWidth: 1,
+    borderBottomColor: "#e1e1e1", 
+    flexDirection: "row", 
+    alignItems: "center", 
   },
   commentUserImage: {
-    width: 30, // 评论用户头像的宽度
-    height: 30, // 评论用户头像的高度
-    borderRadius: 15, // 头像的圆角半径
-    marginRight: 10, // 头像右边的外边距
+    width: 30, 
+    height: 30, 
+    borderRadius: 15, 
+    marginRight: 10, 
   },
   locationText: {
-    color: "#333", // 位置文本的颜色
-    fontSize: 14, // 位置文本的字体大小
-    marginLeft: 8, // 位置文本左边的外边距
+    color: "#333", 
+    fontSize: 14, 
+    marginLeft: 8, 
   },
   inputContainer: {
     flexDirection: "row",
@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: "#9747FF",
     borderRadius: 20,
-    justifyContent: "center", // 按钮内部的文本垂直居中
+    justifyContent: "center", 
   },
   sendButtonText: {
     color: "#fff",
