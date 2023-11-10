@@ -78,6 +78,8 @@ TO BE UPDATED
 TO BE UPDATED
 
 ### API Endpoints
+Note: You will need to make the backend running before accessing the following content.
+
 Detailed API documentation can be found [here](http://localhost:8080/doc.html). It might appear as a Chinese version but you can simply click the language switcher on the top right corner to switch to English.
   
 ### TechStack

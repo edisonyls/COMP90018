@@ -8,9 +8,15 @@ import {
   ActivityIndicator,
   StyleSheet,
   Alert,
+  RefreshControl,
 } from "react-native";
 
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, {
+  useLayoutEffect,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import MenuContainer from "../components/MenuContainer";
 import ItemCardContainer from "../components/ItemCardContainer";
@@ -29,6 +35,9 @@ const ProfileScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [mainData, setMainData] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState("Post");
+  const [refreshing, setRefreshing] = useState(false);
+
+  const isFocused = useIsFocused();
 
   const navigation = useNavigation();
   //const isFocused = useIsFocused();
@@ -47,6 +56,38 @@ const ProfileScreen = () => {
     1: "Found",
     2: "General",
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      setIsLoading(true);
+      getAllPostsPerUser(user.id)
+        .then((res) => {
+          setMainData(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [isFocused]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    getAllPostsPerUser(user.id)
+      .then((res) => {
+        setMainData(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setRefreshing(false);
+      });
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -93,7 +134,17 @@ const ProfileScreen = () => {
       {isLoading ? (
         <LoadingView loading={isLoading} />
       ) : (
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          refreshControl={
+            // Add this prop to ScrollView
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh} // Bind your onRefresh function
+              colors={["#0B646B"]} // Optional: customize the spinner colors
+            />
+          }
+        >
           <View style={styles.imageContainer}>
             <Image
               // key={backgroundUri}
@@ -139,6 +190,7 @@ const ProfileScreen = () => {
                     post={item}
                     navigation={navigation}
                     key={item.id}
+                    userId={user?.id}
                   />
                 ))
               ) : (

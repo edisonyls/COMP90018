@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { API_KEY } from "../utils/utils";
 import axios from "axios";
 
-const ItemCardContainer = ({ post, navigation }) => {
+const ItemCardContainer = ({ post, navigation, userId }) => {
   const [like, setLike] = useState(false);
   const [location, setLocation] = useState("");
 
@@ -43,7 +43,7 @@ const ItemCardContainer = ({ post, navigation }) => {
 
   const handleMarkerPress = async (post) => {
     try {
-      navigation.navigate("Post", { post: post });
+      navigation.navigate("Post", { post: post, userId: userId });
     } catch (error) {
       console.error("Error fetching user info:", error);
       Alert.alert(
