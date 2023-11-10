@@ -52,22 +52,24 @@ const VerifyScreen = ({ navigation, route }) => {
 
     const code = convertToObject(OTP);
     if (code.length !== 6) {
-      Alert.alert("Invalid Verification", "Please Enter 6 Digits");
+      Alert.alert("无效的验证码", "请输入6位数字验证码");
     } else {
       setLoading(true);
-      const res = await verifyEmail(code, email, password, username);
-      if (!res) {
+      try {
+        const res = await verifyEmail(code, email, password, username);
+        if (!res) {
+          Alert.alert("服务器端出现问题，请检查API连接。");
+        } else if (res.success) {
+          setUser(res.data);
+          navigation.navigate("Home");
+        } else {
+          Alert.alert(res.msg || "注册失败，请稍后重试。");
+        }
+      } catch (error) {
+        Alert.alert("出错了！", error.message);
+      } finally {
         setLoading(false);
-        console.log("Server side is down. Check api connection.");
-        Alter.alert("Oops!", "Try again later.");
-      } else if (!res.success) {
-        setLoading(false);
-        console.log("Register is failed");
-        Alert.alert("Oops!", res.msg);
       }
-      setUser(res.data);
-      setLoading(false);
-      navigation.navigate("Home");
     }
   };
 
