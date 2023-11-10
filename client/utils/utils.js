@@ -4,5 +4,9 @@ export const isValidEmail = (email) => {
   return re.test(String(email).toLowerCase());
 };
 
+export const isValidPassword = (password) => {
+  return password.length >= 6 && password.length <= 18;
+};
+
 export const API_KEY = "AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng";
-export const BASE_URL = "192.168.1.107";
+export const BASE_URL = "192.168.1.111";
