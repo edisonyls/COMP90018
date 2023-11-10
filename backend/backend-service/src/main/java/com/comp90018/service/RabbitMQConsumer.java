@@ -21,21 +21,16 @@ public class RabbitMQConsumer {
 
     @RabbitListener(queues = {RabbitMQUtils.QUEUE_SYS_MSG})
     public void watchQueue(String payload, Message message) {
-        log.info(payload);
-
         String routingKey = message.getMessageProperties().getReceivedRoutingKey();
         MessageConvertBO messageConvertBO = JsonUtils.jsonToPojo(payload, MessageConvertBO.class);
-        log.info(routingKey);
-
         if (("sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.FOLLOW_NOTIFY.getSystemMessage()).equals(routingKey)
                 || ("sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.UNFOLLOW_NOTIFY.getSystemMessage()).equals(routingKey)
                 || ("sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.COMMENT_NOTIFY.getSystemMessage()).equals(routingKey)
                 || ("sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.COMMENT_LIKE_NOTIFY.getSystemMessage()).equals(routingKey)
                 || ("sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.POST_UNLIKE_NOTIFY.getSystemMessage()).equals(routingKey)
                 || ("sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.POST_LIKE_NOTIFY.getSystemMessage()).equals(routingKey)) {
-
+            log.info("mq new message consumes");
             messageService.createMessage(messageConvertBO.getSenderId(), messageConvertBO.getReceiverId(), messageConvertBO.getType(), messageConvertBO.getContent());
-
         }
     }
 }

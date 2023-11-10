@@ -1,9 +1,6 @@
 package com.comp90018.impl;
 
 import com.comp90018.idworker.Sid;
-import com.comp90018.mapper.CommentMapper;
-import com.comp90018.mapper.PostMapper;
-import com.comp90018.mapper.UsersMapper;
 import com.comp90018.service.MessageService;
 import com.comp90018.service.UserService;
 import com.comp90018.utils.RedisOperator;

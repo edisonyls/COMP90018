@@ -7,6 +7,7 @@ import com.comp90018.mongoDao.MessageDao;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.MessageService;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class MessageServiceImpl extends BaseImpl implements MessageService {
 
     @Autowired
@@ -33,6 +35,7 @@ public class MessageServiceImpl extends BaseImpl implements MessageService {
                                 receiverId, receiver.getNickname(), receiver.getProfile(),
                                 type, content, new Date());
         messageDao.save(messageDTO);
+        log.info("message created success");
         String s = redis.get(RedisEnum.REDIS_HASH.getRedisKey() + receiverId);
         if(s == null || s.length() == 0) {
             redis.set(RedisEnum.REDIS_HASH.getRedisKey() + receiverId, String.valueOf(1));

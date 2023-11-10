@@ -14,6 +14,7 @@ import com.comp90018.utils.RabbitMQUtils;
 
 import com.comp90018.vo.ListFollowerVO;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class FollowerServiceImpl extends BaseImpl implements FollowerService {
 
     final String Follow = "Follow";
@@ -47,11 +49,13 @@ public class FollowerServiceImpl extends BaseImpl implements FollowerService {
     @Override
     public String doFollow(String followerId, String followingId) {
         if (followerId == null || followingId == null) {
+            log.info(FollowResEnum.USER_CANNOT_NULL.getRes());
             return FollowResEnum.USER_CANNOT_NULL.getRes();
         }
 
         boolean b = checkFollow(followerId, followingId);
         if(b) {
+            log.info(FollowResEnum.ALREADY_FOLLOW.getRes());
             return FollowResEnum.ALREADY_FOLLOW.getRes();
         }
 
@@ -102,11 +106,13 @@ public class FollowerServiceImpl extends BaseImpl implements FollowerService {
     @Override
     public String unFollow(String followerId, String followingId) {
         if (followerId == null || followingId == null) {
+            log.info(FollowResEnum.USER_CANNOT_NULL.getRes());
             return FollowResEnum.USER_CANNOT_NULL.getRes();
         }
 
         Followers following = queryIsFollower(followerId, followingId);
         if(following == null) { // the follower doesn't follow the following
+            log.info(FollowResEnum.ALREADY_UNFOLLOW.getRes());
             return FollowResEnum.ALREADY_UNFOLLOW.getRes();
         }
 
