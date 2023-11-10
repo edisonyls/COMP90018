@@ -10,6 +10,7 @@
     -   [Frontend Pre-requirements](#frontend-pre-requirements)
     -   [Database Setup](#database-setup)
     -   [STARTING THE APP](#starting-the-app)
+-   [Run on Android Studio](#run-on-android-studio)
 -   [API Endpoints](#api-endpoints)
 -   [TechStack](#techstack)
  
@@ -82,6 +83,9 @@ If you decide to stick with our cloud server, on the same file mentioned above, 
 Communicate with your local server and db:
 
 Navigate to `~/backend/backend-controller/src/main/java/comp/comp90018/Application.java` and run the java file. After the local server is running, navigate to the `~/client/utils/utils.js` file, and change the BASE_URL to your machine's IP address. Then you can run the client with `npm start` on your terminal.
+
+### Run on Android Studio
+If you want to run the code in android studio, you would need to follow the content [here](https://docs.expo.dev/workflow/prebuild/). In short, you can generate native source code running a prebuild. In your terminal type `npx expo prebuild`. This should create the ios/ and android/ folders with the native code.
 
 ### API Endpoints
 Note: You will need to make the backend running before accessing the following content.

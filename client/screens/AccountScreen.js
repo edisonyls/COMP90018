@@ -36,7 +36,7 @@ const AccountScreen = () => {
   useEffect(() => {
     const loadProfileData = async () => {
       setIsLoading(true);
-     
+
       const storedName = user?.nickname ? user.nickname : "Null";
       const storedPhoneNumber = user?.mobile ? user.mobile : "Null";
 
@@ -76,12 +76,12 @@ const AccountScreen = () => {
         id: user.id,
         mobile: phoneNumber,
         nickname: name,
-      
         postcode: user.postcode,
         sex: user.sex,
         state: user.state,
       };
       updateUser(updatedAttributes);
+      console.log(updatedUserInfo);
       const response = await changeUserInfo(updatedUserInfo);
       setIsLoading(false);
     } catch (e) {
@@ -104,7 +104,11 @@ const AccountScreen = () => {
       const type = asset.type;
       const name = uri.split("/").pop();
       let formData = new FormData();
-      formData.append("file", { uri, name, type });
+      formData.append("file", {
+        uri,
+        type: "image/jpeg", // or whatever the file type is
+        name,
+      });
 
       if (isBackground) {
         setBackgroundUri({ uri, formData });
@@ -129,14 +133,13 @@ const AccountScreen = () => {
         setUploadBackgroundPic(false);
       }
 
-   
       if (typeof headUri === "object" && headUri.uri && uploadProfilePic) {
         console.log("head uploading...");
         await uploadHead(user.id, headUri.formData);
         setUploadProfilePic(false);
       }
 
-      await updateUserProfile(); /
+      await updateUserProfile();
       setIsLoading(false);
       navigation.goBack();
     } catch (e) {
@@ -176,7 +179,6 @@ const AccountScreen = () => {
                     <AntDesign name="edit" size={24} color="black" />
                   </TouchableOpacity>
 
-                 
                   <View style={styles.profileContainer}>
                     <Image style={styles.headImage} source={headUri} />
                     <TouchableOpacity
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#F3F3F3", 
+    borderBottomColor: "#F3F3F3",
   },
   headerTitle: {
     fontSize: 24,
@@ -235,29 +237,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    marginBottom: 20, 
+    marginBottom: 20,
   },
   backgroundImage: {
     width: "100%",
-    height: 200, 
-    resizeMode: "cover", 
+    height: 200,
+    resizeMode: "cover",
   },
   editIcon: {
     position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: "#FFF", 
+    backgroundColor: "#FFF",
     borderRadius: 30,
     padding: 10,
-    elevation: 4, 
-    shadowColor: "#000", 
+    elevation: 4,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
   profileContainer: {
-    position: "absolute", 
-    top: 150, 
+    position: "absolute",
+    top: 150,
     alignItems: "center",
   },
   headImage: {
@@ -265,8 +267,8 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 4,
-    borderColor: "#FFF", 
-    overflow: "hidden", 
+    borderColor: "#FFF",
+    overflow: "hidden",
   },
   saveButton: {
     backgroundColor: "#9747FF",
@@ -274,8 +276,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     marginHorizontal: 50,
-    marginTop: 20, 
-    shadowColor: "#9747FF", 
+    marginTop: 20,
+    shadowColor: "#9747FF",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -289,25 +291,25 @@ const styles = StyleSheet.create({
   nameContainer: {
     margin: 20,
     marginBottom: 10,
-    borderBottomColor: "#DDD", 
-    paddingBottom: 10, 
+    borderBottomColor: "#DDD",
+    paddingBottom: 10,
   },
   nameLabel: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#555", 
-    marginBottom: 5, 
+    color: "#555",
+    marginBottom: 5,
   },
   nameInput: {
     fontSize: 16,
-    width: "100%", 
-    height: 50, 
-    borderRadius: 15, 
-    borderWidth: 1, 
-    borderColor: "#DDDDDD", 
+    width: "100%",
+    height: 50,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#DDDDDD",
     marginTop: 5,
-    textAlign: "center", 
-    padding: 10, 
+    textAlign: "center",
+    padding: 10,
   },
 });
 

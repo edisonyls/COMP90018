@@ -1,68 +1,85 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TextInput, KeyboardAvoidingView, Platform,SafeAreaView,FlatList,Keyboard,Alert,toString} from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import { useNavigation } from '@react-navigation/native';
+// Found workable
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  FlatList,
+  Keyboard,
+  Alert,
+  toString,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "@react-navigation/native";
 //import RNPickerSelect from 'react-native-picker-select';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { AntDesign } from '@expo/vector-icons'; // Importing AntDesign for the dropdown icon
-import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
+import { launchImageLibrary } from "react-native-image-picker";
+import { AntDesign } from "@expo/vector-icons"; // Importing AntDesign for the dropdown icon
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
-import { BASE_URL } from '../utils/utils';
-import { Picker } from '@react-native-picker/picker';
+import { BASE_URL } from "../utils/utils";
+import { Picker } from "@react-native-picker/picker";
 import LoadingView from "../components/LoadingView";
 //import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
+const API_KEY = "AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng";
 
-const FindMyPet = () => {
+const FindLostPet = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
   const [formData, setFormData] = useState(null);
   //const [petCategory, setPetCategory] = useState(null);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [isPickerOpen, setIsPickerOpen] = useState(false); // New state variable to track picker status
   const [petCategory, setPetCategory] = useState(null); // State variable for the selected pet category
   // State to hold the pet's breed input
-  const [petBreed, setPetBreed] = useState('');
+  const [petBreed, setPetBreed] = useState("");
   // State to hold the pet's name input
-  const[petName, setPetName] = useState('');
-  const[contactNumber,setContactNumber] = useState('');
-  const[reward,setReward] = useState('');
-  const[description,setDescription] = useState('');
+  const [petName, setPetName] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [reward, setReward] = useState("");
+  const [description, setDescription] = useState("");
   const { user } = useUserContext();
-  const[isLoading, setIsLoading] = useState(false);
-  
-  
-  //find pet location 
-  //const [location, setLocation] = useState({latitude:37.8136,longitude:144.9631});
-  const [region, setRegion] = useState({latitude:37.8136,longitude:144.9631});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [searchKeyword, setSearchKeyword] = useState('');
+  //find pet location
+  //const [location, setLocation] = useState({latitude:37.8136,longitude:144.9631});
+  const [region, setRegion] = useState({
+    latitude: 37.8136,
+    longitude: 144.9631,
+  });
+
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isShowingResults, setIsShowingResults] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
-  
+
   const togglePicker = () => {
     setIsPickerOpen(!isPickerOpen);
   };
 
-
   const searchLocation = async (text) => {
     setSearchKeyword(text);
-  
+
     // If the search keyword is empty, don't perform a search
-    if (text.trim() === '') {
+    if (text.trim() === "") {
       setSearchResults([]);
       setIsShowingResults(false);
       return;
     }
-  
+
     try {
       const response = await axios.post(
         `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API_KEY}&input=${text}`
       );
-  
+
       if (response.data.predictions.length > 0) {
         // Update the state with the new predictions, which will be displayed in the FlatList.
         // Do NOT fetch the place details here; you should do that only when the user selects a place.
@@ -76,7 +93,6 @@ const FindMyPet = () => {
       console.log(e);
     }
   };
-  
 
   const handleResultPress = (description, placeId) => {
     setSelectedPlaceId(placeId);
@@ -85,22 +101,17 @@ const FindMyPet = () => {
     //Keyboard.dismiss();
   };
 
-
-
-
-
   useEffect(() => {
     (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+      if (Platform.OS !== "web") {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
         }
       }
       //ref.current?.setAddressText('Some Text');
     })();
-
-
   }, []);
 
   const handleSelectImage = () => {
@@ -111,9 +122,10 @@ const FindMyPet = () => {
         {
           text: "Take Photo",
           onPress: async () => {
-            const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
-            if (cameraPermission.status !== 'granted') {
-              alert('Sorry, we need camera permissions to make this work!');
+            const cameraPermission =
+              await ImagePicker.requestCameraPermissionsAsync();
+            if (cameraPermission.status !== "granted") {
+              alert("Sorry, we need camera permissions to make this work!");
               return;
             }
             const cameraResult = await ImagePicker.launchCameraAsync({
@@ -126,19 +138,26 @@ const FindMyPet = () => {
               const uri = asset.uri;
               setImageUri(uri);
               const type = asset.type;
-              const name = uri.split('/').pop();
+              const name = uri.split("/").pop();
               let formData = new FormData();
-              formData.append('multipartFile', { uri, name, type });
+              formData.append("multipartFile", {
+                uri,
+                type: "image/jpeg", // or whatever the file type is
+                name,
+              });
               setFormData(formData);
             }
-          }
+          },
         },
         {
           text: "Choose from Library",
           onPress: async () => {
-            const libraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (libraryPermission.status !== 'granted') {
-              alert('Sorry, we need camera roll permissions to make this work!');
+            const libraryPermission =
+              await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (libraryPermission.status !== "granted") {
+              alert(
+                "Sorry, we need camera roll permissions to make this work!"
+              );
               return;
             }
             const libraryResult = await ImagePicker.launchImageLibraryAsync({
@@ -152,14 +171,18 @@ const FindMyPet = () => {
               const uri = asset.uri;
               setImageUri(uri);
               const type = asset.type;
-              const name = uri.split('/').pop();
+              const name = uri.split("/").pop();
               let formData = new FormData();
-              formData.append('multipartFile', { uri, name, type });
+              formData.append("multipartFile", {
+                uri,
+                type: "image/jpeg", // or whatever the file type is
+                name,
+              });
               setFormData(formData);
             }
-          }
+          },
         },
-        { text: "Cancel", style: "cancel" }
+        { text: "Cancel", style: "cancel" },
       ],
       { cancelable: true }
     );
@@ -169,31 +192,32 @@ const FindMyPet = () => {
     console.log("Sending data for uploading img...");
     // Step 3: Send the FormData object using Axios with the appropriate headers
     try {
-
       const config = {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       };
-      const res = await axios.post(`http://${BASE_URL}:8080/post/uploadImg`, formData, config);
+      const res = await axios.post(
+        `http://${BASE_URL}:8080/post/uploadImg`,
+        formData,
+        config
+      );
       const response = res.data;
-      if (response.success === true) { // check if response is in valid format
+      if (response.success === true) {
+        // check if response is in valid format
         // Image uploaded successfully
-        console.log('Image uploaded successfully. ID:', response.data.postId);
+        console.log("Image uploaded successfully. ID:", response.data.postId);
         return response.data.postId;
-
       } else {
         // Handle any other HTTP status codes
-        console.log('Server responded with an unexpected status.');
+        console.log("Server responded with an unexpected status.");
         return false;
       }
-      
     } catch (error) {
       console.log(error);
       return false;
     }
   };
-
 
   // const handlePickerFocus = () => {
   //   setIsPickerOpen(previousState => !previousState); // Toggle the current state of the picker's open/close status
@@ -201,83 +225,98 @@ const FindMyPet = () => {
 
   // Function to validate the form fields
   const validateForm = () => {
-    if (!imageUri || !petCategory || !petBreed || !contactNumber ||!selectedPlaceId || !title) {
+    if (
+      !imageUri ||
+      !petCategory ||
+      !petBreed ||
+      !contactNumber ||
+      !selectedPlaceId ||
+      !title
+    ) {
       // One or more fields are empty
-      Alert.alert('Missing Information', 'Please fill in all fields before submitting.');
+      Alert.alert(
+        "Missing Information",
+        "Please fill in all fields before submitting."
+      );
       return false;
     }
     // All fields are filled
     return true;
   };
 
-
   // Function to handle the form submission
-  const handleSubmit = async() => {
-    if(validateForm()){
-    setIsLoading(true);
-    const isUploadImage = await uploadImage(formData);
-    console.log("postId is "+ isUploadImage);
-    if (isUploadImage) {
-      try {
-        // Fetch the detailed information of the selected location
-        const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
+  const handleSubmit = async () => {
+    if (validateForm()) {
+      setIsLoading(true);
+      const isUploadImage = await uploadImage(formData);
+      console.log("postId is " + isUploadImage);
+      if (isUploadImage) {
+        try {
+          // Fetch the detailed information of the selected location
+          const response = await axios.get(
+            `https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`
+          );
 
-        if (response.data.result) {
-          // Extract the coordinates
-          const location = response.data.result.geometry.location;
-    
-          // Log the coordinates
-          
-          console.log('Form submitted with the following data:');
-          console.log('Selected location coordinates:', location);
-          console.log(`Image URI: ${imageUri}`);
-          console.log(`Pet Category: ${petCategory}`);
-          console.log(`Pet Breed: ${petBreed}`);
-          console.log(`Pet Name: ${petName}`);
-          console.log(`Contact Number: ${contactNumber}`);
-          console.log(`Reward: ${reward}`);
+          if (response.data.result) {
+            // Extract the coordinates
+            const location = response.data.result.geometry.location;
 
+            // Log the coordinates
 
-          const petData = {
-            petCategory: petCategory,
-            petBreed: petBreed,
-            contactNumber: contactNumber,
-            latitude: location.lat,
-            longitude: location.lng,
-            userId: user.id,
-            postType: 'Found',
-            description: description,
-            title: title,
-            postId: isUploadImage
-          };
+            console.log("Form submitted with the following data:");
+            console.log("Selected location coordinates:", location);
+            console.log(`Image URI: ${imageUri}`);
+            console.log(`Pet Category: ${petCategory}`);
+            console.log(`Pet Breed: ${petBreed}`);
+            console.log(`Pet Name: ${petName}`);
+            console.log(`Contact Number: ${contactNumber}`);
+            console.log(`Reward: ${reward}`);
 
-          try {
-            const serverResponse = await axios.post('http://'+ BASE_URL +':8080/post/uploadPost', petData);
-            
-          
-            console.log(serverResponse.data);
-          
-            if (serverResponse.data.success) {
-                console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
-                          // Here, you can also proceed with other form submission tasks...
-                          // For example, sending data to a server.
-                    
-                          // After successful submission, clear the form fields
-                          setPetName('');
-                          setPetCategory('');
-                          setPetBreed('');
-                          setSelectedPlaceId(null);
-                          setReward('');
-                          setContactNumber('');
-                          setImageUri(null);
-                          setDescription(null);
-              
-                          Alert.alert('Successfully Sumbmitted!');
-                          navigation.navigate('Home'); // replace 'NextScreen' with the actual name of your screen
-            } else {
-                console.log('Server responded with an unexpected status.');
-            }
-          } catch (error) {
+            const petData = {
+              petCategory: petCategory,
+              petBreed: petBreed,
+              contactNumber: contactNumber,
+              latitude: location.lat,
+              longitude: location.lng,
+              userId: user.id,
+              postType: "Found",
+              description: description,
+              title: title,
+              postId: isUploadImage,
+            };
+
+            try {
+              const serverResponse = await axios.post(
+                "http://" + BASE_URL + ":8080/post/uploadPost",
+                petData
+              );
+
+              console.log(serverResponse.data);
+
+              if (serverResponse.data.success) {
+                console.log(
+                  "Data submitted successfully. ID:",
+                  serverResponse.data.data.id
+                );
+                // Here, you can also proceed with other form submission tasks...
+                // For example, sending data to a server.
+
+                // After successful submission, clear the form fields
+                setPetName("");
+                setPetCategory("");
+                setPetBreed("");
+                setSelectedPlaceId(null);
+                setReward("");
+                setContactNumber("");
+                setImageUri(null);
+                setDescription(null);
+
+                Alert.alert("Successfully Sumbmitted!");
+                navigation.navigate("Home"); // replace 'NextScreen' with the actual name of your screen
+              } else {
+                console.log("Server responded with an unexpected status.");
+              }
+            } catch (error) {
               //console.error('An error occurred while submitting the form:', error);
               if (error.response) {
                 // The request was made and the server responded with a status code
@@ -291,47 +330,37 @@ const FindMyPet = () => {
               } else {
                 // Something happened in setting up the request and triggered an Error
                 console.log(error);
-              } 
-              
+              }
+            }
+          } else {
+            console.log("Failed to retrieve location details.");
           }
-
-          
-          
-    
-
-    
-        } else {
-          console.log('Failed to retrieve location details.');
+        } catch (error) {
+          console.log("An error occurred during form submission:", error);
+        } finally {
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.log('An error occurred during form submission:', error);
-      }finally{
-        setIsLoading(false);      
       }
-    }
     }
   };
 
   return (
-    
-    <View style ={{flex:1}}>
-
+    <View style={{ flex: 1 }}>
       {isLoading ? (
         <LoadingView loading={isLoading} msg={"Please wait..."} />
       ) : (
         <>
-      <TouchableOpacity
-      style={styles.backStyle}
-              onPress={() => navigation.goBack()}
-              className="mr-4"
-            >
-              <AntDesign name="left" size={24} color="black" />
-      </TouchableOpacity>
-        <View style={styles.locationContainer}>
-
+          <TouchableOpacity
+            style={styles.backStyle}
+            onPress={() => navigation.goBack()}
+            className="mr-4"
+          >
+            <AntDesign name="left" size={24} color="black" />
+          </TouchableOpacity>
+          <View style={styles.locationContainer}>
             {/*Pet missing Location*/}
             <View style={styles.autocompleteContainer}>
-            <Text style={styles.inputLabel}> * Location of Lost</Text>
+              <Text style={styles.inputLabel}> * Location of Lost</Text>
               <TextInput
                 placeholder="Search for an address"
                 returnKeyType="search"
@@ -346,143 +375,143 @@ const FindMyPet = () => {
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       style={styles.resultItem}
-                      onPress={() => handleResultPress(item.description, item.place_id)}>
+                      onPress={() =>
+                        handleResultPress(item.description, item.place_id)
+                      }
+                    >
                       <Text>{item.description}</Text>
                     </TouchableOpacity>
                   )}
-                  keyExtractor={(item,index) => item.id? item.id.toString(): index.toString()}
+                  keyExtractor={(item, index) =>
+                    item.id ? item.id.toString() : index.toString()
+                  }
                   style={styles.searchResultsContainer}
                 />
               )}
             </View>
-          
           </View>
 
-
-
-            
-      <ScrollView
-          keyboardShouldPersistTaps='handled'
-          styles = {{flex: 1}} 
-      >
-
-          <ScrollView style={styles.formContainer} keyboardShouldPersistTaps='handled' onScrollBeginDrag={Keyboard.dismiss}>
-
+          <ScrollView keyboardShouldPersistTaps="handled" styles={{ flex: 1 }}>
+            <ScrollView
+              style={styles.formContainer}
+              keyboardShouldPersistTaps="handled"
+              onScrollBeginDrag={Keyboard.dismiss}
+            >
               {/* Post title */}
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}> * Title</Text>
-                  <TextInput
-                      style={styles.textInput}
-                      onChangeText={setTitle}
-                      value={title}
-                      placeholder="Enter post's title"
-                      autoCapitalize="words"
-                  />
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={setTitle}
+                  value={title}
+                  placeholder="Enter post's title"
+                  autoCapitalize="words"
+                />
               </View>
 
-
-            {/* Image Selector Field */}
-            <TouchableOpacity onPress={handleSelectImage} style={styles.imageSelector}>
-            {imageUri ? (
-                <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-            ) : (
-                <Text>Select Image</Text>
-            )}
-            </TouchableOpacity>
-
-
-            
-
-            {/* Pet Category Dropdown */}
-            <View style={styles.dropdownContainer}>
-            <Text style={styles.inputLabel}>* Pet Category</Text>
-            
-            <View style={styles.container}>
-              <Picker
-                selectedValue={petCategory}
-                onValueChange={(itemValue, itemIndex) => setPetCategory(itemValue)}
-                style={styles.picker}
-                prompt="Select a pet category..." // 这仅适用于Android
-                mode="dropdown" // 对Android有效，设置弹出模式
+              {/* Image Selector Field */}
+              <TouchableOpacity
+                onPress={handleSelectImage}
+                style={styles.imageSelector}
               >
-                <Picker.Item label="Cat" value="cat" />
-                <Picker.Item label="Dog" value="dog" />
-                <Picker.Item label="Rabbit" value="rabbit" />
-                <Picker.Item label="Hamster" value="hamster" />
-                <Picker.Item label="Other" value="other" />
-              </Picker>
-            </View>
+                {imageUri ? (
+                  <Image
+                    source={{ uri: imageUri }}
+                    style={styles.imagePreview}
+                  />
+                ) : (
+                  <Text>Select Image</Text>
+                )}
+              </TouchableOpacity>
 
-            </View>
+              {/* Pet Category Dropdown */}
+              <View style={styles.dropdownContainer}>
+                <Text style={styles.inputLabel}>* Pet Category</Text>
 
-            {/* Pet Breed Input */}
-            <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}> * Pet's Breed</Text>
-            <TextInput
-                style={styles.textInput}
-                onChangeText={setPetBreed}
-                value={petBreed}
-                placeholder="Enter pet's breed"
-                // Here you can set if you want the first letter to be auto-capitalized, etc.
-                autoCapitalize="words"
-            />
-            </View>
+                <View style={styles.container}>
+                  <Picker
+                    selectedValue={petCategory}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setPetCategory(itemValue)
+                    }
+                    style={styles.picker}
+                    prompt="Select a pet category..." // 这仅适用于Android
+                    mode="dropdown" // 对Android有效，设置弹出模式
+                  >
+                    <Picker.Item label="Cat" value="cat" />
+                    <Picker.Item label="Dog" value="dog" />
+                    <Picker.Item label="Rabbit" value="rabbit" />
+                    <Picker.Item label="Hamster" value="hamster" />
+                    <Picker.Item label="Other" value="other" />
+                  </Picker>
+                </View>
+              </View>
 
-            {/* Description Input */}
-            <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}> Description</Text>
-            <TextInput
-                style={styles.textInput}
-                onChangeText={setDescription}
-                value={description}
-                placeholder="Enter description"
-                // Here you can set if you want the first letter to be auto-capitalized, etc.
-                autoCapitalize="words"
-            />
-            </View>
+              {/* Pet Breed Input */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}> * Pet's Breed</Text>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={setPetBreed}
+                  value={petBreed}
+                  placeholder="Enter pet's breed"
+                  // Here you can set if you want the first letter to be auto-capitalized, etc.
+                  autoCapitalize="words"
+                />
+              </View>
 
+              {/* Description Input */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}> Description</Text>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={setDescription}
+                  value={description}
+                  placeholder="Enter description"
+                  // Here you can set if you want the first letter to be auto-capitalized, etc.
+                  autoCapitalize="words"
+                />
+              </View>
 
-            {/* Contact number input */}
-            <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}> * Contact Number</Text>
-            <TextInput
-                style={styles.textInput}
-                onChangeText={setContactNumber}
-                value={contactNumber}
-                placeholder="Enter your phone number"
-  
-            />
-            </View>
+              {/* Contact number input */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}> * Contact Number</Text>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={setContactNumber}
+                  value={contactNumber}
+                  placeholder="Enter your phone number"
+                />
+              </View>
 
+              {/* Submit Button */}
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleSubmit}
+              >
+                <Text style={styles.submitButtonText}>Submit</Text>
+              </TouchableOpacity>
 
-            {/* Submit Button */}
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
-
-        
-
-            {/* Additional form fields will be added here */}
-        </ScrollView>
-      {/* </ScrollView> */}
-      {/* <View style = {marginBottom:50, flex: 1}> </View> */}
-     </ScrollView>
-     </>
+              {/* Additional form fields will be added here */}
+            </ScrollView>
+            {/* </ScrollView> */}
+            {/* <View style = {marginBottom:50, flex: 1}> </View> */}
+          </ScrollView>
+        </>
       )}
     </View>
   );
-}
-
+};
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
-  locationContainer:{
+  locationContainer: {
     paddingTop: 100,
     paddingHorizontal: 35,
-    zIndex:1,
+    zIndex: 1,
     marginBottom: -110,
     marginTop: 40,
   },
@@ -494,13 +523,13 @@ const styles = StyleSheet.create({
   },
   imageSelector: {
     borderWidth: 1,
-    borderColor: 'grey',
-    borderStyle: 'dashed',
+    borderColor: "grey",
+    borderStyle: "dashed",
     borderRadius: 1,
     width: 320,
     height: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 20, // reduced space for the next form field
     marginTop: 15,
   },
@@ -510,9 +539,9 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     // This is the new style for the icon container
-    position: 'absolute',
+    position: "absolute",
     right: 10, // for horizontal positioning - adjust as needed
-    top: '50%',   // for vertical positioning - adjust as needed
+    top: "50%", // for vertical positioning - adjust as needed
     // You can also add padding, backgroundColor, etc., here if needed
     transform: [{ translateY: -15 }],
   },
@@ -523,13 +552,13 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 13, // or another appropriate size
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 6, // space below the label
     // ... any other styling you need
   },
   textInput: {
     height: 40, // or whatever height you find appropriate
-    borderColor: 'gray', // you can have a specific color for your project
+    borderColor: "gray", // you can have a specific color for your project
     borderWidth: 1, // this is the border for the input field
     paddingLeft: 10, // space between text and the border
     borderRadius: 5, // if you want rounded corners
@@ -537,33 +566,33 @@ const styles = StyleSheet.create({
   },
 
   map: {
-    width: '100%',
-    height: '70%', // Adjust as needed
+    width: "100%",
+    height: "70%", // Adjust as needed
   },
 
   autocompleteContainer: {
     position: "absolute",
-    
-    paddingLeft:35,
+
+    paddingLeft: 35,
     flex: 100,
     zIndex: 10,
   },
   searchResultsContainer: {
     width: 320, // or '100%' if you want it to have the full width of the screen
     maxHeight: 200, // or whatever maximum height you want
-    backgroundColor: '#fff',
-    position: 'absolute',
+    backgroundColor: "#fff",
+    position: "absolute",
     top: 75, // this positions your results just below the TextInput field
-    borderRadius:5,
-    zIndex:10,
+    borderRadius: 5,
+    zIndex: 10,
     marginLeft: 35,
-    paddingLeft:5,
+    paddingLeft: 5,
   },
   resultItem: {
-    width: '100%',
-    justifyContent: 'center',
+    width: "100%",
+    justifyContent: "center",
     height: 50,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     borderBottomWidth: 1,
     paddingLeft: 10,
   },
@@ -572,23 +601,23 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 14,
     borderRadius: 5,
-    borderColor: 'grey',
-    color: '#000',
+    borderColor: "grey",
+    color: "#000",
     //backgroundColor: '#fff',
     borderWidth: 1,
     paddingLeft: 10,
   },
 
   submitButton: {
-    backgroundColor: 'plum', // Use your app's color scheme here
+    backgroundColor: "plum", // Use your app's color scheme here
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 5,
     //marginTop: 10, // Adjust as needed for spacing from the last form field
     marginBottom: 60,
   },
   submitButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
   },
   inputIOS: {
@@ -596,9 +625,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderRadius: 4,
-    color: 'black',
+    color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
     marginBottom: 20, // space for the next form field
   },
@@ -607,46 +636,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderWidth: 0.5,
-    borderColor: 'purple',
+    borderColor: "purple",
     borderRadius: 8,
-    color: 'black',
+    color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
     marginBottom: 20, // space for the next form field
   },
 
   dropdownLabel: {
     fontSize: 14, // or another appropriate size
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10, // space below the label
     // ... any other styling you need
   },
   container: {
     flex: 1, // 使用 flex 布局，确保容器充满屏幕
-    alignItems: 'center', // 子项水平居中
-    justifyContent: 'center', // 子项垂直居中
+    alignItems: "center", // 子项水平居中
+    justifyContent: "center", // 子项垂直居中
     padding: 20, // 容器内部留有一定的空间
-    borderColor: 'gray', // you can have a specific color for your project
+    borderColor: "gray", // you can have a specific color for your project
     borderWidth: 1, // this is the border for the input field
     paddingLeft: 10, // space between text and the border
     borderRadius: 5, // if you want rounded corners
-    height:40,
+    height: 40,
     marginBottom: 20,
-
-
   },
   picker: {
     width: 300, // 选择器的宽度
     height: 40, // or whatever height you find appropriates
-    borderColor: 'gray', // you can have a specific color for your project
-    
+    borderColor: "gray", // you can have a specific color for your project
   },
-  backStyle:{
-    marginLeft:15,
-    marginTop:20,
-
-  }
-
+  backStyle: {
+    marginLeft: 15,
+    marginTop: 20,
+  },
 });
 
-
-export default FindMyPet;
+export default FindLostPet;
