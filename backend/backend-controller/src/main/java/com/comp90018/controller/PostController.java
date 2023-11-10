@@ -47,7 +47,7 @@ public class PostController extends BaseController {
                 return JSONResult.errorMsg("Upload error, please try again.");
             }
             String imgUrl = minIOConfig.getFileHost() + "/" + minIOConfig.getBucketName() + "/" + fileName;
-            redis.set(postId, imgUrl, 90);
+            redis.set(postId, imgUrl, 900);
             Map<String, Object> map = new HashMap<String, Object>() {{
                 put("postId", postId);
             }};
@@ -61,7 +61,7 @@ public class PostController extends BaseController {
         String url = redis.get(postId);
         log.info(url);
 //        url = uploadPostBO.getPostImg();
-        if (url == null) {
+        if (url == null ) {
             return JSONResult.errorMsg("Img cannot be blank");
         }
         else {
