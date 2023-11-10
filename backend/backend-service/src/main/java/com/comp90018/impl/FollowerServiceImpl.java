@@ -1,15 +1,20 @@
 package com.comp90018.impl;
 
+import com.comp90018.bo.MessageConvertBO;
 import com.comp90018.enums.*;
-import com.comp90018.idworker.Sid;
+
 import com.comp90018.mapper.FollowersMapper;
 import com.comp90018.mapper.ListFollowerMapper;
 import com.comp90018.mapper.ListFollowingMapper;
 import com.comp90018.pojo.Followers;
 import com.comp90018.service.FollowerService;
-import com.comp90018.service.MessageService;
-import com.comp90018.utils.RedisOperator;
+
+import com.comp90018.utils.JsonUtils;
+import com.comp90018.utils.RabbitMQUtils;
+
 import com.comp90018.vo.ListFollowerVO;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,24 +25,20 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class FollowerServiceImpl implements FollowerService {
+@Slf4j
+public class FollowerServiceImpl extends BaseImpl implements FollowerService {
 
     final String Follow = "Follow";
     final Integer MyFollower = 0;
     final Integer MyFollowing = 1;
 
     @Autowired
-    private Sid sid;
-    @Autowired
-    private MessageService messageService;
-    @Autowired
     private ListFollowingMapper listFollowingMapper;
     @Autowired
     private ListFollowerMapper listFollowerMapper;
     @Autowired
-    private RedisOperator redis;
-    @Autowired
     private FollowersMapper followersMapper;
+
 
     @Override
     public boolean checkFollow(String followerId, String followingId) {
@@ -48,11 +49,13 @@ public class FollowerServiceImpl implements FollowerService {
     @Override
     public String doFollow(String followerId, String followingId) {
         if (followerId == null || followingId == null) {
+            log.info(FollowResEnum.USER_CANNOT_NULL.getRes());
             return FollowResEnum.USER_CANNOT_NULL.getRes();
         }
 
         boolean b = checkFollow(followerId, followingId);
         if(b) {
+            log.info(FollowResEnum.ALREADY_FOLLOW.getRes());
             return FollowResEnum.ALREADY_FOLLOW.getRes();
         }
 
@@ -84,7 +87,18 @@ public class FollowerServiceImpl implements FollowerService {
         //send notify message
         HashMap<String, Object> map = new HashMap<>();
         map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.FOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
-        messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+//        MessageDTO messageDTO = messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+
+        MessageConvertBO messageConvertBO = new MessageConvertBO();
+        messageConvertBO.setSenderId(followerId);
+        messageConvertBO.setReceiverId(followingId);
+        messageConvertBO.setType(MessageTypeEnum.SYSTEM_MESSAGE.getType());
+        messageConvertBO.setContent(map);
+
+        rabbitTemplate.convertAndSend(RabbitMQUtils.EXCHANGE_MSG,
+                "sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.FOLLOW_NOTIFY.getSystemMessage(),
+                JsonUtils.objectToJson(messageConvertBO));
+
         return FollowResEnum.FOLLOW_SUCCESS.getRes();
     }
 
@@ -92,11 +106,13 @@ public class FollowerServiceImpl implements FollowerService {
     @Override
     public String unFollow(String followerId, String followingId) {
         if (followerId == null || followingId == null) {
+            log.info(FollowResEnum.USER_CANNOT_NULL.getRes());
             return FollowResEnum.USER_CANNOT_NULL.getRes();
         }
 
         Followers following = queryIsFollower(followerId, followingId);
         if(following == null) { // the follower doesn't follow the following
+            log.info(FollowResEnum.ALREADY_UNFOLLOW.getRes());
             return FollowResEnum.ALREADY_UNFOLLOW.getRes();
         }
 
@@ -118,7 +134,18 @@ public class FollowerServiceImpl implements FollowerService {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.UNFOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
-        messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+//        messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+
+        MessageConvertBO messageConvertBO = new MessageConvertBO();
+        messageConvertBO.setSenderId(followerId);
+        messageConvertBO.setReceiverId(followingId);
+        messageConvertBO.setType(MessageTypeEnum.SYSTEM_MESSAGE.getType());
+        messageConvertBO.setContent(map);
+
+        rabbitTemplate.convertAndSend(RabbitMQUtils.EXCHANGE_MSG,
+                "sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.UNFOLLOW_NOTIFY.getSystemMessage(),
+                JsonUtils.objectToJson(messageConvertBO));
+
         return FollowResEnum.UNFOLLOW_SUCCESS.getRes();
     }
 
