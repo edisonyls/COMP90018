@@ -112,21 +112,21 @@ public class PostController extends BaseController {
         return JSONResult.ok("Delete successful");
     }
 
-//    @PostMapping("updatePost")
-//    public JSONResult updatePost(@RequestBody UploadPostBO uploadPostBO) {
+    @PostMapping("updatePost")
+    public JSONResult updatePost(@RequestBody UploadPostBO uploadPostBO) {
 //        String postId = uploadPostBO.getPostId();
-//
+
 //        String url = redis.get(postId);
-//        Post post = null;
-//        postService.updatePost(uploadPostBO);
+        Post post = null;
+        post = postService.updatePost(uploadPostBO);
 //        if (url != null) {
 //            post.setPicture(url);
 //            redis.del(url);
 //        }
-//        if (post == null) {
-//            return JSONResult.errorMsg("Update error, post not exist");
-//        }
-//        return JSONResult.ok(post);
-//    }
+        if (post == null) {
+            return JSONResult.errorMsg("Update error, post not exist");
+        }
+        return JSONResult.ok(post);
+    }
 
 }
