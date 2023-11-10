@@ -22,32 +22,32 @@ import LoadingView from "../components/LoadingView";
 import { Entypo } from "@expo/vector-icons";
 import { Magnetometer } from "expo-sensors";
 const RadarAnimation = React.memo(() => {
-  const scaleValue = new Animated.Value(0); // 初始值为0
+  const scaleValue = new Animated.Value(0);
   const [selectedMenu, setSelectedMenu] = useState("All");
 
   const animateRadar = () => {
-    scaleValue.setValue(0); // 在动画开始时重置值
+    scaleValue.setValue(0); 
     Animated.timing(scaleValue, {
       toValue: 1,
-      duration: 1500, // 动画持续时间
-      easing: Easing.linear, // 线性动画
-      useNativeDriver: true, // 使用原生动画驱动
-    }).start(() => animateRadar()); // 动画结束后重新开始，创建循环效果
+      duration: 1500,
+      easing: Easing.linear, 
+      useNativeDriver: true, 
+    }).start(() => animateRadar()); 
   };
 
   useEffect(() => {
-    animateRadar(); // 开始动画
-    return () => scaleValue.stopAnimation(); // 当组件卸载时停止动画
+    animateRadar(); 
+    return () => scaleValue.stopAnimation(); 
   }, []);
 
   const scale = scaleValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 1.8], // 可以调整输出范围来放大雷达动画
+    outputRange: [0, 1.8], 
   });
 
   const opacity = scaleValue.interpolate({
     inputRange: [0, 0.5, 1],
-    outputRange: [0.5, 0.5, 0], // 使雷达动画从半透明渐变到完全透明
+    outputRange: [0.5, 0.5, 0], 
   });
 
   return (
@@ -57,7 +57,7 @@ const RadarAnimation = React.memo(() => {
 
         borderRadius: 100,
         borderWidth: 2,
-        borderColor: "blue", // 雷达的颜色
+        borderColor: "blue", 
         width: 200,
         height: 200,
         position: "absolute",
@@ -78,7 +78,7 @@ const MapScreen = () => {
   const { user, setUser } = useUserContext();
   const [posts, setPosts] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
-  const [allPosts, setAllPosts] = useState([]); // 存储从后端获取的所有帖子
+  const [allPosts, setAllPosts] = useState([]); 
   const [direction, setDirection] = useState(null);
   const userLocation = location
     ? {
@@ -107,24 +107,24 @@ const MapScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
-    // 订阅磁力计事件
-    Magnetometer.setUpdateInterval(1000); // 设置更新频率为1000毫秒
+    
+    Magnetometer.setUpdateInterval(1000); 
     const subscription = Magnetometer.addListener((data) => {
-      // 使用磁力计数据来计算方向
+     
       let angle = Math.atan2(data.y, data.x);
       if (angle >= 0) {
         angle = angle * (180 / Math.PI);
       } else {
         angle = (angle + 2 * Math.PI) * (180 / Math.PI);
       }
-      // 将角度调整180度
+   
       angle = (angle + 180) % 360;
-      // 将调整后的角度转换为度数并设置方向
+     
       setDirection(angle);
     });
 
     return () => {
-      // 清理订阅
+     
       subscription.remove();
     };
   }, []);
@@ -151,8 +151,8 @@ const MapScreen = () => {
       try {
         const postsData = await getAllPosts("All");
         if (postsData && postsData.success) {
-          setAllPosts(postsData.data); // 保存所有帖子
-          setPosts(postsData.data); // 默认显示所有帖子
+          setAllPosts(postsData.data); 
+          setPosts(postsData.data); 
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -170,19 +170,19 @@ const MapScreen = () => {
         setPosts(allPosts);
         return;
       case "missing":
-        postType = 0; // 注意这里是数字，不是字符串
+        postType = 0; 
         break;
       case "found":
-        postType = 1; // 同上
+        postType = 1;
         break;
       case "general":
-        postType = 2; // 同上
+        postType = 2;
         break;
       default:
         setPosts(allPosts);
         return;
     }
-    const filtered = allPosts.filter((post) => post.postType === postType); // 确保这里不要转换成字符串
+    const filtered = allPosts.filter((post) => post.postType === postType); 
     setPosts(filtered);
   };
 
@@ -198,7 +198,7 @@ const MapScreen = () => {
         longitudeDelta: 0.006,
       }
     : {
-        // 这里是备用位置，如果无法获取位置或用户拒绝权限，它将默认回到这里
+        
         latitude: -37.8109481,
         longitude: 144.9563753,
         latitudeDelta: 0.01,
@@ -267,7 +267,7 @@ const MapScreen = () => {
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
-                    transform: [{ rotate: `${direction}deg` }], // 根据设备方向旋转标记
+                    transform: [{ rotate: `${direction}deg` }], 
                   }}
                 >
                   <RadarAnimation />
@@ -282,7 +282,7 @@ const MapScreen = () => {
                   latitude: post.latitude,
                   longitude: post.longitude,
                 }}
-                onPress={() => handleMarkerPress(post)} // 添加点击事件
+                onPress={() => handleMarkerPress(post)} 
               >
                 <Image
                   source={{ uri: post.picture }}
@@ -303,9 +303,9 @@ const MapScreen = () => {
 };
 const styles = StyleSheet.create({
   map: {
-    height: 500, // 为地图设置一个高度，这样它就能正确显示了
+    height: 500, 
   },
-  // 其他可能的样式
+  
   headshown: {
     borderWidth: 2,
     borderColor: "red",
