@@ -41,10 +41,10 @@ const PostScreen = ({ route, navigation }) => {
       if (commentListData && commentListData.success) {
         setComments(commentListData.data || []);
       } else {
-        console.error("获取评论失败:", commentListData.msg);
+        console.error("fail:", commentListData.msg);
       }
     } catch (error) {
-      console.error("获取评论和用户信息失败:", error);
+      console.error("fail:", error);
     }
   };
 
@@ -60,12 +60,12 @@ const PostScreen = ({ route, navigation }) => {
     const response = await addComment(commentData);
     if (response.success) {
 
-      // 评论成功后的操作，比如清空输入框，重新获取评论列表等
+      
       setCommentContent("");
       fetchComments();
     } else {
-      // 处理错误情况
-      console.error("评论失败:", response.message);
+      
+      console.error("fail:", response.message);
 
     }
   };
@@ -112,7 +112,7 @@ const PostScreen = ({ route, navigation }) => {
         response.data.results &&
         response.data.results.length > 0
       ) {
-        // Typically, the formatted address you want is in the first result
+       
         const address = response.data.results[0].formatted_address;
         setAddress(address);
       } else {
@@ -163,13 +163,13 @@ const PostScreen = ({ route, navigation }) => {
                     </TouchableOpacity>
                     <TouchableOpacity
                       onPress={() => {
-                        // 确保有用户信息可供传递
+                        
                         if (userInfo) {
                           if (userInfo.id === user.id) {
-                            // 如果相同，则导航到 "Profile" 界面
+                            
                             navigation.navigate("Profile");
                           } else {
-                            // 如果不同，则导航到 "Others" 界面，并传递用户信息
+                            
                             navigation.navigate("Others", {
                               otherUser: userInfo,
                             });
@@ -220,7 +220,7 @@ const PostScreen = ({ route, navigation }) => {
 
                 {post.title && (
                   <View>
-                    {/* <Text style={styles.infoLabel}>Title:</Text> */}
+                    
                     <Text style={styles.titleText}>{post.title}</Text>
                   </View>
                 )}
@@ -354,10 +354,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   infoValue: {
-    // backgroundColor: 'white',
-    // borderWidth: 1,
-    // borderColor: 'grey',
-    // borderRadius: 10,
+  
     flex: 1,
     padding: 5,
     marginLeft: 5,
@@ -370,10 +367,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   titleText: {
-    //  backgroundColor: 'white',
-    // borderWidth: 1,
-    // borderColor: 'grey',
-    // borderRadius: 10,
+   
     fontSize: 30,
     fontWeight: "bold",
     marginTop: 10,
@@ -383,7 +377,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     padding: 10,
-    // borderTopRightRadius: 25,
+ 
     borderRadius: 25,
     backgroundColor: "#EDE7F6",
     marginTop: -10,
