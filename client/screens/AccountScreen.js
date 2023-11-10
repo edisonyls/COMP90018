@@ -36,7 +36,7 @@ const AccountScreen = () => {
   useEffect(() => {
     const loadProfileData = async () => {
       setIsLoading(true);
-      // 这里假设你会从 user 或 profileData 中加载数据
+     
       const storedName = user?.nickname ? user.nickname : "Null";
       const storedPhoneNumber = user?.mobile ? user.mobile : "Null";
 
@@ -76,7 +76,7 @@ const AccountScreen = () => {
         id: user.id,
         mobile: phoneNumber,
         nickname: name,
-        //password: user.password,
+      
         postcode: user.postcode,
         sex: user.sex,
         state: user.state,
@@ -85,7 +85,7 @@ const AccountScreen = () => {
       const response = await changeUserInfo(updatedUserInfo);
       setIsLoading(false);
     } catch (e) {
-      console.error("更新用户资料失败", e);
+      console.error("fail", e);
       setIsLoading(false);
     }
   };
@@ -129,14 +129,14 @@ const AccountScreen = () => {
         setUploadBackgroundPic(false);
       }
 
-      // 上传头像图片（如果有更改）
+   
       if (typeof headUri === "object" && headUri.uri && uploadProfilePic) {
         console.log("head uploading...");
         await uploadHead(user.id, headUri.formData);
         setUploadProfilePic(false);
       }
 
-      await updateUserProfile(); // 使用新昵称和手机号更新用户资料
+      await updateUserProfile(); /
       setIsLoading(false);
       navigation.goBack();
     } catch (e) {
@@ -176,7 +176,7 @@ const AccountScreen = () => {
                     <AntDesign name="edit" size={24} color="black" />
                   </TouchableOpacity>
 
-                  {/* 新的容器开始 */}
+                 
                   <View style={styles.profileContainer}>
                     <Image style={styles.headImage} source={headUri} />
                     <TouchableOpacity
@@ -224,40 +224,40 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#F3F3F3", // 添加底部边界线以区分头部
+    borderBottomColor: "#F3F3F3", 
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333", // 使用深色字体提高可读性
+    color: "#333",
   },
   imageContainer: {
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    marginBottom: 20, // 增加底部边距以避免挤压
+    marginBottom: 20, 
   },
   backgroundImage: {
     width: "100%",
-    height: 200, // 修改高度以适应不同设备
-    resizeMode: "cover", // 确保图片完全覆盖容器
+    height: 200, 
+    resizeMode: "cover", 
   },
   editIcon: {
     position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: "#FFF", // 明亮的背景色确保图标可见
+    backgroundColor: "#FFF", 
     borderRadius: 30,
     padding: 10,
-    elevation: 4, // 在安卓上添加阴影
-    shadowColor: "#000", // iOS阴影
+    elevation: 4, 
+    shadowColor: "#000", 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
   profileContainer: {
-    position: "absolute", // 更改为绝对定位
-    top: 150, // 调整位置以重叠背景图片
+    position: "absolute", 
+    top: 150, 
     alignItems: "center",
   },
   headImage: {
@@ -265,8 +265,8 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 4,
-    borderColor: "#FFF", // 添加边框突出头像
-    overflow: "hidden", // 确保图片不会溢出边界
+    borderColor: "#FFF", 
+    overflow: "hidden", 
   },
   saveButton: {
     backgroundColor: "#9747FF",
@@ -274,12 +274,12 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: "center",
     marginHorizontal: 50,
-    marginTop: 20, // 为按钮添加上边距
-    shadowColor: "#9747FF", // iOS阴影
+    marginTop: 20, 
+    shadowColor: "#9747FF", 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 4, // 在安卓上添加阴影
+    elevation: 4,
   },
   saveButtonText: {
     color: "#FFF",
@@ -289,25 +289,25 @@ const styles = StyleSheet.create({
   nameContainer: {
     margin: 20,
     marginBottom: 10,
-    borderBottomColor: "#DDD", // 添加底部边界线以区分输入框
-    paddingBottom: 10, // 增加底部内边距
+    borderBottomColor: "#DDD", 
+    paddingBottom: 10, 
   },
   nameLabel: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#555", // 暗色标签更易读
-    marginBottom: 5, // 增加标签与输入框的距离
+    color: "#555", 
+    marginBottom: 5, 
   },
   nameInput: {
     fontSize: 16,
-    width: "100%", // 设置正方形的宽度
-    height: 50, // 设置正方形的高度
-    borderRadius: 15, // 设置圆角的大小
-    borderWidth: 1, // 设置边框宽度
-    borderColor: "#DDDDDD", // 设置边框颜色
+    width: "100%", 
+    height: 50, 
+    borderRadius: 15, 
+    borderWidth: 1, 
+    borderColor: "#DDDDDD", 
     marginTop: 5,
-    textAlign: "center", // 文本居中
-    padding: 10, // 内边距
+    textAlign: "center", 
+    padding: 10, 
   },
 });
 
