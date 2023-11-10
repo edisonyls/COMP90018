@@ -9,4 +9,4 @@ export const isValidPassword = (password) => {
 };
 
 export const API_KEY = "AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng";
-export const BASE_URL = "192.168.1.111";
+export const BASE_URL = "10.13.107.234";
