@@ -17,8 +17,7 @@
 </details>
 
 ### About the Project
-TO BE UPDATED
-Brief Introduction on Why Should We Implement This App?
+Nowadays, a growing number of individuals are embracing pet ownership, with animals becoming an integral aspect of their daily lives. In light of this trend, we've crafted a dedicated social app for pet enthusiasts. Our application serves as a vibrant platform where users can showcase their beloved pets, seek assistance for locating lost pets, and report sightings of missing animals. This initiative is our way of contributing to the welfare and community engagement of pets and their owners. Moreover, the app facilitates messaging among users, enabling them to share details about their pets and connect with a broader community of pet lovers, thus broadening their network of friends who share their passion for animals.
 
 ### Features Implemented
 :gem: Authentication
