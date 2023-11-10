@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
-import { View, Alert } from "react-native";
+import { View, Alert, Text } from "react-native";
 import { isValidEmail, isPasswordValid } from "../utils/utils";
 import {
   StyledContainer,
@@ -129,7 +129,9 @@ const SignIn = ({ navigation }) => {
               <Line />
               <StyledButton google={true} onPress={handleGoogleSubmit}>
                 <Fontisto name="google" color={primary} size={25} />
-                <ButtonText google={true}>Sign In with Google</ButtonText>
+                <Text className="text-[#ffffff] text=[16px] ml-2">
+                  Signin with Google
+                </Text>
               </StyledButton>
               <ExtraView>
                 <ExtraText>Don't have an account already? </ExtraText>
