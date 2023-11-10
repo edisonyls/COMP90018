@@ -19,7 +19,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document("message")
-public class MessageDTO {
+public class Message {
 
     @Id
     private String id;
@@ -45,7 +45,7 @@ public class MessageDTO {
     @Field("time")
     private Date time;
 
-    public MessageDTO(String senderId, String senderNickname, String senderProfile, String receiverId, String receiverNickname, String receiverProfile, Integer type, Map content, Date time) {
+    public Message(String senderId, String senderNickname, String senderProfile, String receiverId, String receiverNickname, String receiverProfile, Integer type, Map content, Date time) {
         this.senderId = senderId;
         this.senderNickname = senderNickname;
         this.senderProfile = senderProfile;

@@ -1,6 +1,6 @@
 package com.comp90018.impl;
 
-import com.comp90018.dto.MessageDTO;
+import com.comp90018.dto.Message;
 import com.comp90018.enums.*;
 
 import com.comp90018.mapper.FollowersMapper;
@@ -8,8 +8,6 @@ import com.comp90018.mapper.ListFollowerMapper;
 import com.comp90018.mapper.ListFollowingMapper;
 import com.comp90018.pojo.Followers;
 import com.comp90018.service.FollowerService;
-
-import com.comp90018.utils.JsonUtils;
 
 import com.comp90018.vo.ListFollowerVO;
 
@@ -86,7 +84,7 @@ public class FollowerServiceImpl extends BaseImpl implements FollowerService {
         //send notify message
         HashMap<String, Object> map = new HashMap<>();
         map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.FOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
-        MessageDTO messageDTO = messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+        Message message = messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
 
         return FollowResEnum.FOLLOW_SUCCESS.getRes();
     }

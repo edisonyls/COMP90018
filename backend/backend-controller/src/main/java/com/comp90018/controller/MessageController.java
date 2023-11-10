@@ -2,7 +2,7 @@ package com.comp90018.controller;
 
 import com.comp90018.bo.ChatBO;
 import com.comp90018.bo.SendMsgBO;
-import com.comp90018.dto.MessageDTO;
+import com.comp90018.dto.Message;
 import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.enums.ResponseStatusEnum;
@@ -41,12 +41,12 @@ public class MessageController extends BaseController{
         }
 
         HashMap<String, String> contentMap = new HashMap<>();
-        contentMap.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), "send you a messageDTO");
+        contentMap.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), "send you a message");
         contentMap.put(MessageContentEnum.DETAIL.getSystemMessage(), content);
-        MessageDTO messageDTO = messageService.createMessage(senderId, receiverId, MessageTypeEnum.USER_MESSAGE.getType(), contentMap);
+        Message message = messageService.createMessage(senderId, receiverId, MessageTypeEnum.USER_MESSAGE.getType(), contentMap);
 
-        if(messageDTO != null) {
-            return JSONResult.ok(messageDTO);
+        if(message != null) {
+            return JSONResult.ok(message);
         }
 
         return JSONResult.errorCustom(ResponseStatusEnum.MESSAGE_SEND_FAIL);
@@ -59,12 +59,12 @@ public class MessageController extends BaseController{
             return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
         }
 
-        List<MessageDTO> messageDTOS = messageService.listAllNotification(userId);
-        if (messageDTOS == null || messageDTOS.size() == 0) {
+        List<Message> messages = messageService.listAllNotification(userId);
+        if (messages == null || messages.size() == 0) {
             return JSONResult.errorCustom(ResponseStatusEnum.NO_MESSAGES);
         }
 
-        return JSONResult.ok(messageDTOS);
+        return JSONResult.ok(messages);
     }
 
     @PostMapping("/listChat")
@@ -76,12 +76,12 @@ public class MessageController extends BaseController{
             return JSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST);
         }
 
-        List<MessageDTO> messageDTOS = messageService.listMessagesWithOne(userId, contactId);
-        if (messageDTOS == null || messageDTOS.size() == 0) {
+        List<Message> messages = messageService.listMessagesWithOne(userId, contactId);
+        if (messages == null || messages.size() == 0) {
             return JSONResult.errorCustom(ResponseStatusEnum.NO_MESSAGES);
         }
 
-        return JSONResult.ok(messageDTOS);
+        return JSONResult.ok(messages);
     }
 
 }

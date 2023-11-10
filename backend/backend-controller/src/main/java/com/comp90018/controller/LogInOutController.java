@@ -67,12 +67,6 @@ public class LogInOutController extends BaseController{
         String username = signUpBO.getUsername();
         String password = signUpBO.getPassword();
 
-        //check nickname
-        Users users = userService.queryUsersIsExistByNickname(username);
-        if(users != null) {
-            return JSONResult.errorCustom(ResponseStatusEnum.NICKNAME_ALREADY_EXIST);
-        }
-
         //check verify code
         String redisCode = redis.get(RedisEnum.REDIS_CODE + email);
         if(redisCode == null || redisCode.length() == 0 || !redisCode.equals(code)) {

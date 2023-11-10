@@ -1,6 +1,6 @@
 package com.comp90018.impl;
 
-import com.comp90018.dto.MessageDTO;
+import com.comp90018.dto.Message;
 import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.enums.RedisEnum;
 import com.comp90018.mongoDao.MessageDao;
@@ -23,7 +23,7 @@ public class MessageServiceImpl extends BaseImpl implements MessageService {
     @Autowired
     private MessageDao messageDao;
     @Override
-    public MessageDTO createMessage(String senderId, String receiverId, Integer type, Map content) {
+    public Message createMessage(String senderId, String receiverId, Integer type, Map content) {
         Users sender = userService.queryUser(senderId);
         Users receiver = userService.queryUser(receiverId);
 
@@ -31,10 +31,10 @@ public class MessageServiceImpl extends BaseImpl implements MessageService {
             return null;
         }
 
-        MessageDTO messageDTO = new MessageDTO(senderId, sender.getNickname(), sender.getProfile(),
+        Message message = new Message(senderId, sender.getNickname(), sender.getProfile(),
                                 receiverId, receiver.getNickname(), receiver.getProfile(),
                                 type, content, new Date());
-        messageDao.save(messageDTO);
+        messageDao.save(message);
         log.info("message created success");
         String s = redis.get(RedisEnum.REDIS_HASH.getRedisKey() + receiverId);
         if(s == null || s.length() == 0) {
@@ -43,20 +43,20 @@ public class MessageServiceImpl extends BaseImpl implements MessageService {
             redis.set(RedisEnum.REDIS_HASH.getRedisKey() + receiverId, String.valueOf(Integer.parseInt(s) + 1));
         }
 
-        return messageDTO;
+        return message;
     }
 
     @Override
-    public List<MessageDTO> listAllNotification(String userId) {
-        List<MessageDTO> messageDTOList = messageDao.findAllByReceiverIdOrderByTimeDesc(userId);
-        List<MessageDTO> newList = new ArrayList<>();
-//        for (MessageDTO message : messageDTOList) {
+    public List<Message> listAllNotification(String userId) {
+        List<Message> messageList = messageDao.findAllByReceiverIdOrderByTimeDesc(userId);
+        List<Message> newList = new ArrayList<>();
+//        for (Message message : messageList) {
 //            if (message.getType() == MessageTypeEnum.SYSTEM_MESSAGE.getType()) {
 //                newList.add(message);
 //            }
 //        }
 //        return newList;
-        return messageDTOList;
+        return messageList;
     }
 
     /**
@@ -66,12 +66,12 @@ public class MessageServiceImpl extends BaseImpl implements MessageService {
      * @return
      */
     @Override
-    public List<MessageDTO> listMessagesWithOne(String userId, String contactId) {
-        List<MessageDTO> list = messageDao.findAllBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimeAsc(userId, contactId, contactId, userId);
-        List<MessageDTO> newList = new ArrayList<>();
-        for (MessageDTO messageDTO : list) {
-            if (messageDTO.getType() == MessageTypeEnum.USER_MESSAGE.getType()) {
-                newList.add(messageDTO);
+    public List<Message> listMessagesWithOne(String userId, String contactId) {
+        List<Message> list = messageDao.findAllBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByTimeAsc(userId, contactId, contactId, userId);
+        List<Message> newList = new ArrayList<>();
+        for (Message message : list) {
+            if (message.getType() == MessageTypeEnum.USER_MESSAGE.getType()) {
+                newList.add(message);
             }
         }
         return newList;
