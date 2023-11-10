@@ -35,20 +35,20 @@ const SecurityScreen = () => {
         return;
       }
       
-      setIsLoading(true); // 开始加载状态
+      setIsLoading(true); 
       const response = await changeUserPassword(user.id, oldPassword, newPassword);
       if (response.success) {
-        // 假设响应中有一个 success 字段表明操作是否成功
+        
         Alert.alert("Success", "Password changed successfully.");
         navigation.goBack();
       } else {
-        // 如果响应中的 success 字段为 false 或不存在这个字段，显示错误信息
+        
         Alert.alert("Error", response.message || "Password change failed.");
       }
     } catch (error) {
       Alert.alert("Error", "Failed to change password.");
     } finally {
-      setIsLoading(false); // 结束加载状态
+      setIsLoading(false); 
     }
   };
 
@@ -131,26 +131,26 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
-    width: "100%", // 宽度为100%
-    height: 50, // 高度
-    borderRadius: 15, // 圆角
-    borderWidth: 1, // 边框宽度
-    borderColor: "#DDDDDD", // 边框颜色
+    width: "100%", 
+    height: 50,
+    borderRadius: 15, 
+    borderWidth: 1, 
+    borderColor: "#DDDDDD", 
     marginTop: 5,
-    textAlign: "center", // 文本居中
-    padding: 10, // 内边距
+    textAlign: "center", 
+    padding: 10, 
   },
   saveButton: {
-    backgroundColor: "#9747FF", // 按钮背景色
+    backgroundColor: "#9747FF", 
     padding: 15,
     borderRadius: 30,
     alignItems: "center",
-    marginHorizontal: 40, // 水平边距
-    marginBottom: 20, // 底部边距
-    position: "absolute", // 添加绝对定位
-    bottom: 20, // 按钮距离底部的距离
-    left: 0, // 按钮距离左边的距离
-    right: 0, // 按钮距离右边的距离
+    marginHorizontal: 40, 
+    marginBottom: 20, 
+    position: "absolute",
+    bottom: 20, 
+    left: 0,
+    right: 0,
   },
   saveButtonText: {
     color: "white",
