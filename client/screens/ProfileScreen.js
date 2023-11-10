@@ -243,7 +243,7 @@ const ProfileScreen = () => {
               </TouchableOpacity>
 
               <Text style={styles.sectionTitle}>Log Out</Text>
-              <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+              <TouchableOpacity style={styles.buttomMenuItem} onPress={handleLogout}>
                 <View style={styles.iconContainer}>
                   <Feather name="log-out" size={24} color="black" />
                 </View>
@@ -347,6 +347,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
     marginLeft: 16,
+  },
+  
+  buttomMenuItem: {
+    flexDirection: "row", // Arrange icon and text in a row
+    alignItems: "center", // Center align items
+    paddingVertical: 10, // Add padding above and below
+    paddingHorizontal: 16, // Add padding on the sides
+    marginLeft: 20,
+    marginBottom:60,
   },
 });
 
