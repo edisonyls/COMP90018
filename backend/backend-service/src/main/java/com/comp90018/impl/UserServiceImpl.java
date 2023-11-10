@@ -8,7 +8,6 @@ import com.comp90018.enums.SexEnum;
 import com.comp90018.mapper.UsersMapper;
 import com.comp90018.pojo.Users;
 import com.comp90018.service.UserService;
-import com.comp90018.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,9 +91,8 @@ public class UserServiceImpl extends BaseImpl implements UserService {
         user.setProfile("http://47.74.87.207:9000/comp90018/profile.jpg");
         user.setBgImg("http://47.74.87.207:9000/comp90018/bg.jpg");
         user.setSex(SexEnum.OTHER.getSex());
-        user.setBirthday(DateUtil.stringToDate("1800-11-11"));
         user.setDescription("default");
-
+        user.setBirthday(new Date());
         user.setCreatedTime(new Date());
         user.setUpdatedTime(new Date());
 

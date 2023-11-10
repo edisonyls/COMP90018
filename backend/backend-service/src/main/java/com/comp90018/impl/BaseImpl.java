@@ -21,8 +21,10 @@ public class BaseImpl {
 
     @Autowired
     public RedisOperator redis;
+
     @Autowired
     public UserService userService;
+
     @Autowired
     public Sid sid;
 }
