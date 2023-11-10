@@ -24,7 +24,7 @@ import { useUserContext } from "../context/userContext";
 
 const PostScreen = ({ route, navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
-  const { post } = route.params; // 从路由参数中获取post对象
+  const { post } = route.params;
   const [address, setAddress] = useState('');
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState('');
@@ -35,7 +35,6 @@ const PostScreen = ({ route, navigation }) => {
     try {
       const commentListData = await getCommentList(post.id);
       if (commentListData && commentListData.success) {
-        // 直接设置评论数据
         setComments(commentListData.data || []);
       } else {
         console.error('获取评论失败:', commentListData.msg);
@@ -46,24 +45,21 @@ const PostScreen = ({ route, navigation }) => {
   };
   
   const handleSendComment = async () => {
-    // 构造评论数据
     const commentData = {
       commentUserId: user.id,
       content: commentContent,
-      //createTime: new Date().toISOString(), // 使用当前时间作为评论时间
       postId: post.id,
       posterId: post.posterId,
       
     };
 
-    // 调用接口函数发送评论
+   
     const response = await addComment(commentData);
     if (response.success) {
-      // 评论成功后的操作，比如清空输入框，重新获取评论列表等
       setCommentContent('');
       fetchComments();
     } else {
-      // 处理错误情况
+      
       console.error('评论失败:', response.message);
     }
   };
@@ -80,7 +76,7 @@ const PostScreen = ({ route, navigation }) => {
   }, [post.latitude, post.longitude]);
 
   const getGeocode = async (latitude, longitude) => {
-    const apiKey = API_KEY; // Ensure this is kept secret and not exposed
+    const apiKey = API_KEY; 
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
 
     try {
@@ -98,7 +94,6 @@ const PostScreen = ({ route, navigation }) => {
     }
 };
   useEffect(() => {
-    // 当PostScreen加载时调用queryUserInfo来获取用户信息
     const fetchUserInfo = async () => {
       try {
         const userInfoData = await queryUserInfo(post.posterId);
@@ -134,13 +129,13 @@ const PostScreen = ({ route, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                // 确保有用户信息可供传递
+                
                 if (userInfo) {
                   if (userInfo.id === user.id) {
-                    // 如果相同，则导航到 "Profile" 界面
+                   
                     navigation.navigate('Profile');
                   } else {
-                    // 如果不同，则导航到 "Others" 界面，并传递用户信息
+                    
                     navigation.navigate('Others', { otherUser: userInfo });
                   }
                 }
@@ -165,8 +160,7 @@ const PostScreen = ({ route, navigation }) => {
         <TouchableOpacity>
           <View className="mt-2 items-center">
             <Image
-              source={{ uri: post.picture }} // Replace with your actual image source
-             
+              source={{ uri: post.picture }} 
               style={{
                 width: screenWidth - 20,
                 height: screenWidth - 20,
