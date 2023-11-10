@@ -19,12 +19,11 @@ import { useUserContext } from "../context/userContext";
 import { getAllPosts, queryUserInfo } from "../api/auth";
 import { EvilIcons } from "@expo/vector-icons";
 import LoadingView from "../components/LoadingView";
-import { Entypo } from '@expo/vector-icons';
-import { Magnetometer } from 'expo-sensors';
+import { Entypo } from "@expo/vector-icons";
+import { Magnetometer } from "expo-sensors";
 const RadarAnimation = React.memo(() => {
   const scaleValue = new Animated.Value(0); // 初始值为0
   const [selectedMenu, setSelectedMenu] = useState("All");
-
 
   const animateRadar = () => {
     scaleValue.setValue(0); // 在动画开始时重置值
@@ -35,7 +34,6 @@ const RadarAnimation = React.memo(() => {
       useNativeDriver: true, // 使用原生动画驱动
     }).start(() => animateRadar()); // 动画结束后重新开始，创建循环效果
   };
-  
 
   useEffect(() => {
     animateRadar(); // 开始动画
@@ -110,7 +108,7 @@ const MapScreen = () => {
 
   useEffect(() => {
     // 订阅磁力计事件
-    Magnetometer.setUpdateInterval(1000);  // 设置更新频率为1000毫秒
+    Magnetometer.setUpdateInterval(1000); // 设置更新频率为1000毫秒
     const subscription = Magnetometer.addListener((data) => {
       // 使用磁力计数据来计算方向
       let angle = Math.atan2(data.y, data.x);
@@ -124,7 +122,7 @@ const MapScreen = () => {
       // 将调整后的角度转换为度数并设置方向
       setDirection(angle);
     });
-  
+
     return () => {
       // 清理订阅
       subscription.remove();
@@ -143,24 +141,26 @@ const MapScreen = () => {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
       setIsLoading(false);
-
-      const fetchAllPosts = async () => {
-        setIsPostLoading(true);
-        try {
-          const postsData = await getAllPosts("All");
-          if (postsData && postsData.success) {
-            setAllPosts(postsData.data); // 保存所有帖子
-            setPosts(postsData.data); // 默认显示所有帖子
-          }
-        } catch (error) {
-          console.error("Error fetching posts:", error);
-        }
-        setIsPostLoading(false);
-      };
-
-      fetchAllPosts();
     })();
     setIsLocationLoading(false);
+  }, []);
+
+  useEffect(() => {
+    const fetchAllPosts = async () => {
+      setIsPostLoading(true);
+      try {
+        const postsData = await getAllPosts("All");
+        if (postsData && postsData.success) {
+          setAllPosts(postsData.data); // 保存所有帖子
+          setPosts(postsData.data); // 默认显示所有帖子
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+      setIsPostLoading(false);
+    };
+
+    fetchAllPosts();
   }, []);
 
   const filterPosts = (menuSelection) => {
@@ -207,10 +207,10 @@ const MapScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white relative">
-      {isLocationLoading ? (
-        <LoadingView loading={isLocationLoading} msg={"Loading location..."} />
-      ) : isLoading ? (
+      {isLoading ? (
         <LoadingView loading={isLoading} msg={"Map Loading..."} />
+      ) : isLocationLoading ? (
+        <LoadingView loading={isLocationLoading} msg={"Loading location..."} />
       ) : (
         <ScrollView>
           <View className="flex-row items-between justify-between px-8">
@@ -221,12 +221,6 @@ const MapScreen = () => {
               <Text className="text-[20px] text-[#527283]">
                 {user.nickname}
               </Text>
-            </View>
-            <View className="w-12 h-12 bg-gray-400 rounded-md items-center justify-center shadow-lg">
-              <Image
-                className="w-full h-full rounded-md object-cover"
-                source={require("./../assets/logo.jpg")}
-              />
             </View>
           </View>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -270,11 +264,11 @@ const MapScreen = () => {
             {userLocation && (
               <Marker coordinate={userLocation}>
                 <View
-                 style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transform: [{ rotate: `${direction}deg` }], // 根据设备方向旋转标记
-                }}
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transform: [{ rotate: `${direction}deg` }], // 根据设备方向旋转标记
+                  }}
                 >
                   <RadarAnimation />
                   <Entypo name="direction" size={40} color="#9747ff" />

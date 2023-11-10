@@ -1,108 +1,84 @@
 # COMP90018 - Mobile Computing System Programming
 ## Assignment 2 - Let's Pet (Pet App)
-### Basic Features 
-:gem: Basic Authentication
+<details>
+<summary>Table of Contents</summary>
 
-- Sign In
-- Register
+-   [About the Project](#about-the-project)
+-   [Features Implemented](#features-implemented)
+-   [Getting Started](#getting-started)
+    -   [Backend Pre-requirements](#backend-pre-requirements)
+    -   [Frontend Pre-requirements](#frontend-pre-requirements)
+    -   [Database Setup](#database-setup)
+    -   [STARTING THE APP](#starting-the-app)
+-   [API Endpoints](#api-endpoints)
+-   [TechStack](#techstack)
+ 
 
-:gem: Home Page
+</details>
 
-- You can categorize the post by All, Missing, Found and General
-- You can see posts from other users
-- You can search posts by keywords
+### About the Project
+TO BE UPDATED
+Brief Introduction on Why Should We Implement This App?
 
-:gem: Map
+### Features Implemented
+:gem: Authentication
+- Secure sign-in and registration process.
+- Email verification required for new registrations.
 
-- You can see the locations of posts from other users
-- You can filter the locations based on the categories
+:gem: Home Screen
+- Posts filtration by categories: All, Missing, Found, General.
+- Browse through posts made by the community.
 
-:gem:  My Account
+:gem: Map Screen
+- GPS-based real-time user location tracking.
+- Gyroscope integration for direction detection.
+- Map visualization of posts, filterable by categories.
+- Direct access to post details.
 
-- You can see personal information
-- You can see your pets registered
-- You can see other posts that you liked/collected previously
-- You can edit your personal information
-- You can change your password and email for you registered account
+:gem: Notifications
+- Near real-time update notifications for:
+  - Comments on your posts.
+  - New messages.
+  - New followers or unfollowers.
+- View and manage follower connections and profile access.
 
-:gem:  Posts from Other Users
+:gem: Chatting
+- In-app messaging functionality for user communication.
 
-- You can see posts from other users
-- You can react on the posts, such as :thumbsup: :heart: :100: and etc.
+:gem: Profile
+- Personal post gallery.
+- Editable user profile for personal information management.
 
-:gem:  Create New Post
-- You can post new post
+:gem: Interaction with Posts
+- View, comment, and engage with other users' posts.
 
-:gem: Other Features
+:gem: Post Creation
+- Interface for publishing new posts to the community.
 
-- Real time message
-- Convert speech to text
+:gem:  Create Different New Post
 
-### Project Structure
-**Frontend Structure**
+:gem: Sensors Implemented
+- GPS
+- Gyroscope
+- Camera
 
-To Be Updated
+### Getting Started
+TO BE UPDATED
 
-**Backend Structure**
+#### Database Setup
+TO BE UPDATED
 
-To Be Updated
+#### Backend Pre-requirements
+TO BE UPDATED
+
+#### Frontend Pre-requirements
+TO BE UPDATED
+
+#### STARTING THE APP
+TO BE UPDATED
 
 ### API Endpoints
-- GET - BASE_URL/users/:userId 
-    - endpoint to get the current user information
-    - accepts currentUserId and selectedUserId
-    - return information of the provided user based on the userId
-- POST - BASE_URL/friend-request 
-    - endpoint to send a friend request to a user
-- GET - BASE_URL/friend-request/:userId
-    - endpoint to show all the friend-requests of a particular user
-    - accepts the current logged in userId
-    - return all the friend requests of the provided userId
-- POST - BASE_URL/friend-request/accept 
-    - endpoint to accept a friend-request of a particular person
-    - accepts senderId and recepientId
-- GET - BASE_URL/accepted-friends/:userId 
-    - endpoint to access all the friends of the logged in user!
-    - accepts the current logged in userId
-    - retrieve and return a list of friends for a given user based on their user ID. 
-- POST - BASE_URL/messages
-    - endpoint to post Messages and store it in the backend
-    - accepts senderId, recepientId, messageType, messageText
-    - create a new Message schema and store it in the back end
-- GET - BASE_URL/messages/:senderId/:recepientId    
-    - endpoint to fetch the messages between two users
-    - accepts senderId and recepientId
-    - return a list of message associated between two users
-- POST - BASE_URL/deleteMessage
-    - endpoint to delete the messages
-- GET - BASE_URL/friend-requests/sent/:userId 
-    - endpoint to fetch all the friend requests sent by the logged in user
-    - a user wants to see whom they've sent friend requests to that haven't yet been accepted.
-- GET - BASE_URL/friends/:userId 
-    - endpoint to fetch all the friends of the logged in user
-    - returns a list of friend IDs associated with a given user based on their user ID. 
-
-TODO: Need a multer for handling file uploads
-
-### Schema
-- MessageSchema
-    - senderId: ObjectId
-    - recepientId: ObjectId
-    - messageType: String
-    - message: String
-    - timeStamp: Date, default: Date.now,
-
-- UserSchema
-    - userName: String
-    - emailAddress: String
-    - password: String
-    - posts: [PostSchema]
-    - friends: [UserSchema]
-    - friendRequests: [UserId]
-    - friends: [UserId]
-    - sendFriendRequests: [UserId]
-
-- PostSchema: TO BE UPDATED
+Detailed API documentation can be found [here](http://localhost:8080/doc.html). It might appear as a Chinese version but you can simply click the language switcher on the top right corner to switch to English.
   
 ### TechStack
 Our project is constructed using a contemporary Java technology stack, aimed at delivering an efficient and secure web application platform. It is grounded in the Spring Boot framework, utilizing Spring MVC's design patterns for processing user requests, and MyBatis for the data access layer, ensuring developmental efficiency and flexibility. Moreover, the project ingeniously employs Redis for data caching to optimize performance for frequent queries, particularly enhancing response times for social features such as follower interactions and likes.

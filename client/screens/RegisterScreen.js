@@ -30,7 +30,7 @@ import {
 import { Octicons, Ionicons } from "@expo/vector-icons";
 import { sendVerifyRequest } from "../api/auth";
 import LoadingView from "../components/LoadingView";
-import { isValidEmail } from "../utils/utils";
+import { isValidEmail, isValidPassword } from "../utils/utils";
 
 const { darkLight, brand } = Colors;
 
@@ -59,6 +59,13 @@ const Register = ({ navigation }) => {
         "Invalid Email",
         "The email address you entered is not valid."
       );
+    } else if (!isValidPassword(values.password)) {
+      Alert.alert(
+        "Invalid Password Format!",
+        "Password must be in length 6-18."
+      );
+    } else if (!isChecked) {
+      Alert.alert("Oops!", "Please agree to the terms and conditions!");
     } else {
       setIsLoading(true);
       const res = await sendVerifyRequest(values.email);

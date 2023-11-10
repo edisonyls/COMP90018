@@ -18,9 +18,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useUserContext } from "../context/userContext";
 import { logoutAction, getAllPostsPerUser } from "../api/ProfileAPI";
 import LoadingView from "../components/LoadingView";
-import { SimpleLineIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons'; 
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -70,16 +70,21 @@ const ProfileScreen = () => {
   const handleLogout = async () => {
     setIsLoading(true);
     const result = await logoutAction(user.id);
+    console.log(result.data);
     if (result) {
       updateUser(null);
       setIsLoading(false);
       navigation.reset({
         index: 0,
-        routes: [{ name: 'SignIn' }], // 确保这里的 'SignIn' 是你的登录屏幕的路由名称
+        routes: [{ name: "SignIn" }], // 确保这里的 'SignIn' 是你的登录屏幕的路由名称
       });
     } else {
       setIsLoading(false);
-      Alert.alert("Error", "Failed to logout");
+      Alert.alert("Success!", "You have been logged out");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "SignIn" }], // 确保这里的 'SignIn' 是你的登录屏幕的路由名称
+      });
     }
   };
 
@@ -153,43 +158,45 @@ const ProfileScreen = () => {
           ) : selectedMenu === "Settings" ? (
             <View>
               <Text style={styles.sectionTitle}>Account</Text>
-              <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Account")}>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate("Account")}
+              >
                 <View style={styles.iconContainer}>
                   <SimpleLineIcons name="user" size={24} color="black" />
                 </View>
                 <Text style={styles.menuText}>Profile</Text>
-                
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Security")}>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate("Security")}
+              >
                 <View style={styles.iconContainer}>
                   <AntDesign name="lock1" size={24} color="black" />
                 </View>
                 <Text style={styles.menuText}>Security</Text>
-              
               </TouchableOpacity>
 
-              
-
-            
               {/* </TouchableOpacity> */}
               <Text style={styles.sectionTitle}>Help</Text>
-              <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("ContactUs")}>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate("ContactUs")}
+              >
                 <View style={styles.iconContainer}>
                   <AntDesign name="phone" size={24} color="black" />
                 </View>
                 <Text style={styles.menuText}>Contact Us</Text>
-              
               </TouchableOpacity>
-             
+
               <Text style={styles.sectionTitle}>Log Out</Text>
               <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-              <View style={styles.iconContainer}>
-              <Feather name="log-out" size={24} color="black" />
+                <View style={styles.iconContainer}>
+                  <Feather name="log-out" size={24} color="black" />
                 </View>
-                
-                <Text style={styles.menuText}>Log out</Text>          
-                
+
+                <Text style={styles.menuText}>Log out</Text>
               </TouchableOpacity>
             </View>
           ) : null}
@@ -261,30 +268,30 @@ const styles = StyleSheet.create({
     right: 10, // 距离容器右侧10单位
   },
   menuItem: {
-    flexDirection: 'row', // Arrange icon and text in a row
-    alignItems: 'center', // Center align items
+    flexDirection: "row", // Arrange icon and text in a row
+    alignItems: "center", // Center align items
     paddingVertical: 10, // Add padding above and below
     paddingHorizontal: 16, // Add padding on the sides
-    marginLeft:20,
+    marginLeft: 20,
   },
   iconContainer: {
     width: 40, // Width of the circle
     height: 40, // Height of the circle
     borderRadius: 20, // Make it round
-    backgroundColor: '#e0e0e0', // Grey background
-    justifyContent: 'center', // Center content horizontally
-    alignItems: 'center', // Center content vertically
+    backgroundColor: "#e0e0e0", // Grey background
+    justifyContent: "center", // Center content horizontally
+    alignItems: "center", // Center content vertically
     marginRight: 8, // Add space between the icon and the text
   },
   menuText: {
     fontSize: 16, // Increase font size
-    color: '#333', // Dark grey color for the text
+    color: "#333", // Dark grey color for the text
     marginLeft: 8, // Add space between the icon and the text
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginTop: 20,
     marginBottom: 10,
     marginLeft: 16,
