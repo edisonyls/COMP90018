@@ -32,7 +32,7 @@ const Landing = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <Image style={{ width: 380, height: 550 }} source={item} /> // 您可以根据需要调整图片的尺寸
+            <Image style={{ width: 380, height: 550 }} source={item} /> 
           )}
         />
 
