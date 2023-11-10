@@ -67,7 +67,7 @@ export const getAllPosts = async (postType) => {
     );
     return response.data;
   } catch (error) {
-    console.error("在getAllPosts请求时出错", error);
+    console.error("getAllPosts fail", error);
     return false;
   }
 };
@@ -101,7 +101,7 @@ export const getCommentList = async (postId) => {
     );
     return response.data;
   } catch (error) {
-    console.error("获取评论列表时出错", error);
+    console.error("comment fail", error);
     return { success: false, data: [] };
   }
 };
@@ -114,29 +114,29 @@ export const addComment = async (commentData) => {
     );
     return response.data;
   } catch (error) {
-    console.error("添加评论时出错", error);
+    console.error("fail", error);
     return { success: false, message: error.message };
   }
 };
 
 export const checkFollowStatus = async (followerId, followingId) => {
   try {
-    // 创建 URLSearchParams 实例来构建 application/x-www-form-urlencoded 格式的请求体
+    
     const body = new URLSearchParams();
     body.append('followerId', followerId);
     body.append('followingId', followingId);
 
-    // 发送 POST 请求
+    
     const response = await axios.post(`http://${BASE_URL}:8080/post/checkFollow`, body.toString(), {
       headers: {
-        // 设置 Content-Type 头来告诉服务器请求体的格式
+        
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
     return response.data;
   } catch (error) {
-    console.error("在checkFollow请求时出错", error);
-    // 返回更详细的错误信息
+    console.error("checkFollow fail", error);
+    
     return { success: false, message: error.message, response: error.response };
   }
 };
@@ -154,12 +154,12 @@ export const followUser = async (followerId, followingId) => {
     });
     return response.data;
   } catch (error) {
-    console.error("在follow请求时出错", error);
+    console.error("follow fail", error);
     return { success: false, message: error.message, response: error.response };
   }
 };
 
-// 取消关注
+
 export const unfollowUser = async (followerId, followingId) => {
   try {
     const body = new URLSearchParams();
