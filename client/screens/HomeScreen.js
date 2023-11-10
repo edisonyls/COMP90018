@@ -106,7 +106,6 @@ const HomeScreen = () => {
               refreshing={refreshing}
               onRefresh={onRefresh} // Bind your onRefresh function
               colors={["#0B646B"]} // Optional: customize the spinner colors
-              tintColor="#0B646B" // Optional: iOS only: customize the spinner color
             />
           }
         >
@@ -176,12 +175,6 @@ const HomeScreen = () => {
               <Text className="text-[#2C7379] text-[20px] font-bold">
                 All Post
               </Text>
-              <TouchableOpacity className="flex-row items-center justify-center space-x-2">
-                <Text className="text-[#A0C4C7] text-[14px] font-bold">
-                  Filter By
-                </Text>
-                <AntDesign name="doubleright" size={12} color="#A0C4C7" />
-              </TouchableOpacity>
             </View>
             {selectedMenu === "all" ? <View></View> : null}
             <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">

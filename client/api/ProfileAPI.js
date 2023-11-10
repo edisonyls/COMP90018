@@ -76,14 +76,18 @@ export const getAllPostsPerUser = async (userId) => {
   }
 };
 
-export const changeUserPassword = async (userId, originalPassword, newPassword) => {
+export const changeUserPassword = async (
+  userId,
+  originalPassword,
+  newPassword
+) => {
   try {
     const response = await axios.post(
       `http://${BASE_URL}:8080/user/changePassword`, // 使用新的后端接口地址
       {
         userId: userId,
         originalPassword: originalPassword,
-        newPassword: newPassword
+        newPassword: newPassword,
       },
       {
         headers: {
@@ -95,5 +99,22 @@ export const changeUserPassword = async (userId, originalPassword, newPassword) 
   } catch (error) {
     console.error("Error while changing password", error);
     throw error; // 抛出错误以便可以捕获并处理
+  }
+};
+
+export const deletePost = async (postId) => {
+  try {
+    const response = await axios.post(
+      "http://" + BASE_URL + ":8080//post/deleteAPost",
+      {},
+      {
+        params: {
+          postId: postId,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error while deleting post", error);
   }
 };
