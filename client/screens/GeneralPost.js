@@ -8,14 +8,18 @@ import {
   TextInput,
   Alert,
   FlatList,
+  ScrollView,
+  Keyboard,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import RNPickerSelect from 'react-native-picker-select';
+//import RNPickerSelect from 'react-native-picker-select';
 import { AntDesign } from '@expo/vector-icons';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
 import { BASE_URL } from '../utils/utils';
+import { Picker } from '@react-native-picker/picker'
+import LoadingView from "../components/LoadingView";
 
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
@@ -26,7 +30,7 @@ const GeneralPost = () => {
   const [formData, setFormData] = useState('');
   const [title, setTitle] = useState('');
   const [ content, setContent] = useState('');
-  
+  const [isLoading, setIsLoading] = useState(false);
   const [description, setDescription] = useState ('');
   const { user } = useUserContext();
 
@@ -189,12 +193,14 @@ const GeneralPost = () => {
 
     // Function to handle the form submission
     const handleSubmit = async() => {
-
+      setIsLoading(true);
       const isUploadImage = await uploadImage(formData);
       console.log("postId is "+ isUploadImage);
-
+      
         if (validateForm() && isUploadImage) {
+          
           try {
+
             // Fetch the detailed information of the selected location
             const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
 
@@ -225,6 +231,24 @@ const GeneralPost = () => {
                 console.log(serverResponse.data);
                 if (serverResponse.data.success) {
                     console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
+
+                    // Here, you can also proceed with other form submission tasks...
+                    // For example, sending data to a server.
+
+                    // After successful submission, clear the form fields
+
+                    setSelectedPlaceId(null);
+                    setDescription('');
+                    setImageUri('');
+                    setPostTag('');
+                    setTitle('');
+
+                    // or however you clear your location field
+                    // Clear other form fields as necessary
+
+                    // Use the navigation hook to navigate to another screen
+                    Alert.alert('Successfully Sumbmitted!');
+                    navigation.navigate('Home'); // replace 'NextScreen' with the actual name of your screen
                     // ... (clear your form fields and navigate away)
                 } else {
                     console.log('Server responded with an unexpected status.');
@@ -233,138 +257,142 @@ const GeneralPost = () => {
                 console.log(error);
               }
 
-
-
-
-              // Here, you can also proceed with other form submission tasks...
-              // For example, sending data to a server.
-
-              // After successful submission, clear the form fields
-
-              setSelectedPlaceId(null);
-              setDescription('');
-              setImageUri('');
-              setPostTag('');
-              setTitle('');
-
-              // or however you clear your location field
-              // Clear other form fields as necessary
-
-              // Use the navigation hook to navigate to another screen
-              Alert.alert('Successfully Sumbmitted!');
-              navigation.navigate('Home'); // replace 'NextScreen' with the actual name of your screen
-
             } else {
               console.log('Failed to retrieve location details.');
             }
           } catch (error) {
             console.log('An error occurred during form submission:', error);
+          } finally{
+            setIsLoading(false);
           }
         }
       };
 
   return (
-    <View style={styles.formContainer}>
-      {/* Lost Location Input */}
-      <View style={styles.autocompleteContainer}>
-            <Text style={styles.inputLabel}> * Location of Lost</Text>
-              <TextInput
-                placeholder="Search for an address"
-                returnKeyType="search"
-                style={styles.searchBox}
-                placeholderTextColor="#000"
-                onChangeText={(text) => searchLocation(text)}
-                value={searchKeyword}
-              />
-              {isShowingResults && (
-                <FlatList
-                  data={searchResults}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={styles.resultItem}
-                      onPress={() => handleResultPress(item.description, item.place_id)}>
-                      <Text>{item.description}</Text>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={(item,index) => item.id? item.id.toString(): index.toString()}
-                  style={styles.searchResultsContainer}
-                />
-              )}
-      </View>
+    <View style ={{flex:1}}>
 
-       {/* Post title */}
-       <View style={styles.inputContainer}>
-                      <Text style={styles.inputLabel}> * Title</Text>
-                        <TextInput
-                            style={styles.textInput}
-                            onChangeText={setTitle}
-                            value={title}
-                            placeholder="Enter post's title"
-                           
-                        />
-       </View>
+    {isLoading ? (
+        <LoadingView loading={isLoading} msg={"Please wait..."} />
+      ) : (
+        <>
+      <TouchableOpacity
+        style={styles.backStyle}
+        onPress={() => navigation.goBack()}
+        className="mr-4"
+      >
+        <AntDesign name="left" size={24} color="black" />
+      </TouchableOpacity>
+      
+     
+     <View style={styles.locationContainer} >
+        {/* Lost Location Input */}
+        <View style={styles.autocompleteContainer}>
+              <Text style={styles.inputLabel}> * Location of Lost</Text>
+                <TextInput
+                  placeholder="Search for an address"
+                  returnKeyType="search"
+                  style={styles.searchBox}
+                  placeholderTextColor="#000"
+                  onChangeText={(text) => searchLocation(text)}
+                  value={searchKeyword}
+                />
+                {isShowingResults && (
+                  <FlatList
+                    data={searchResults}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        style={styles.resultItem}
+                        onPress={() => handleResultPress(item.description, item.place_id)}>
+                        <Text>{item.description}</Text>
+                      </TouchableOpacity>
+                    )}
+                    keyExtractor={(item,index) => item.id? item.id.toString(): index.toString()}
+                    style={styles.searchResultsContainer}
+                  />
+                )}
+        </View>
+
+      </View>
+ 
+      <ScrollView
+          keyboardShouldPersistTaps='handled'
+          styles = {{flex: 1}} 
+      >
+     
+
+        <ScrollView style={styles.formContainer} keyboardShouldPersistTaps='handled' onScrollBeginDrag={Keyboard.dismiss}>
+
+        {/* Post title */}
+        <View style={styles.inputContainer}>
+                        <Text style={styles.inputLabel}> * Title</Text>
+                          <TextInput
+                              style={styles.textInput}
+                              onChangeText={setTitle}
+                              value={title}
+                              placeholder="Enter post's title"
+                            
+                          />
+        </View>
 
 
         {/* Post content */}
         <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}> * Content</Text>
-                  <TextInput
-                      style={styles.textInput}
-                      onChangeText={setContent}
-                      value={content}
-                      placeholder="Enter post's content"
+                  <Text style={styles.inputLabel}> * Content</Text>
+                    <TextInput
+                        style={styles.textInput}
+                        onChangeText={setContent}
+                        value={content}
+                        placeholder="Enter post's content"
 
-                  />
-       </View>
+                    />
+        </View>
 
-
-
-
-
-      {/* Image Selector Field */}
-      <TouchableOpacity onPress={handleSelectImage} style={styles.imageSelector}>
-        {imageUri ? (
-          <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-        ) : (
-          <Text>Select Image</Text>
-        )}
-      </TouchableOpacity>
+        {/* Image Selector Field */}
+        <TouchableOpacity onPress={handleSelectImage} style={styles.imageSelector}>
+          {imageUri ? (
+            <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+          ) : (
+            <Text>Select Image</Text>
+          )}
+        </TouchableOpacity>
 
 
-      {/* Tag selection */}
-      <View style={styles.dropdownContainer}>
-        <Text style={styles.inputLabel}> Select tag</Text>
-        <RNPickerSelect
-          onValueChange={(value) => setPostTag(value)}
-          items={[
-            { label: 'food', value: 'food' },
-            { label: 'park', value: 'park' },
-            { label: 'illness', value: 'illness' },
-            { label: 'custome', value: 'custome' },
-            { label: 'shop', value: 'shop' },
-            { label: 'newbie', value: 'newbie' },
-            { label: 'other', value: 'other' }
-            
-          ]}
-          style={pickerSelectStyles}
-          placeholder={{ label: "Select a tag...", value: null }}
-          value={postTag}
-          useNativeAndroidPickerStyle={false}
-          Icon={() => {
-            return (
-              <View style={styles.iconContainer}>
-                <AntDesign name="down" size={30} color="gray" />
+        {/* Tag selection */}
+        <View style={styles.dropdownContainer}>
+          <Text style={styles.inputLabel}> Select tag</Text>
+          <View style={styles.container}>
+                <Picker
+                  selectedValue={postTag}
+                  onValueChange={(itemValue, itemIndex) => setPostTag(itemValue)}
+                  style={styles.picker}
+                  prompt="Select a tag..." // 这仅适用于Android
+                  mode="dropdown" // 对Android有效，设置弹出模式
+                >
+                  <Picker.Item label="food" value="food" />
+                  <Picker.Item label="park" value="park" />
+                  <Picker.Item label="illness" value="illness" />
+                  <Picker.Item label="custome" value="custome" />
+                  <Picker.Item label="shop" value="shop" />
+                  <Picker.Item label="newbie" value="newbie" />
+                  <Picker.Item label="other" value="other" />
+                </Picker>
               </View>
-            );
-          }}
-        />
-      </View>
 
+        </View>
 
-      {/* Submit Button */}
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
+      
+
+        {/* Submit Button */}
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <Text style={styles.submitButtonText}>Submit</Text>
+        </TouchableOpacity>
+
+       
+        </ScrollView>
+      </ScrollView>
+
+      </>
+      )}
     </View>
   );
 };
@@ -375,18 +403,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   locationContainer:{
-    paddingTop: 100,
-    paddingHorizontal: 35,
+    paddingTop: 50,
+    paddingHorizontal: 20,
     zIndex:1,
-    marginBottom: -70,
-    marginTop: 50,
+    marginBottom: -50,
+    marginTop:50
+    
   },
 
   formContainer: {
-    paddingTop: 120,
+    marginTop:40,
+    paddingTop: 30,
     paddingHorizontal: 35,
-    marginTop:80,
     //paddingBottom:-50,
+ 
+    
   },
   imageSelector: {
     borderWidth: 1,
@@ -439,7 +470,7 @@ const styles = StyleSheet.create({
 
   autocompleteContainer: {
     position: "absolute",
-    marginTop: 70,
+    //marginTop: 20,
     paddingLeft:35,
     flex: 100,
     zIndex: 10,
@@ -451,17 +482,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 75, // this positions your results just below the TextInput field
     borderRadius:5,
-    zIndex:10,
+    zIndex:100,
     marginLeft: 35,
     paddingLeft:5,
   },
   resultItem: {
+    
     width: '100%',
     justifyContent: 'center',
     height: 50,
     borderBottomColor: '#ccc',
     borderBottomWidth: 1,
     paddingLeft: 10,
+   
   },
   searchBox: {
     width: 320, // or '100%' if you want it to have the full width of the screen
@@ -487,44 +520,39 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
-
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
-    marginBottom: 20, // space for the next form field
-  },
-  inputAndroid: {
-    fontSize: 14,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
-    marginBottom: 20, // space for the next form field
-  },
-
   dropdownLabel: {
     fontSize: 14, // or another appropriate size
     fontWeight: 'bold',
     marginBottom: 10, // space below the label
     // ... any other styling you need
   },
+  container: {
+    flex: 1, // 使用 flex 布局，确保容器充满屏幕
+    alignItems: 'center', // 子项水平居中
+    justifyContent: 'center', // 子项垂直居中
+    padding: 20, // 容器内部留有一定的空间
+    borderColor: 'gray', // you can have a specific color for your project
+    borderWidth: 1, // this is the border for the input field
+    paddingLeft: 10, // space between text and the border
+    borderRadius: 5, // if you want rounded corners
+    height:40,
+    marginBottom: 20,
 
-  
+
+  },
+  picker: {
+    width: 300, // 选择器的宽度
+    height: 40, // or whatever height you find appropriates
+    borderColor: 'gray', // you can have a specific color for your project
+    
+  },
+  backStyle:{
+    marginLeft:15,
+    marginTop:20,
+
+  }
 
 });
-
 
 
 

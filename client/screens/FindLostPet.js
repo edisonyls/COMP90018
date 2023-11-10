@@ -2,13 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TextInput, KeyboardAvoidingView, Platform,SafeAreaView,FlatList,Keyboard,Alert,toString} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import RNPickerSelect from 'react-native-picker-select';
+//import RNPickerSelect from 'react-native-picker-select';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { AntDesign } from '@expo/vector-icons'; // Importing AntDesign for the dropdown icon
 import MapView, { PROVIDER_GOOGLE }from 'react-native-maps';
 import axios from "axios";
 import { useUserContext } from "../context/userContext";
 import { BASE_URL } from '../utils/utils';
+import { Picker } from '@react-native-picker/picker';
+import LoadingView from "../components/LoadingView";
+//import AntDesign from 'react-native-vector-icons/AntDesign';
+
 const API_KEY = 'AIzaSyCLOAAZfuZhFLjzSZcqDdpSIgaKxZ6nyng';
 
 const FindMyPet = () => {
@@ -27,6 +31,8 @@ const FindMyPet = () => {
   const[reward,setReward] = useState('');
   const[description,setDescription] = useState('');
   const { user } = useUserContext();
+  const[isLoading, setIsLoading] = useState(false);
+  
   
   //find pet location 
   //const [location, setLocation] = useState({latitude:37.8136,longitude:144.9631});
@@ -37,6 +43,10 @@ const FindMyPet = () => {
   const [isShowingResults, setIsShowingResults] = useState(false);
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
   
+  const togglePicker = () => {
+    setIsPickerOpen(!isPickerOpen);
+  };
+
 
   const searchLocation = async (text) => {
     setSearchKeyword(text);
@@ -185,9 +195,9 @@ const FindMyPet = () => {
   };
 
 
-  const handlePickerFocus = () => {
-    setIsPickerOpen(previousState => !previousState); // Toggle the current state of the picker's open/close status
-  };
+  // const handlePickerFocus = () => {
+  //   setIsPickerOpen(previousState => !previousState); // Toggle the current state of the picker's open/close status
+  // };
 
   // Function to validate the form fields
   const validateForm = () => {
@@ -203,10 +213,9 @@ const FindMyPet = () => {
 
   // Function to handle the form submission
   const handleSubmit = async() => {
-
+    setIsLoading(true);
     const isUploadImage = await uploadImage(formData);
     console.log("postId is "+ isUploadImage);
-
     if (validateForm() && isUploadImage) {
       try {
         // Fetch the detailed information of the selected location
@@ -249,7 +258,21 @@ const FindMyPet = () => {
           
             if (serverResponse.data.success) {
                 console.log('Data submitted successfully. ID:', serverResponse.data.data.id);
-                // ... (clear your form fields and navigate away)
+                          // Here, you can also proceed with other form submission tasks...
+                          // For example, sending data to a server.
+                    
+                          // After successful submission, clear the form fields
+                          setPetName('');
+                          setPetCategory('');
+                          setPetBreed('');
+                          setSelectedPlaceId(null);
+                          setReward('');
+                          setContactNumber('');
+                          setImageUri(null);
+                          setDescription(null);
+              
+                          Alert.alert('Successfully Sumbmitted!');
+                          navigation.navigate('Home'); // replace 'NextScreen' with the actual name of your screen
             } else {
                 console.log('Server responded with an unexpected status.');
             }
@@ -267,49 +290,41 @@ const FindMyPet = () => {
               } else {
                 // Something happened in setting up the request and triggered an Error
                 console.log(error);
-              }
+              } 
               
           }
 
           
           
     
-          // Here, you can also proceed with other form submission tasks...
-          // For example, sending data to a server.
-    
-          // After successful submission, clear the form fields
-          setPetName('');
-          setPetCategory('');
-          setPetBreed('');
-          setSelectedPlaceId(null);
-          setReward('');
-          setContactNumber('');
-          setImageUri(null);
-          setDescription(null);
-        
-          // or however you clear your location field
-          // Clear other form fields as necessary
-    
-          // Use the navigation hook to navigate to another screen
-          Alert.alert('Successfully Sumbmitted!');
-          navigation.navigate('Home'); // replace 'NextScreen' with the actual name of your screen
+
     
         } else {
           console.log('Failed to retrieve location details.');
         }
       } catch (error) {
         console.log('An error occurred during form submission:', error);
+      }finally{
+        setIsLoading(false);      
       }
     }
   };
 
   return (
-    // <KeyboardAvoidingView
-    //     behavior={Platform.OS === "ios" ? "padding" : "height"}
-    //     style={{ flex: 1 }}
-    // >
+    
     <View style ={{flex:1}}>
-      {/* <ScrollView style={styles.mainContainer} keyboardShouldPersistTaps='handled'> */}
+
+      {isLoading ? (
+        <LoadingView loading={isLoading} msg={"Please wait..."} />
+      ) : (
+        <>
+      <TouchableOpacity
+      style={styles.backStyle}
+              onPress={() => navigation.goBack()}
+              className="mr-4"
+            >
+              <AntDesign name="left" size={24} color="black" />
+      </TouchableOpacity>
         <View style={styles.locationContainer}>
 
             {/*Pet missing Location*/}
@@ -344,8 +359,9 @@ const FindMyPet = () => {
 
 
             
-      <View
-      styles = {{flex: 0}}
+      <ScrollView
+          keyboardShouldPersistTaps='handled'
+          styles = {{flex: 1}} 
       >
 
           <ScrollView style={styles.formContainer} keyboardShouldPersistTaps='handled' onScrollBeginDrag={Keyboard.dismiss}>
@@ -378,31 +394,23 @@ const FindMyPet = () => {
             {/* Pet Category Dropdown */}
             <View style={styles.dropdownContainer}>
             <Text style={styles.inputLabel}>* Pet Category</Text>
-            <RNPickerSelect
-                onValueChange={(value) => setPetCategory(value)}
-                onOpen={handlePickerFocus} // Here we use the function
-                onClose={handlePickerFocus} // Here too
-                items={[
-                    { label: 'Cat', value: 'cat' },
-                    { label: 'Dog', value: 'dog' },
-                    { label: 'Rabbit', value: 'rabbit' },
-                    { label: 'Hamster', value: 'hamster' },
-                    { label: 'Other', value: 'other' },
-                ]}
-                style={pickerSelectStyles}
-                placeholder={{ label: "Select a pet category...", value: null }}
-                value={petCategory}
-                useNativeAndroidPickerStyle={false} // Required for custom styling to take effect on Android
+            
+            <View style={styles.container}>
+              <Picker
+                selectedValue={petCategory}
+                onValueChange={(itemValue, itemIndex) => setPetCategory(itemValue)}
+                style={styles.picker}
+                prompt="Select a pet category..." // 这仅适用于Android
+                mode="dropdown" // 对Android有效，设置弹出模式
+              >
+                <Picker.Item label="Cat" value="cat" />
+                <Picker.Item label="Dog" value="dog" />
+                <Picker.Item label="Rabbit" value="rabbit" />
+                <Picker.Item label="Hamster" value="hamster" />
+                <Picker.Item label="Other" value="other" />
+              </Picker>
+            </View>
 
-                Icon={() => {
-                    return (
-                    <View style={styles.iconContainer}>
-                        <AntDesign name={isPickerOpen ? "up" : "down"} size={30} color="gray" /> 
-                    </View>
-                    );
-                }}
-
-            />
             </View>
 
             {/* Pet Breed Input */}
@@ -456,7 +464,9 @@ const FindMyPet = () => {
         </ScrollView>
       {/* </ScrollView> */}
       {/* <View style = {marginBottom:50, flex: 1}> </View> */}
-     </View>
+     </ScrollView>
+     </>
+      )}
     </View>
   );
 }
@@ -471,12 +481,12 @@ const styles = StyleSheet.create({
     paddingTop: 100,
     paddingHorizontal: 35,
     zIndex:1,
-    marginBottom: -70,
+    marginBottom: -110,
     marginTop: 40,
   },
 
   formContainer: {
-    paddingTop: 120,
+    paddingTop: 90,
     paddingHorizontal: 35,
     //paddingBottom:-50,
   },
@@ -500,8 +510,9 @@ const styles = StyleSheet.create({
     // This is the new style for the icon container
     position: 'absolute',
     right: 10, // for horizontal positioning - adjust as needed
-    top: 7,   // for vertical positioning - adjust as needed
+    top: '50%',   // for vertical positioning - adjust as needed
     // You can also add padding, backgroundColor, etc., here if needed
+    transform: [{ translateY: -15 }],
   },
 
   inputContainer: {
@@ -530,7 +541,7 @@ const styles = StyleSheet.create({
 
   autocompleteContainer: {
     position: "absolute",
-    marginTop: 70,
+    
     paddingLeft:35,
     flex: 100,
     zIndex: 10,
@@ -578,10 +589,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
-
-});
-
-const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 14,
     paddingVertical: 12,
@@ -611,9 +618,33 @@ const pickerSelectStyles = StyleSheet.create({
     marginBottom: 10, // space below the label
     // ... any other styling you need
   },
+  container: {
+    flex: 1, // 使用 flex 布局，确保容器充满屏幕
+    alignItems: 'center', // 子项水平居中
+    justifyContent: 'center', // 子项垂直居中
+    padding: 20, // 容器内部留有一定的空间
+    borderColor: 'gray', // you can have a specific color for your project
+    borderWidth: 1, // this is the border for the input field
+    paddingLeft: 10, // space between text and the border
+    borderRadius: 5, // if you want rounded corners
+    height:40,
+    marginBottom: 20,
 
-  
+
+  },
+  picker: {
+    width: 300, // 选择器的宽度
+    height: 40, // or whatever height you find appropriates
+    borderColor: 'gray', // you can have a specific color for your project
+    
+  },
+  backStyle:{
+    marginLeft:15,
+    marginTop:20,
+
+  }
 
 });
+
 
 export default FindMyPet;
