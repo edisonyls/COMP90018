@@ -71,22 +71,22 @@ const OthersProfile = ({ route, navigation }) => {
   const handleMarkerPress = async (post) => {
     try {
       if (userInfo) {
-        // 检查当前的用户 ID 是否与帖子发布者的 ID 相同
+    
         if (userInfo.id === user.id) {
-          // 如果相同，则导航到 "Profile" 界面
+         
           navigation.navigate('Profile');
         } else {
-          // 如果不同，则导航到 "Others" 界面，并传递用户信息
+          
           navigation.navigate('Others', { otherUser: userInfo });
         }
       }
 
-      // 如果请求不成功，设置userInfo为空并可选择显示错误信息
+  
     } catch (error) {
-      // 如果发生了其他类型的错误，如网络错误等，也设置userInfo为空并显示错误
+     
       setUserInfo(null);
       console.error("Error fetching user info:", error);
-      // 同样可以显示一个错误弹窗
+     
       Alert.alert(
         "Error",
         "An error occurred while trying to fetch user information."
@@ -132,27 +132,27 @@ const OthersProfile = ({ route, navigation }) => {
 
   // Function to handle follow button press
   const handleFollowPress = async () => {
-    setIsLoading(true); // 开始加载状态
+    setIsLoading(true); 
     try {
       let response;
       if (isFollowing) {
-        // 如果当前已经关注，调用取消关注的接口
+        
         response = await unfollowUser(user.id, otherUser.id);
       } else {
-        // 如果当前没有关注，调用添加关注的接口
+        
         response = await followUser(user.id, otherUser.id);
       }
-      // 根据响应更新关注状态
+      
       if (response.success) {
         setIsFollowing(!isFollowing);
       } else {
-        // 处理错误，例如显示提示消息
+     
         console.error("Failed to update follow status: ", response.message);
       }
     } catch (error) {
       console.error("Error updating follow status: ", error);
     } finally {
-      setIsLoading(false); // 结束加载状态
+      setIsLoading(false); 
     }
   };
 
@@ -190,7 +190,7 @@ const OthersProfile = ({ route, navigation }) => {
             </View>
           </View>
 
-          {/* Follow and Message buttons */}
+        
           <View
             style={{
               flexDirection: "row",
@@ -217,7 +217,7 @@ const OthersProfile = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {/*Display all the post cards if available*/}
+       
           <View className="px-4 mt-4 flex-row items-center justify-evenly flex-wrap">
             {mainData?.length > 0 ? (
               mainData.map((post) => (
@@ -249,15 +249,15 @@ const OthersProfile = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   profileContainer: {
-    position: "relative", // 同上
+    position: "relative",
     alignItems: "center",
     paddingTop: 50,
     paddingBottom: 10,
   },
   menuSection: {
-    flexDirection: "row", // 使 menuContainer 内的元素水平排列
-    justifyContent: "space-evenly", // 平均分配子元素之间的空间
-    marginTop: 20, // 为顶部增加一些空间
+    flexDirection: "row", 
+    justifyContent: "space-evenly", 
+    marginTop: 20, 
   },
   imageContainer: {
     alignItems: "center",
@@ -265,14 +265,14 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   backgroundImage: {
-    width: "100%", // 宽度为100%，以填满容器
-    height: 198, // 这可以根据您的背景图像进行调整
+    width: "100%",
+    height: 198, 
   },
   headImage: {
     width: 83,
     height: 83,
-    position: "absolute", // 设置为绝对定位
-    bottom: 40, // 这意味着图片的底部将位于容器边界以下的位置，实现重叠效果
+    position: "absolute",
+    bottom: 40, 
     borderRadius: 83 / 2,
   },
   profileName: {
@@ -280,33 +280,33 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "black",
     textAlign: "center",
-    //marginVertical: 10, // 增加垂直方向的空间
+   
   },
   sectionContainer: {
-    paddingHorizontal: 16, // 左右边距
-    paddingTop: 16, // 顶部边距
+    paddingHorizontal: 16, 
+    paddingTop: 16,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "700",
     color: "black",
     marginTop: 20,
-    textAlign: "left", // 靠左对齐
-    marginBottom: 10, // 和图片之间的距离
+    textAlign: "left", 
+    marginBottom: 10, 
     marginLeft: 10,
   },
   sectionImage: {
-    width: 350, // 图片宽度为容器宽度
-    height: 45, // 高度根据宽度和比例自动调整
+    width: 350, 
+    height: 45, 
 
-    marginBottom: 40, // 图片之间的距离
+    marginBottom: 40, 
     marginLeft: 20,
-    resizeMode: "cover", // 如果图片宽度和高度与容器不符，确保图片完整覆盖
+    resizeMode: "cover",
   },
   editIcon: {
-    position: "absolute", // 使用绝对定位
-    top: 10, // 距离容器顶部10单位
-    right: 10, // 距离容器右侧10单位
+    position: "absolute", 
+    top: 10, 
+    right: 10, 
   },
 });
 
