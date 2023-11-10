@@ -1,7 +1,6 @@
 package com.comp90018.impl;
 
 import com.comp90018.bo.LikedPostBO;
-import com.comp90018.bo.MessageConvertBO;
 import com.comp90018.enums.MessageContentEnum;
 import com.comp90018.enums.MessageTypeEnum;
 import com.comp90018.mapper.MyLikedPostMapper;
@@ -10,7 +9,6 @@ import com.comp90018.pojo.MyLikedPost;
 import com.comp90018.pojo.Post;
 import com.comp90018.service.PostLikeService;
 import com.comp90018.utils.JsonUtils;
-import com.comp90018.utils.RabbitMQUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,17 +56,7 @@ public class PostLikeServiceImpl extends BaseImpl implements PostLikeService {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.POST_UNLIKE_NOTIFY.getSystemMessage()); // (behavior, like)
 
-//                messageService.createMessage(userId, post.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
-
-                MessageConvertBO messageConvertBO = new MessageConvertBO();
-                messageConvertBO.setSenderId(userId);
-                messageConvertBO.setReceiverId(post.getPosterId());
-                messageConvertBO.setType(MessageTypeEnum.SYSTEM_MESSAGE.getType());
-                messageConvertBO.setContent(map);
-
-                rabbitTemplate.convertAndSend(RabbitMQUtils.EXCHANGE_MSG,
-                        "sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.POST_UNLIKE_NOTIFY.getSystemMessage(),
-                        JsonUtils.objectToJson(messageConvertBO));
+                messageService.createMessage(userId, post.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
 
                 return true;
             }
@@ -92,17 +80,7 @@ public class PostLikeServiceImpl extends BaseImpl implements PostLikeService {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.POST_LIKE_NOTIFY.getSystemMessage()); // (behavior, like)
 
-                MessageConvertBO messageConvertBO = new MessageConvertBO();
-                messageConvertBO.setSenderId(userId);
-                messageConvertBO.setReceiverId(post.getPosterId());
-                messageConvertBO.setType(MessageTypeEnum.SYSTEM_MESSAGE.getType());
-                messageConvertBO.setContent(map);
-
-                rabbitTemplate.convertAndSend(RabbitMQUtils.EXCHANGE_MSG,
-                        "sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.POST_LIKE_NOTIFY.getSystemMessage(),
-                        JsonUtils.objectToJson(messageConvertBO));
-
-//                messageService.createMessage(userId, post.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
+                messageService.createMessage(userId, post.getPosterId(), MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
 
                 return true;
             }

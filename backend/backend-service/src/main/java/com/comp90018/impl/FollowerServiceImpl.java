@@ -1,6 +1,6 @@
 package com.comp90018.impl;
 
-import com.comp90018.bo.MessageConvertBO;
+import com.comp90018.dto.MessageDTO;
 import com.comp90018.enums.*;
 
 import com.comp90018.mapper.FollowersMapper;
@@ -10,7 +10,6 @@ import com.comp90018.pojo.Followers;
 import com.comp90018.service.FollowerService;
 
 import com.comp90018.utils.JsonUtils;
-import com.comp90018.utils.RabbitMQUtils;
 
 import com.comp90018.vo.ListFollowerVO;
 
@@ -87,17 +86,7 @@ public class FollowerServiceImpl extends BaseImpl implements FollowerService {
         //send notify message
         HashMap<String, Object> map = new HashMap<>();
         map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.FOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
-//        MessageDTO messageDTO = messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
-
-        MessageConvertBO messageConvertBO = new MessageConvertBO();
-        messageConvertBO.setSenderId(followerId);
-        messageConvertBO.setReceiverId(followingId);
-        messageConvertBO.setType(MessageTypeEnum.SYSTEM_MESSAGE.getType());
-        messageConvertBO.setContent(map);
-
-        rabbitTemplate.convertAndSend(RabbitMQUtils.EXCHANGE_MSG,
-                "sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.FOLLOW_NOTIFY.getSystemMessage(),
-                JsonUtils.objectToJson(messageConvertBO));
+        MessageDTO messageDTO = messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
 
         return FollowResEnum.FOLLOW_SUCCESS.getRes();
     }
@@ -134,17 +123,7 @@ public class FollowerServiceImpl extends BaseImpl implements FollowerService {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put(MessageContentEnum.BEHAVIOR.getSystemMessage(), MessageContentEnum.UNFOLLOW_NOTIFY.getSystemMessage()); // (behavior, follow)
-//        messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
-
-        MessageConvertBO messageConvertBO = new MessageConvertBO();
-        messageConvertBO.setSenderId(followerId);
-        messageConvertBO.setReceiverId(followingId);
-        messageConvertBO.setType(MessageTypeEnum.SYSTEM_MESSAGE.getType());
-        messageConvertBO.setContent(map);
-
-        rabbitTemplate.convertAndSend(RabbitMQUtils.EXCHANGE_MSG,
-                "sys.msg." + MessageTypeEnum.SYSTEM_MESSAGE.getType() + "." + MessageContentEnum.UNFOLLOW_NOTIFY.getSystemMessage(),
-                JsonUtils.objectToJson(messageConvertBO));
+        messageService.createMessage(followerId, followingId, MessageTypeEnum.SYSTEM_MESSAGE.getType(), map);
 
         return FollowResEnum.UNFOLLOW_SUCCESS.getRes();
     }
