@@ -193,6 +193,7 @@ const GeneralPost = () => {
 
     // Function to handle the form submission
     const handleSubmit = async() => {
+      if(validateForm()){
       setIsLoading(true);
       const isUploadImage = await uploadImage(formData);
       console.log("postId is "+ isUploadImage);
@@ -266,6 +267,7 @@ const GeneralPost = () => {
             setIsLoading(false);
           }
         }
+      }
       };
 
   return (

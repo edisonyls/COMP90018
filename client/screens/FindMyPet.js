@@ -219,13 +219,11 @@ const FindMyPet = () => {
 
   // Function to handle the form submission
   const handleSubmit = async() => {
+  if(validateForm()){
     setIsLoading(true);
-    
-
     const isUploadImage = await uploadImage(formData);
     console.log("postId is "+ isUploadImage);
-
-    if (validateForm() && isUploadImage) {
+    if (isUploadImage) {
       try {
         // Fetch the detailed information of the selected location
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedPlaceId}&key=${API_KEY}`);
@@ -310,6 +308,8 @@ const FindMyPet = () => {
         setIsLoading(false);
       }
     }
+  }
+  
   };
 
   return (

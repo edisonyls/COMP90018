@@ -95,7 +95,7 @@ const ItemCardContainer = ({ post, navigation, userId }) => {
             </Text>
           )}
           <Text className="mb-1">
-            {post.petName}, {post.petKind}
+            {post.petName} {post.petKind}
           </Text>
           <Text className="text-[#428288] text-[16px] font-bold mb-1">
             {post.title?.length > 30 ? `${title.slice(0, 30)}...` : post.title}

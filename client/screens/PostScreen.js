@@ -357,6 +357,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: 'grey',
     // borderRadius: 10,
+    flex: 1,
     padding: 5,
     marginLeft: 5,
     fontSize: 15,
